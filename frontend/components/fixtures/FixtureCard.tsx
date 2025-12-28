@@ -19,7 +19,7 @@ export function FixtureCard({ fixture }: FixtureCardProps) {
         <CardContent className="p-6">
           <div className="flex items-start justify-between mb-4">
             <div className="text-sm text-muted-foreground">
-              {fixture.stadium?.name && `🏟️ ${fixture.stadium.name} • `}
+              {fixture.home_team.stadium_name && `🏟️ ${fixture.home_team.stadium_name} • `}
               {formatDate(matchDate)}
             </div>
             {fixture.round && (

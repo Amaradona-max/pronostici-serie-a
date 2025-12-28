@@ -52,6 +52,10 @@ logs/
 # Alembic
 alembic/versions/*.pyc
 
+# Celery
+celerybeat-schedule
+celerybeat.pid
+
 # Coverage
 .coverage
 htmlcov/

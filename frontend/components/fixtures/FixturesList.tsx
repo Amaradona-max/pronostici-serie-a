@@ -1,7 +1,7 @@
 'use client'
 
 import { useQuery } from '@tanstack/react-query'
-import { api } from '@/lib/api'
+import { apiClient } from '@/lib/api'
 import { FixtureCard } from './FixtureCard'
 import { Loader2 } from 'lucide-react'
 
@@ -13,8 +13,8 @@ interface FixturesListProps {
 
 export function FixturesList({ status = 'scheduled', round, limit = 20 }: FixturesListProps) {
   const { data, isLoading, error } = useQuery({
-    queryKey: ['fixtures', { status, round, page_size: limit }],
-    queryFn: () => api.getFixtures({ status, round, page_size: limit }),
+    queryKey: ['fixtures', { status, round, limit }],
+    queryFn: () => apiClient.getFixtures({ status, limit }),
     refetchInterval: 5 * 60 * 1000, // Refresh every 5 minutes
   })
 
@@ -34,7 +34,7 @@ export function FixturesList({ status = 'scheduled', round, limit = 20 }: Fixtur
     )
   }
 
-  if (!data || data.fixtures.length === 0) {
+  if (!data || data.length === 0) {
     return (
       <div className="rounded-lg border bg-muted/50 p-6 text-center">
         <p className="text-muted-foreground">Nessuna partita trovata</p>
@@ -44,7 +44,7 @@ export function FixturesList({ status = 'scheduled', round, limit = 20 }: Fixtur
 
   return (
     <div className="grid gap-4 md:grid-cols-2">
-      {data.fixtures.map((fixture) => (
+      {data.map((fixture) => (
         <FixtureCard key={fixture.id} fixture={fixture} />
       ))}
     </div>
