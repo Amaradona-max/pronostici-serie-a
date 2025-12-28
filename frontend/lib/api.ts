@@ -1,5 +1,5 @@
-// Use Next.js API routes as proxy to backend
-const API_URL = '/api'
+// Use environment variable for API URL, fallback to /api for local dev
+const API_URL = process.env.NEXT_PUBLIC_API_URL || '/api'
 
 // Types
 export interface Team {
