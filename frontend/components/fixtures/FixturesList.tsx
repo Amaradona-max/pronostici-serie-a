@@ -1,7 +1,7 @@
 'use client'
 
 import { useQuery } from '@tanstack/react-query'
-import { api } from '../../lib/api'
+import { api } from '@/lib/api'
 import { FixtureCard } from './FixtureCard'
 import { Loader2 } from 'lucide-react'
 
