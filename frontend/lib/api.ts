@@ -94,18 +94,20 @@ class ApiClient {
   // Fixtures
   async getFixtures(params?: {
     status?: string
-    round?: number
-    limit?: number
-    offset?: number
+    round?: string
+    season?: string
+    page?: number
+    page_size?: number
   }): Promise<FixtureWithPrediction[]> {
+    const season = params?.season || '2025-2026'
     const queryParams = new URLSearchParams()
     if (params?.status) queryParams.append('status', params.status)
-    if (params?.round) queryParams.append('round', params.round.toString())
-    if (params?.limit) queryParams.append('limit', params.limit.toString())
-    if (params?.offset) queryParams.append('offset', params.offset.toString())
+    if (params?.round) queryParams.append('round', params.round)
+    if (params?.page) queryParams.append('page', params.page.toString())
+    if (params?.page_size) queryParams.append('page_size', params.page_size.toString())
 
     const query = queryParams.toString()
-    return this.request(`/fixtures${query ? `?${query}` : ''}`)
+    return this.request(`/fixtures/serie-a/${season}${query ? `?${query}` : ''}`)
   }
 
   async getFixture(id: number): Promise<FixtureWithPrediction> {
