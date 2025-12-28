@@ -33,9 +33,11 @@ async def lifespan(app: FastAPI):
     logger.info("Starting Serie A Predictions API...")
     logger.info(f"Environment: {settings.ENVIRONMENT}")
 
-    # Initialize database (only creates tables in dev mode)
-    if not settings.is_production:
-        await init_db()
+    # Initialize database (create tables if they don't exist)
+    # This is safe because init_db uses create_all which is idempotent
+    logger.info("Initializing database...")
+    await init_db()
+    logger.info("Database initialized successfully")
 
     logger.info("Application started successfully")
 
