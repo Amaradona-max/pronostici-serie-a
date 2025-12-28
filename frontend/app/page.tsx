@@ -1,5 +1,5 @@
-import { FixturesList } from '@/components/fixtures/FixturesList'
-import { StatsOverview } from '@/components/stats/StatsOverview'
+import { FixturesList } from '../components/fixtures/FixturesList'
+import { StatsOverview } from '../components/stats/StatsOverview'
 
 export default function HomePage() {
   return (

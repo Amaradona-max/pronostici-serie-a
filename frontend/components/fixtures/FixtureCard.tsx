@@ -1,10 +1,10 @@
 'use client'
 
 import Link from 'next/link'
-import { Card, CardContent } from '@/components/ui/card'
-import { formatDate } from '@/lib/utils'
+import { Card, CardContent } from '../ui/card'
+import { formatDate } from '../../lib/utils'
 import { ChevronRight } from 'lucide-react'
-import type { Fixture } from '@/lib/api'
+import type { Fixture } from '../../lib/api'
 
 interface FixtureCardProps {
   fixture: Fixture
