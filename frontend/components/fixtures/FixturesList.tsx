@@ -13,8 +13,8 @@ interface FixturesListProps {
 
 export function FixturesList({ status = 'scheduled', round, limit = 20 }: FixturesListProps) {
   const { data, isLoading, error } = useQuery({
-    queryKey: ['fixtures', { status, round, limit }],
-    queryFn: () => apiClient.getFixtures({ status, limit }),
+    queryKey: ['fixtures', { status, round, page_size: limit }],
+    queryFn: () => apiClient.getFixtures({ status, round, page_size: limit }),
     refetchInterval: 5 * 60 * 1000, // Refresh every 5 minutes
   })
 
