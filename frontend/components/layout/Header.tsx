@@ -15,30 +15,36 @@ export function Header() {
           <span className="text-xl font-bold">⚽ Serie A Predictions</span>
         </Link>
 
-        <nav className="flex items-center space-x-6 text-sm font-medium flex-1">
+        <nav className="flex items-center space-x-4 text-sm font-medium flex-1 overflow-x-auto">
           <Link
             href="/"
-            className="transition-colors hover:text-foreground/80 text-foreground"
+            className="transition-colors hover:text-foreground/80 text-foreground whitespace-nowrap"
           >
             Home
           </Link>
           <Link
+            href="/classifica"
+            className="transition-colors hover:text-foreground/80 text-foreground/60 whitespace-nowrap"
+          >
+            Classifica
+          </Link>
+          <Link
+            href="/marcatori"
+            className="transition-colors hover:text-foreground/80 text-foreground/60 whitespace-nowrap"
+          >
+            Marcatori
+          </Link>
+          <Link
+            href="/cartellini"
+            className="transition-colors hover:text-foreground/80 text-foreground/60 whitespace-nowrap"
+          >
+            Cartellini
+          </Link>
+          <Link
             href="/partite"
-            className="transition-colors hover:text-foreground/80 text-foreground/60"
+            className="transition-colors hover:text-foreground/80 text-foreground/60 whitespace-nowrap"
           >
             Partite
-          </Link>
-          <Link
-            href="/squadre"
-            className="transition-colors hover:text-foreground/80 text-foreground/60"
-          >
-            Squadre
-          </Link>
-          <Link
-            href="/stats"
-            className="transition-colors hover:text-foreground/80 text-foreground/60"
-          >
-            Statistiche
           </Link>
         </nav>
 
