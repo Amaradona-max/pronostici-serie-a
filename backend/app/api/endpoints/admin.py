@@ -32,11 +32,11 @@ SERIE_A_TEAMS = [
     {"name": "Lecce", "short_name": "LEC", "code": "LEC", "external_id": 867},
     {"name": "Hellas Verona", "short_name": "VER", "code": "VER", "external_id": 504},
     {"name": "Cagliari", "short_name": "CAG", "code": "CAG", "external_id": 490},
-    {"name": "Parma", "short_name": "PAR", "code": "PAR", "external_id": 488},
+    {"name": "Parma", "short_name": "PAR", "code": "PAR", "external_id": 1037},
     {"name": "Como", "short_name": "COM", "code": "COM", "external_id": 512},
     # Neopromosse 2025/2026
-    {"name": "Cremonese", "short_name": "CRE", "code": "CRE", "external_id": 867},
-    {"name": "Pisa", "short_name": "PIS", "code": "PIS", "external_id": 1579},
+    {"name": "Cremonese", "short_name": "CRE", "code": "CRE", "external_id": 445},
+    {"name": "Pisa", "short_name": "PIS", "code": "PIS", "external_id": 1071},
     {"name": "Sassuolo", "short_name": "SAS", "code": "SAS", "external_id": 488},
 ]
 
