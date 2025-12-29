@@ -11,7 +11,7 @@ import logging
 
 from app.config import get_settings
 from app.db.engine import init_db, close_db
-from app.api.endpoints import fixtures, predictions, health
+from app.api.endpoints import fixtures, predictions, health, admin
 
 # Configure logging
 logging.basicConfig(
@@ -86,6 +86,12 @@ app.include_router(
     predictions.router,
     prefix="/api/v1/predictions",
     tags=["Predictions"]
+)
+
+app.include_router(
+    admin.router,
+    prefix="/api/v1/admin",
+    tags=["Admin"]
 )
 
 
