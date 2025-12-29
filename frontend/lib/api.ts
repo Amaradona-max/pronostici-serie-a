@@ -43,6 +43,13 @@ export interface FixtureWithPrediction extends Fixture {
   prediction?: Prediction
 }
 
+export interface FixturesResponse {
+  fixtures: FixtureWithPrediction[]
+  total: number
+  page: number
+  page_size: number
+}
+
 export interface HealthResponse {
   status: string
   timestamp: string
@@ -107,7 +114,10 @@ class ApiClient {
     if (params?.page_size) queryParams.append('page_size', params.page_size.toString())
 
     const query = queryParams.toString()
-    return this.request(`/fixtures/serie-a/${season}${query ? `?${query}` : ''}`)
+    const response = await this.request<FixturesResponse>(
+      `/api/v1/fixtures/serie-a/${season}${query ? `?${query}` : ''}`
+    )
+    return response.fixtures
   }
 
   async getFixture(id: number): Promise<FixtureWithPrediction> {
