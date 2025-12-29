@@ -1,159 +1,156 @@
-# Quick Start Guide
+# ⚡ Quick Start - Sviluppo Locale
 
-Guida rapida per avviare il progetto Serie A Predictions in 5 minuti.
-
-## Setup Rapido
-
-### 1. Prerequisiti
-
-```bash
-# Verifica Docker installato
-docker --version
-docker-compose --version
-
-# Se mancano, installa da: https://docs.docker.com/get-docker/
-```
-
-### 2. Clone e Configurazione
-
-```bash
-# Clone repository
-cd ~/Desktop
-git clone <repository-url> "Pronostici Msterr Calcio"
-cd "Pronostici Msterr Calcio"
-
-# Crea file .env
-cp .env.example .env
-```
-
-### 3. Configura API Key
-
-1. Registrati su [RapidAPI](https://rapidapi.com/api-sports/api/api-football)
-2. Sottoscrivi piano gratuito di API-Football
-3. Copia API key
-4. Apri `.env` e incolla:
-
-```bash
-API_FOOTBALL_KEY=your_key_here
-SECRET_KEY=$(openssl rand -hex 32)
-```
-
-### 4. Avvia Progetto
-
-```bash
-# Avvia tutti i servizi
-docker-compose up -d
-
-# Attendi ~30 secondi per il primo avvio
-```
-
-### 5. Inizializza Database
-
-```bash
-# Esegui migrations
-docker-compose exec backend alembic upgrade head
-
-# Popola squadre Serie A
-docker-compose exec backend python -m app.scripts.seed_teams
-
-# Sincronizza fixtures (OPZIONALE - richiede API key valida)
-# docker-compose exec backend python -m app.tasks.sync_tasks sync_season_fixtures 2025-2026
-```
-
-### 6. Verifica Installazione
-
-```bash
-# Backend API
-curl http://localhost:8000/api/v1/health
-# Risposta attesa: {"status":"healthy"}
-
-# Frontend
-open http://localhost:3000
-
-# API Docs (Swagger)
-open http://localhost:8000/docs
-```
-
-## Comandi Utili
-
-```bash
-# Visualizza logs
-make logs
-
-# Stop servizi
-make down
-
-# Restart completo
-docker-compose down && docker-compose up -d
-
-# Shell backend (per debug)
-make shell
-
-# Accedi a PostgreSQL
-make shell-db
-```
-
-## Struttura Progetto
-
-```
-Pronostici Msterr Calcio/
-├── backend/          # FastAPI + Python
-│   ├── app/
-│   │   ├── api/      # Endpoints REST
-│   │   ├── db/       # Models e migrations
-│   │   ├── ml/       # Dixon-Coles model
-│   │   └── tasks/    # Celery tasks
-├── frontend/         # Next.js + React
-│   ├── app/          # Pages
-│   ├── components/   # UI components
-│   └── lib/          # Utilities
-└── docker-compose.yml
-```
-
-## Prossimi Passi
-
-1. **Esplora API**: http://localhost:8000/docs
-2. **Vedi Frontend**: http://localhost:3000
-3. **Consulta README**: `README.md` per dettagli completi
-4. **Deployment**: `DEPLOYMENT.md` per messa in produzione
-
-## Troubleshooting
-
-### Porta 8000 già in uso
-
-```bash
-# Cambia porta in docker-compose.yml
-ports:
-  - "8001:8000"  # Usa 8001 invece di 8000
-```
-
-### Database connection error
-
-```bash
-# Restart PostgreSQL
-docker-compose restart postgres
-
-# Verifica container running
-docker-compose ps
-```
-
-### Frontend non carica
-
-```bash
-# Rebuil frontend
-docker-compose build frontend
-docker-compose up -d frontend
-
-# Check logs
-docker-compose logs frontend
-```
-
-## Support
-
-- **Documentazione completa**: `README.md`
-- **Guide deployment**: `DEPLOYMENT.md`
-- **Issues**: Crea issue su GitHub se problemi
+Guida rapida per avviare l'app sul tuo Mac in 5 minuti.
 
 ---
 
-**Tempo totale setup**: ~5 minuti ⚡
+## 🚀 Comandi Rapidi
+
+### Avvio Completo (2 Terminal)
+
+**Terminal 1 - Backend:**
+```bash
+cd "/Users/prova/Desktop/Pronostici Master Calcio/backend"
+source venv/bin/activate
+uvicorn app.main:app --reload --host 0.0.0.0 --port 8000
+```
+
+**Terminal 2 - Frontend:**
+```bash
+cd "/Users/prova/Desktop/Pronostici Master Calcio/frontend"
+npm run dev
+```
+
+**Browser:**
+- Apri http://localhost:3000
+
+---
+
+## 📝 Modificare e Pubblicare
+
+### 1. Modifica i File
+- Frontend: `frontend/app/*/page.tsx`
+- Dati: `backend/app/api/endpoints/standings.py`
+- Calendario: `backend/app/api/endpoints/admin.py`
+
+### 2. Testa in Locale
+- Frontend: http://localhost:3000
+- Backend: http://localhost:8000/docs
+
+### 3. Reset Database Locale (se hai modificato i dati)
+```bash
+curl -X POST http://localhost:8000/api/v1/admin/reset-database
+```
+
+### 4. Pubblica Online
+```bash
+git add .
+git commit -m "Descrizione modifiche"
+git push origin main
+```
+
+### 5. Reset Database Online (dopo 5 minuti dal push)
+```bash
+curl -X POST https://seriea-predictions-api.onrender.com/api/v1/admin/reset-database
+```
+
+---
+
+## 🔗 Link Utili
+
+### Per Te (Sviluppo)
+- **Locale Frontend**: http://localhost:3000
+- **Locale Backend**: http://localhost:8000
+- **Locale API Docs**: http://localhost:8000/docs
+
+### Per Condividere
+- **App Online**: https://pronostici-serie-a.vercel.app
+- **Classifica**: https://pronostici-serie-a.vercel.app/classifica
+- **Marcatori**: https://pronostici-serie-a.vercel.app/marcatori
+- **Cartellini**: https://pronostici-serie-a.vercel.app/cartellini
+
+---
+
+## 📂 File Principali da Modificare
+
+### Dati (Backend)
+```
+backend/app/api/endpoints/standings.py
+  Linea 83:  real_standings_data    → Classifica
+  Linea 146: real_scorers_data      → Marcatori
+  Linea 205: real_cards_by_team     → Cartellini
+
+backend/app/api/endpoints/admin.py
+  Linea 125: giornata_18_fixtures   → Calendario partite
+```
+
+### Layout (Frontend)
+```
+frontend/app/page.tsx                → Home page
+frontend/app/classifica/page.tsx     → Classifica
+frontend/app/marcatori/page.tsx      → Marcatori
+frontend/app/cartellini/page.tsx     → Cartellini
+frontend/components/layout/Header.tsx → Menu navigazione
+```
+
+---
+
+## 🛠️ Prima Installazione
+
+Se è la prima volta che avvii l'app:
+
+### Backend (solo una volta)
+```bash
+cd backend
+python3 -m venv venv
+source venv/bin/activate
+pip install -r requirements.txt
+```
+
+### Frontend (solo una volta)
+```bash
+cd frontend
+npm install
+```
+
+---
+
+## ⚠️ Problemi Comuni
+
+### Backend non parte
+```bash
+cd backend
+source venv/bin/activate
+pip install -r requirements.txt
+```
+
+### Frontend mostra errori
+```bash
+cd frontend
+rm -rf node_modules package-lock.json
+npm install
+```
+
+### Modifiche non online
+```bash
+# Verifica commit
+git status
+
+# Se ci sono file non committati
+git add .
+git commit -m "Aggiornamento"
+git push origin main
+
+# Aspetta 5 minuti, poi reset database
+curl -X POST https://seriea-predictions-api.onrender.com/api/v1/admin/reset-database
+```
+
+---
+
+## 📱 Fermare i Server
+
+In entrambi i Terminal, premi: **CTRL + C**
+
+---
+
+**Per la guida completa, vedi:** `GUIDA_SVILUPPO.md`
