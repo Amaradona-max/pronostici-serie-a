@@ -50,16 +50,14 @@ async def init_db():
     """
     Initialize database - create all tables.
 
-    WARNING: In production, use Alembic migrations instead.
+    Uses SQLAlchemy's create_all which is idempotent - safe to run multiple times.
     """
     from app.db.base import Base
 
     async with engine.begin() as conn:
-        # For development only - creates all tables
-        # In production, use Alembic migrations
-        if not settings.is_production:
-            await conn.run_sync(Base.metadata.create_all)
-            logger.info("Database tables created")
+        # Create all tables if they don't exist (idempotent operation)
+        await conn.run_sync(Base.metadata.create_all)
+        logger.info("Database tables created")
 
 
 async def close_db():
