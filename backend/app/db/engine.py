@@ -53,6 +53,8 @@ async def init_db():
     Uses SQLAlchemy's create_all which is idempotent - safe to run multiple times.
     """
     from app.db.base import Base
+    # Import models to register them with Base.metadata
+    from app.db import models  # noqa: F401
 
     async with engine.begin() as conn:
         # Create all tables if they don't exist (idempotent operation)
