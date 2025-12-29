@@ -37,7 +37,6 @@ class FixtureBase(BaseModel):
     match_date: datetime
     round: Optional[str] = None
     status: str
-    stadium: Optional[StadiumInfo] = None
     home_score: Optional[int] = None
     away_score: Optional[int] = None
 
