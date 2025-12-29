@@ -1,12 +1,22 @@
-# Serie A Predictions 2025/2026
+# ⚽ Serie A Predictions 2025/2026
 
-Applicazione per pronostici calcistici Serie A basata su modello statistico Dixon-Coles.
+Applicazione completa per pronostici calcistici Serie A con intelligenza artificiale.
 
 ## 🌐 Link Applicazione
 
 - **Frontend:** https://pronostici-serie-a.vercel.app
 - **Backend API:** https://seriea-predictions-api.onrender.com
 - **API Docs:** https://seriea-predictions-api.onrender.com/docs
+
+## ✨ Funzionalità
+
+- 📊 **Classifica Serie A** aggiornata in tempo reale
+- ⚽ **Capocannonieri** con statistiche complete
+- 🟨 **Situazione Cartellini** e giocatori a rischio squalifica
+- 📅 **Calendario Partite** con date e orari
+- 🤖 **Pronostici AI** basati su algoritmi statistici
+- 🔍 **Filtro Squadre** per vedere solo le partite di interesse
+- 📱 **Design Responsive** per tutti i dispositivi
 
 ## 🛠️ Stack Tecnologico
 
@@ -25,24 +35,25 @@ Applicazione per pronostici calcistici Serie A basata su modello statistico Dixo
 - **State Management:** TanStack Query (React Query)
 - **Hosting:** Vercel
 
-## 📊 Stato Deploy
+## 📊 Stato Attuale
 
-- ✅ Backend deployato su Render
-- ✅ Frontend deployato su Vercel
-- ✅ Database PostgreSQL configurato
-- ✅ Redis configurato
-- ✅ CORS configurato
-- ⏳ Database da popolare con fixtures Serie A
+- ✅ Backend deployato su Render con auto-deploy
+- ✅ Frontend deployato su Vercel con auto-deploy
+- ✅ Database PostgreSQL popolato con dati reali
+- ✅ Classifica, Marcatori, Cartellini aggiornati (Giornata 17)
+- ✅ Pronostici AI implementati e funzionanti
+- ✅ Filtro squadre operativo
+- ✅ Design moderno completato
 
 ## 📝 Ultimo Checkpoint
 
-**Data:** 28 Dicembre 2025 - 23:57:36
+**Data:** 29 Dicembre 2025 - 19:53:00
 
-Vedi file `CHECKPOINT_2025-12-28_23-57-36.md` per dettagli completi su:
-- Stato attuale del progetto
-- Problemi risolti
-- Prossimi passi
-- Configurazione ambiente
+Vedi file `CHECKPOINT_2025-12-29_19-53-00.md` per dettagli completi su:
+- Tutte le funzionalità implementate
+- Come riprendere il lavoro
+- Aggiornamenti futuri
+- Troubleshooting
 
 ## 🚀 Sviluppo Locale
 
