@@ -15,7 +15,7 @@ logger = logging.getLogger(__name__)
 router = APIRouter()
 
 
-# Serie A teams 2025-2026
+# Serie A teams 2025-2026 (Official lineup)
 SERIE_A_TEAMS = [
     {"name": "Inter", "short_name": "INT", "code": "INT", "external_id": 505},
     {"name": "AC Milan", "short_name": "MIL", "code": "MIL", "external_id": 489},
@@ -28,16 +28,45 @@ SERIE_A_TEAMS = [
     {"name": "Bologna", "short_name": "BOL", "code": "BOL", "external_id": 500},
     {"name": "Torino", "short_name": "TOR", "code": "TOR", "external_id": 503},
     {"name": "Udinese", "short_name": "UDI", "code": "UDI", "external_id": 494},
-    {"name": "Monza", "short_name": "MON", "code": "MON", "external_id": 1579},
     {"name": "Genoa", "short_name": "GEN", "code": "GEN", "external_id": 495},
     {"name": "Lecce", "short_name": "LEC", "code": "LEC", "external_id": 867},
     {"name": "Hellas Verona", "short_name": "VER", "code": "VER", "external_id": 504},
     {"name": "Cagliari", "short_name": "CAG", "code": "CAG", "external_id": 490},
-    {"name": "Empoli", "short_name": "EMP", "code": "EMP", "external_id": 511},
     {"name": "Parma", "short_name": "PAR", "code": "PAR", "external_id": 488},
     {"name": "Como", "short_name": "COM", "code": "COM", "external_id": 512},
-    {"name": "Venezia", "short_name": "VEN", "code": "VEN", "external_id": 517},
+    # Neopromosse 2025/2026
+    {"name": "Cremonese", "short_name": "CRE", "code": "CRE", "external_id": 867},
+    {"name": "Pisa", "short_name": "PIS", "code": "PIS", "external_id": 1579},
+    {"name": "Sassuolo", "short_name": "SAS", "code": "SAS", "external_id": 488},
 ]
+
+
+@router.post("/reset-database", summary="Reset and repopulate database")
+async def reset_database(db: AsyncSession = Depends(get_db)):
+    """
+    Delete all existing data and repopulate with fresh sample data.
+    USE WITH CAUTION - deletes all data!
+    """
+    try:
+        logger.info("Resetting database...")
+
+        # Delete all fixtures, teams, competitions
+        from sqlalchemy import delete
+
+        await db.execute(delete(models.Fixture))
+        await db.execute(delete(models.Team))
+        await db.execute(delete(models.Competition))
+        await db.commit()
+
+        logger.info("Database cleared, now repopulating...")
+
+        # Call the populate function
+        return await populate_sample_data(db)
+
+    except Exception as e:
+        await db.rollback()
+        logger.error(f"Error resetting database: {str(e)}")
+        raise HTTPException(status_code=500, detail=str(e))
 
 
 @router.post("/populate-sample-data", summary="Populate database with sample data")
@@ -88,8 +117,9 @@ async def populate_sample_data(db: AsyncSession = Depends(get_db)):
         logger.info("Creating sample fixtures...")
         fixtures = []
 
-        # Start from next week
-        base_date = datetime.utcnow() + timedelta(days=7)
+        # Giornata 19: weekend 3-5 gennaio 2026
+        # Sabato 4 gennaio 2026, ore 15:00 (primo slot)
+        base_date = datetime(2026, 1, 4, 15, 0, 0)
 
         # Create fixtures for Giornata 19 (upcoming)
         matchups = [
@@ -124,7 +154,10 @@ async def populate_sample_data(db: AsyncSession = Depends(get_db)):
             fixtures.append(fixture)
 
         # Create some past results for Giornata 18
-        past_date = datetime.utcnow() - timedelta(days=7)
+        # Weekend 21-22 dicembre 2025
+        # Sabato 21 dicembre 2025, ore 15:00
+        past_date = datetime(2025, 12, 21, 15, 0, 0)
+
         past_results = [
             (0, 2, 2, 1),  # Inter 2-1 Juventus
             (1, 3, 1, 2),  # Milan 1-2 Napoli
@@ -134,11 +167,14 @@ async def populate_sample_data(db: AsyncSession = Depends(get_db)):
         ]
 
         for i, (home_idx, away_idx, home_score, away_score) in enumerate(past_results):
+            # Spread matches across the weekend
+            match_time = past_date + timedelta(days=i // 3, hours=(i % 3) * 3)
+
             fixture = models.Fixture(
                 competition_id=competition.id,
                 season="2025-2026",
                 round="Giornata 18",
-                match_date=past_date + timedelta(hours=i * 3),
+                match_date=match_time,
                 home_team_id=teams[home_idx].id,
                 away_team_id=teams[away_idx].id,
                 status=models.FixtureStatus.FINISHED,
