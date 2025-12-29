@@ -11,7 +11,7 @@ export default function StatistichePage() {
     accuracyOverUnder: 62.1,
     accuracyBTTS: 58.7,
     bestTeamPredicted: 'Inter',
-    worstTeamPredicted: 'Venezia',
+    worstTeamPredicted: 'Fiorentina',
     lastWeekAccuracy: 70.0,
     modelVersion: 'v1.2.0 (Dixon-Coles)',
     lastUpdate: '29/12/2025 19:53',
