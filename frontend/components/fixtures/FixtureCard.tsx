@@ -106,6 +106,43 @@ export function FixtureCard({ fixture }: FixtureCardProps) {
               </div>
             </div>
 
+            {/* Predictions Section (if available and scheduled) */}
+            {fixture.status === 'scheduled' && fixture.prediction && (
+              <div className="mt-6 p-4 rounded-lg bg-gradient-to-br from-primary/5 to-secondary/5 border border-primary/10">
+                <h4 className="text-xs font-semibold text-muted-foreground mb-3 uppercase tracking-wide">
+                  Pronostico AI
+                </h4>
+                <div className="grid grid-cols-3 gap-3 mb-3">
+                  <div className="text-center p-2 rounded bg-background/50">
+                    <div className="text-xs text-muted-foreground mb-1">1</div>
+                    <div className="text-lg font-bold text-primary">
+                      {(fixture.prediction.prob_home_win * 100).toFixed(0)}%
+                    </div>
+                  </div>
+                  <div className="text-center p-2 rounded bg-background/50">
+                    <div className="text-xs text-muted-foreground mb-1">X</div>
+                    <div className="text-lg font-bold">
+                      {(fixture.prediction.prob_draw * 100).toFixed(0)}%
+                    </div>
+                  </div>
+                  <div className="text-center p-2 rounded bg-background/50">
+                    <div className="text-xs text-muted-foreground mb-1">2</div>
+                    <div className="text-lg font-bold text-secondary">
+                      {(fixture.prediction.prob_away_win * 100).toFixed(0)}%
+                    </div>
+                  </div>
+                </div>
+                <div className="flex items-center justify-between text-xs">
+                  <span className="text-muted-foreground">
+                    Risultato previsto: <span className="font-bold">{fixture.prediction.most_likely_score}</span>
+                  </span>
+                  <Badge variant="outline" className="text-xs">
+                    Affidabilità {(fixture.prediction.confidence_score * 100).toFixed(0)}%
+                  </Badge>
+                </div>
+              </div>
+            )}
+
             {/* Footer */}
             <div className="flex items-center justify-between mt-6 pt-4 border-t">
               {getStatusBadge()}

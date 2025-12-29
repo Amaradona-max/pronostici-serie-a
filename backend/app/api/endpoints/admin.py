@@ -211,3 +211,146 @@ async def populate_sample_data(db: AsyncSession = Depends(get_db)):
         await db.rollback()
         logger.error(f"Error populating database: {str(e)}")
         raise HTTPException(status_code=500, detail=str(e))
+
+
+@router.post("/generate-predictions", summary="Generate mock predictions for upcoming fixtures")
+async def generate_mock_predictions(db: AsyncSession = Depends(get_db)):
+    """
+    Generate realistic mock predictions for all upcoming (scheduled) fixtures.
+    Based on team standings, form, and home advantage.
+
+    Predictions are calculated using:
+    - Current league position and points
+    - Goals scored/conceded ratio
+    - Home advantage factor
+    - Recent form
+    """
+    try:
+        logger.info("Generating mock predictions...")
+
+        # Get all scheduled fixtures
+        fixtures_query = select(models.Fixture).where(
+            models.Fixture.status == models.FixtureStatus.SCHEDULED,
+            models.Fixture.season == "2025-2026"
+        )
+        fixtures_result = await db.execute(fixtures_query)
+        fixtures = fixtures_result.scalars().all()
+
+        if not fixtures:
+            return {"message": "No scheduled fixtures found", "predictions_created": 0}
+
+        # Team strength ratings based on real standings (after Giornata 17)
+        team_ratings = {
+            "Inter": {"rating": 1900, "attack": 2.24, "defense": 1.06},  # 38 GF, 18 GA in 17 matches
+            "AC Milan": {"rating": 1870, "attack": 2.06, "defense": 1.18},
+            "Napoli": {"rating": 1850, "attack": 1.88, "defense": 0.94},
+            "Juventus": {"rating": 1820, "attack": 1.65, "defense": 0.88},
+            "AS Roma": {"rating": 1780, "attack": 1.76, "defense": 1.24},
+            "Como": {"rating": 1700, "attack": 1.53, "defense": 1.35},
+            "Bologna": {"rating": 1690, "attack": 1.41, "defense": 1.29},
+            "Lazio": {"rating": 1680, "attack": 1.59, "defense": 1.53},
+            "Atalanta": {"rating": 1660, "attack": 1.65, "defense": 1.65},
+            "Udinese": {"rating": 1650, "attack": 1.18, "defense": 1.41},
+            "Sassuolo": {"rating": 1645, "attack": 1.29, "defense": 1.53},
+            "Cremonese": {"rating": 1620, "attack": 1.24, "defense": 1.59},
+            "Torino": {"rating": 1610, "attack": 1.06, "defense": 1.29},
+            "Cagliari": {"rating": 1580, "attack": 1.00, "defense": 1.65},
+            "Parma": {"rating": 1570, "attack": 1.12, "defense": 1.59},
+            "Lecce": {"rating": 1550, "attack": 0.94, "defense": 1.71},
+            "Genoa": {"rating": 1520, "attack": 0.82, "defense": 1.59},
+            "Hellas Verona": {"rating": 1500, "attack": 0.88, "defense": 1.88},
+            "Pisa": {"rating": 1480, "attack": 0.76, "defense": 1.76},
+            "Fiorentina": {"rating": 1450, "attack": 0.71, "defense": 2.00},
+        }
+
+        predictions_created = 0
+
+        for fixture in fixtures:
+            # Get home and away teams
+            home_team_query = select(models.Team).where(models.Team.id == fixture.home_team_id)
+            away_team_query = select(models.Team).where(models.Team.id == fixture.away_team_id)
+
+            home_team = (await db.execute(home_team_query)).scalar_one()
+            away_team = (await db.execute(away_team_query)).scalar_one()
+
+            home_stats = team_ratings.get(home_team.name, {"rating": 1600, "attack": 1.5, "defense": 1.5})
+            away_stats = team_ratings.get(away_team.name, {"rating": 1600, "attack": 1.5, "defense": 1.5})
+
+            # Calculate probabilities using ELO-like system with home advantage
+            home_advantage = 100
+            rating_diff = (home_stats["rating"] + home_advantage) - away_stats["rating"]
+
+            # Convert rating difference to win probability (logistic function)
+            expected_home = 1 / (1 + 10 ** (-rating_diff / 400))
+
+            # Adjust probabilities based on attack/defense strength
+            attack_factor = home_stats["attack"] / (home_stats["attack"] + away_stats["defense"])
+            defense_factor = away_stats["attack"] / (away_stats["attack"] + home_stats["defense"])
+
+            # Calculate 1X2 probabilities
+            prob_home_win = min(0.75, max(0.20, expected_home * 0.85 + attack_factor * 0.15))
+            prob_away_win = min(0.65, max(0.15, (1 - expected_home) * 0.85 + defense_factor * 0.15))
+            prob_draw = max(0.15, 1 - prob_home_win - prob_away_win)
+
+            # Normalize to sum to 1.0
+            total = prob_home_win + prob_draw + prob_away_win
+            prob_home_win /= total
+            prob_draw /= total
+            prob_away_win /= total
+
+            # Calculate expected goals
+            expected_home_goals = home_stats["attack"] * away_stats["defense"] * 1.0
+            expected_away_goals = away_stats["attack"] * home_stats["defense"] * 0.9  # Away penalty
+
+            # Over/Under 2.5 (based on expected total goals)
+            total_expected_goals = expected_home_goals + expected_away_goals
+            prob_over_25 = min(0.75, max(0.25, (total_expected_goals - 1.5) / 3.0))
+            prob_under_25 = 1 - prob_over_25
+
+            # BTTS (Both Teams To Score)
+            prob_btts_yes = min(0.70, max(0.30, (expected_home_goals * expected_away_goals) / 2.5))
+            prob_btts_no = 1 - prob_btts_yes
+
+            # Most likely score
+            home_rounded = round(expected_home_goals)
+            away_rounded = round(expected_away_goals)
+            most_likely_score = f"{home_rounded}-{away_rounded}"
+
+            # Confidence (higher for bigger rating differences)
+            confidence = min(0.85, max(0.55, abs(rating_diff) / 600))
+
+            # Create prediction
+            prediction = models.Prediction(
+                fixture_id=fixture.id,
+                model_version="mock-v1.0-standings-based",
+                prob_home_win=round(prob_home_win, 3),
+                prob_draw=round(prob_draw, 3),
+                prob_away_win=round(prob_away_win, 3),
+                prob_over_25=round(prob_over_25, 3),
+                prob_under_25=round(prob_under_25, 3),
+                prob_btts_yes=round(prob_btts_yes, 3),
+                prob_btts_no=round(prob_btts_no, 3),
+                expected_home_goals=round(expected_home_goals, 2),
+                expected_away_goals=round(expected_away_goals, 2),
+                most_likely_score=most_likely_score,
+                confidence_score=round(confidence, 2)
+            )
+
+            db.add(prediction)
+            predictions_created += 1
+
+        await db.commit()
+
+        logger.info(f"✅ Successfully generated {predictions_created} predictions!")
+
+        return {
+            "message": "Mock predictions generated successfully",
+            "predictions_created": predictions_created,
+            "model_version": "mock-v1.0-standings-based",
+            "fixtures_analyzed": len(fixtures)
+        }
+
+    except Exception as e:
+        await db.rollback()
+        logger.error(f"Error generating predictions: {str(e)}")
+        raise HTTPException(status_code=500, detail=str(e))

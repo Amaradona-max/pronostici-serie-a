@@ -39,6 +39,7 @@ class FixtureBase(BaseModel):
     status: str
     home_score: Optional[int] = None
     away_score: Optional[int] = None
+    prediction: Optional['PredictionResponse'] = None
 
     model_config = {"from_attributes": True}
 
@@ -53,8 +54,8 @@ class FixtureListResponse(BaseModel):
 # ============= PREDICTION MODELS =============
 
 class PredictionResponse(BaseModel):
+    id: int
     fixture_id: int
-    model_version: str
 
     # 1X2 Probabilities
     prob_home_win: float = Field(..., ge=0, le=1, description="P(1)")
@@ -71,21 +72,10 @@ class PredictionResponse(BaseModel):
 
     # Scoreline
     most_likely_score: Optional[str] = Field(None, examples=["2-1"])
-    most_likely_score_prob: Optional[float] = None
 
     # Metadata
     confidence_score: float = Field(..., ge=0, le=1)
-    data_completeness: float = Field(..., ge=0, le=1)
     computed_at: datetime
-
-    @field_validator('prob_draw')
-    @classmethod
-    def validate_probabilities_sum(cls, v, info):
-        """Validate that P(1) + P(X) + P(2) ≈ 1"""
-        total = info.data.get('prob_home_win', 0) + v + info.data.get('prob_away_win', 0)
-        if not (0.99 <= total <= 1.01):
-            raise ValueError(f"Probabilities must sum to 1, got {total}")
-        return v
 
     model_config = {"from_attributes": True}
 

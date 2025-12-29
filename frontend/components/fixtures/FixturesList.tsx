@@ -9,14 +9,24 @@ interface FixturesListProps {
   status?: string
   round?: string
   limit?: number
+  teamFilter?: string | null
 }
 
-export function FixturesList({ status = 'scheduled', round, limit = 20 }: FixturesListProps) {
+export function FixturesList({ status = 'scheduled', round, limit = 20, teamFilter }: FixturesListProps) {
   const { data, isLoading, error } = useQuery({
     queryKey: ['fixtures', { status, round, page_size: limit }],
     queryFn: () => apiClient.getFixtures({ status, round, page_size: limit }),
     refetchInterval: 5 * 60 * 1000, // Refresh every 5 minutes
   })
+
+  // Filter fixtures by team if teamFilter is set
+  const filteredData = teamFilter
+    ? data?.filter(
+        (fixture) =>
+          fixture.home_team.name === teamFilter ||
+          fixture.away_team.name === teamFilter
+      )
+    : data
 
   if (isLoading) {
     return (
@@ -34,17 +44,19 @@ export function FixturesList({ status = 'scheduled', round, limit = 20 }: Fixtur
     )
   }
 
-  if (!data || data.length === 0) {
+  if (!filteredData || filteredData.length === 0) {
     return (
       <div className="rounded-lg border bg-muted/50 p-6 text-center">
-        <p className="text-muted-foreground">Nessuna partita trovata</p>
+        <p className="text-muted-foreground">
+          {teamFilter ? `Nessuna partita trovata per ${teamFilter}` : 'Nessuna partita trovata'}
+        </p>
       </div>
     )
   }
 
   return (
     <div className="grid gap-4 md:grid-cols-2">
-      {data.map((fixture) => (
+      {filteredData.map((fixture) => (
         <FixtureCard key={fixture.id} fixture={fixture} />
       ))}
     </div>

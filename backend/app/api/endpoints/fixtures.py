@@ -87,10 +87,11 @@ async def get_fixtures(
         count_query = select(func.count()).select_from(query.subquery())
         total = (await db.execute(count_query)).scalar()
 
-        # Add pagination and eager loading
+        # Add pagination and eager loading (including predictions)
         query = query.options(
             selectinload(Fixture.home_team),
-            selectinload(Fixture.away_team)
+            selectinload(Fixture.away_team),
+            selectinload(Fixture.predictions)
         ).order_by(Fixture.match_date).offset((page - 1) * page_size).limit(page_size)
 
         result = await db.execute(query)
@@ -99,6 +100,28 @@ async def get_fixtures(
         # Convert to response models
         fixture_responses = []
         for f in fixtures:
+            # Get latest prediction if available
+            latest_prediction = None
+            if f.predictions:
+                # Sort by created_at descending and get first
+                sorted_predictions = sorted(f.predictions, key=lambda p: p.created_at, reverse=True)
+                if sorted_predictions:
+                    pred = sorted_predictions[0]
+                    latest_prediction = PredictionResponse(
+                        id=pred.id,
+                        fixture_id=pred.fixture_id,
+                        prob_home_win=pred.prob_home_win,
+                        prob_draw=pred.prob_draw,
+                        prob_away_win=pred.prob_away_win,
+                        prob_over_25=pred.prob_over_25,
+                        prob_under_25=pred.prob_under_25,
+                        prob_btts_yes=pred.prob_btts_yes,
+                        prob_btts_no=pred.prob_btts_no,
+                        most_likely_score=pred.most_likely_score,
+                        confidence_score=pred.confidence_score,
+                        computed_at=pred.created_at
+                    )
+
             fixture_responses.append(FixtureBase(
                 id=f.id,
                 home_team=TeamBase.model_validate(f.home_team),
@@ -107,7 +130,8 @@ async def get_fixtures(
                 round=f.round,
                 status=f.status,
                 home_score=f.home_score,
-                away_score=f.away_score
+                away_score=f.away_score,
+                prediction=latest_prediction
             ))
 
         return FixtureListResponse(
