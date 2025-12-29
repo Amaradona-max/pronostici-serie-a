@@ -19,8 +19,8 @@ export interface Fixture {
   status: 'scheduled' | 'live' | 'finished' | 'postponed' | 'cancelled'
   home_score?: number
   away_score?: number
-  round: string
-  season: string
+  round?: string
+  season?: string
 }
 
 export interface Prediction {
@@ -78,19 +78,32 @@ class ApiClient {
 
   private async request<T>(endpoint: string, options?: RequestInit): Promise<T> {
     const url = `${this.baseUrl}${endpoint}`
-    const response = await fetch(url, {
-      ...options,
-      headers: {
-        'Content-Type': 'application/json',
-        ...options?.headers,
-      },
-    })
 
-    if (!response.ok) {
-      throw new Error(`API Error: ${response.status} ${response.statusText}`)
+    try {
+      const response = await fetch(url, {
+        ...options,
+        headers: {
+          'Content-Type': 'application/json',
+          ...options?.headers,
+        },
+      })
+
+      if (!response.ok) {
+        const errorText = await response.text()
+        console.error(`API Error [${response.status}]: ${url}`, errorText)
+        throw new Error(`API Error: ${response.status} ${response.statusText}`)
+      }
+
+      return response.json()
+    } catch (error) {
+      console.error('API Request Failed:', {
+        url,
+        baseUrl: this.baseUrl,
+        endpoint,
+        error
+      })
+      throw error
     }
-
-    return response.json()
   }
 
   // Health
