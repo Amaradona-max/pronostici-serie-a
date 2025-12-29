@@ -5,10 +5,10 @@ import { Card, CardContent } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
 import { formatDate } from '@/lib/utils'
 import { ChevronRight, Calendar, Clock } from 'lucide-react'
-import type { Fixture } from '@/lib/api'
+import type { FixtureWithPrediction } from '@/lib/api'
 
 interface FixtureCardProps {
-  fixture: Fixture
+  fixture: FixtureWithPrediction
 }
 
 export function FixtureCard({ fixture }: FixtureCardProps) {

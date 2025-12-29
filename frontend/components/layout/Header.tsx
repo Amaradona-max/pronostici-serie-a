@@ -46,6 +46,12 @@ export function Header() {
           >
             Partite
           </Link>
+          <Link
+            href="/statistiche"
+            className="transition-colors hover:text-foreground/80 text-foreground/60 whitespace-nowrap"
+          >
+            Statistiche
+          </Link>
         </nav>
 
         <Button

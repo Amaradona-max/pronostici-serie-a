@@ -3,6 +3,7 @@
 import { FixturesList } from '@/components/fixtures/FixturesList'
 import { StatsOverview } from '@/components/stats/StatsOverview'
 import { TeamSelector } from '@/components/filters/TeamSelector'
+import { MatchDetailDropdown } from '@/components/predictions/MatchDetailDropdown'
 import { useState } from 'react'
 
 export default function HomePage() {
@@ -21,6 +22,12 @@ export default function HomePage() {
 
       <StatsOverview />
 
+      {/* Analisi Dettagliata Partita */}
+      <div className="mt-8">
+        <MatchDetailDropdown />
+      </div>
+
+      {/* Lista Partite */}
       <div className="mt-8">
         <div className="flex items-center justify-between mb-4">
           <h2 className="text-2xl font-bold">Prossime Partite</h2>

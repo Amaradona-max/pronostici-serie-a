@@ -16,9 +16,9 @@ interface TeamSelectorProps {
 }
 
 export function TeamSelector({ selectedTeam, onTeamChange }: TeamSelectorProps) {
-  const { data: standings } = useQuery({
-    queryKey: ['standings-for-filter'],
-    queryFn: () => apiClient.getStandings(),
+  const { data: teams } = useQuery({
+    queryKey: ['teams-for-filter'],
+    queryFn: () => apiClient.getTeams(),
   })
 
   return (
@@ -31,9 +31,9 @@ export function TeamSelector({ selectedTeam, onTeamChange }: TeamSelectorProps) 
       </SelectTrigger>
       <SelectContent>
         <SelectItem value="all">Tutte le squadre</SelectItem>
-        {standings?.map((team) => (
-          <SelectItem key={team.team_name} value={team.team_name}>
-            {team.team_short_name} - {team.team_name}
+        {teams?.map((team) => (
+          <SelectItem key={team.name} value={team.name}>
+            {team.short_name || team.name}
           </SelectItem>
         ))}
       </SelectContent>
