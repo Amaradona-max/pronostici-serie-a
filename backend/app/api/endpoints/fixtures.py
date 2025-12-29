@@ -10,7 +10,7 @@ from typing import Optional
 from datetime import date, datetime
 
 from app.db.engine import get_db
-from app.db.models import Fixture, Team, Stadium, Prediction, TeamStats, Injury, Suspension
+from app.db.models import Fixture, Team, Prediction, TeamStats, Injury, Suspension
 from app.api.schemas import (
     FixtureListResponse,
     FixtureBase,
@@ -19,8 +19,7 @@ from app.api.schemas import (
     TeamStatsResponse,
     InjuryResponse,
     SuspensionResponse,
-    TeamBase,
-    StadiumInfo
+    TeamBase
 )
 import logging
 
@@ -91,8 +90,7 @@ async def get_fixtures(
         # Add pagination and eager loading
         query = query.options(
             selectinload(Fixture.home_team),
-            selectinload(Fixture.away_team),
-            selectinload(Fixture.stadium)
+            selectinload(Fixture.away_team)
         ).order_by(Fixture.match_date).offset((page - 1) * page_size).limit(page_size)
 
         result = await db.execute(query)
@@ -108,7 +106,6 @@ async def get_fixtures(
                 match_date=f.match_date,
                 round=f.round,
                 status=f.status,
-                stadium=StadiumInfo.model_validate(f.stadium) if f.stadium else None,
                 home_score=f.home_score,
                 away_score=f.away_score
             ))
@@ -148,7 +145,6 @@ async def get_match_detail(
         query = select(Fixture).where(Fixture.id == fixture_id).options(
             selectinload(Fixture.home_team),
             selectinload(Fixture.away_team),
-            selectinload(Fixture.stadium),
             selectinload(Fixture.predictions)
         )
 
