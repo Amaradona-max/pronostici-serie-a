@@ -52,7 +52,11 @@ export function ScorerProbabilities({
     <div className="mt-4 border border-orange-500/20 rounded-lg overflow-hidden">
       {/* Header - Always visible */}
       <button
-        onClick={fetchData}
+        onClick={(e) => {
+          e.preventDefault()
+          e.stopPropagation()
+          fetchData()
+        }}
         className="w-full p-4 bg-gradient-to-r from-orange-500/10 to-red-500/10 hover:from-orange-500/15 hover:to-red-500/15 transition-colors flex items-center justify-between"
       >
         <div className="flex items-center gap-2">

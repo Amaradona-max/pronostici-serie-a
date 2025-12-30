@@ -17,8 +17,13 @@ from app.api.schemas import (
     ScorerProbability,
     FixtureLineupsResponse,
     TeamLineup,
-    LineupPlayer
+    LineupPlayer,
+    FixtureBiorhythmsResponse,
+    TeamBiorhythm,
+    PlayerBiorhythm
 )
+from app.utils.biorhythm import calculate_player_biorhythm, compare_team_biorhythms
+from app.data.player_birthdates import get_birthdate, get_team_birthdates, PLAYER_BIRTHDATES
 import logging
 
 logger = logging.getLogger(__name__)
@@ -969,4 +974,162 @@ async def get_probable_lineups(
         raise
     except Exception as e:
         logger.error(f"Error fetching lineups: {str(e)}")
+        raise HTTPException(status_code=500, detail=str(e))
+
+
+@router.get(
+    "/{fixture_id}/biorhythms",
+    response_model=FixtureBiorhythmsResponse,
+    summary="Get biorhythms for both teams"
+)
+async def get_fixture_biorhythms(
+    fixture_id: int,
+    db: AsyncSession = Depends(get_db)
+):
+    """
+    Calcola i bioritmi di entrambe le squadre per una partita.
+
+    I bioritmi analizzano i cicli biologici dei calciatori:
+    - Fisico (23 giorni): forza, resistenza, coordinazione
+    - Emotivo (28 giorni): umore, creatività, stabilità
+    - Intellettuale (33 giorni): concentrazione, tattica, memoria
+
+    Basato sulla teoria dei bioritmi applicata allo sport.
+    Utilizza le date di nascita reali dei calciatori della Serie A.
+    """
+    try:
+        # Get fixture
+        fixture_query = select(Fixture).where(Fixture.id == fixture_id).options(
+            selectinload(Fixture.home_team),
+            selectinload(Fixture.away_team)
+        )
+        result = await db.execute(fixture_query)
+        fixture = result.scalar_one_or_none()
+
+        if not fixture:
+            raise HTTPException(status_code=404, detail="Fixture not found")
+
+        # Get lineups from mock data
+        home_lineup_data = MOCK_LINEUPS.get(fixture.home_team.name)
+        away_lineup_data = MOCK_LINEUPS.get(fixture.away_team.name)
+
+        # Get match date
+        match_date = fixture.match_date.date() if isinstance(fixture.match_date, datetime) else fixture.match_date
+
+        # Calculate home team biorhythms
+        home_birthdates = get_team_birthdates(fixture.home_team.name, home_lineup_data)
+        home_team_stats = compare_team_biorhythms(home_birthdates, match_date)
+
+        # Calculate individual biorhythms for top performers (home)
+        home_player_biorhythms = []
+        if home_lineup_data:
+            for player in home_lineup_data.get("starters", [])[:11]:  # Solo titolari
+                birthdate = get_birthdate(player["name"])
+                if birthdate:
+                    bio = calculate_player_biorhythm(birthdate, match_date)
+                    home_player_biorhythms.append({
+                        'player_name': player["name"],
+                        'position': player["position"],
+                        'bio': bio
+                    })
+
+        # Sort by overall score and take top 3
+        home_player_biorhythms.sort(key=lambda x: x['bio'].overall, reverse=True)
+        home_top_performers = [
+            PlayerBiorhythm(
+                player_name=p['player_name'],
+                position=p['position'],
+                physical=p['bio'].physical,
+                emotional=p['bio'].emotional,
+                intellectual=p['bio'].intellectual,
+                overall=p['bio'].overall,
+                status=p['bio'].status
+            )
+            for p in home_player_biorhythms[:3]
+        ]
+
+        # Calculate away team biorhythms
+        away_birthdates = get_team_birthdates(fixture.away_team.name, away_lineup_data)
+        away_team_stats = compare_team_biorhythms(away_birthdates, match_date)
+
+        # Calculate individual biorhythms for top performers (away)
+        away_player_biorhythms = []
+        if away_lineup_data:
+            for player in away_lineup_data.get("starters", [])[:11]:  # Solo titolari
+                birthdate = get_birthdate(player["name"])
+                if birthdate:
+                    bio = calculate_player_biorhythm(birthdate, match_date)
+                    away_player_biorhythms.append({
+                        'player_name': player["name"],
+                        'position': player["position"],
+                        'bio': bio
+                    })
+
+        # Sort by overall score and take top 3
+        away_player_biorhythms.sort(key=lambda x: x['bio'].overall, reverse=True)
+        away_top_performers = [
+            PlayerBiorhythm(
+                player_name=p['player_name'],
+                position=p['position'],
+                physical=p['bio'].physical,
+                emotional=p['bio'].emotional,
+                intellectual=p['bio'].intellectual,
+                overall=p['bio'].overall,
+                status=p['bio'].status
+            )
+            for p in away_player_biorhythms[:3]
+        ]
+
+        # Build team biorhythm responses
+        home_team_bio = TeamBiorhythm(
+            team_name=fixture.home_team.name,
+            avg_physical=home_team_stats['avg_physical'],
+            avg_emotional=home_team_stats['avg_emotional'],
+            avg_intellectual=home_team_stats['avg_intellectual'],
+            avg_overall=home_team_stats['avg_overall'],
+            players_excellent=home_team_stats['players_excellent'],
+            players_good=home_team_stats['players_good'],
+            players_low=home_team_stats['players_low'],
+            players_critical=home_team_stats['players_critical'],
+            total_players=home_team_stats['total_players'],
+            top_performers=home_top_performers
+        )
+
+        away_team_bio = TeamBiorhythm(
+            team_name=fixture.away_team.name,
+            avg_physical=away_team_stats['avg_physical'],
+            avg_emotional=away_team_stats['avg_emotional'],
+            avg_intellectual=away_team_stats['avg_intellectual'],
+            avg_overall=away_team_stats['avg_overall'],
+            players_excellent=away_team_stats['players_excellent'],
+            players_good=away_team_stats['players_good'],
+            players_low=away_team_stats['players_low'],
+            players_critical=away_team_stats['players_critical'],
+            total_players=away_team_stats['total_players'],
+            top_performers=away_top_performers
+        )
+
+        # Determine biorhythm advantage
+        home_overall = home_team_stats['avg_overall']
+        away_overall = away_team_stats['avg_overall']
+
+        if abs(home_overall - away_overall) < 10:
+            advantage = "neutral"
+        elif home_overall > away_overall:
+            advantage = "home"
+        else:
+            advantage = "away"
+
+        return FixtureBiorhythmsResponse(
+            fixture_id=fixture_id,
+            match_date=fixture.match_date,
+            home_team_biorhythm=home_team_bio,
+            away_team_biorhythm=away_team_bio,
+            biorhythm_advantage=advantage
+        )
+
+    except HTTPException:
+        raise
+    except Exception as e:
+        logger.error(f"Error calculating biorhythms: {str(e)}")
         raise HTTPException(status_code=500, detail=str(e))

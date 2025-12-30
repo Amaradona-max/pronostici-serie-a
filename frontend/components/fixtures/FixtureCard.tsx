@@ -9,6 +9,7 @@ import type { FixtureWithPrediction } from '@/lib/api'
 import { ExpectedGoals } from '@/components/predictions/ExpectedGoals'
 import { ScorerProbabilities } from '@/components/predictions/ScorerProbabilities'
 import { ProbableLineups } from '@/components/predictions/ProbableLineups'
+import { TeamBiorhythms } from '@/components/predictions/TeamBiorhythms'
 
 interface FixtureCardProps {
   fixture: FixtureWithPrediction
@@ -165,6 +166,13 @@ export function FixtureCard({ fixture }: FixtureCardProps) {
                   homeTeamName={fixture.home_team.name}
                   awayTeamName={fixture.away_team.name}
                   matchDate={fixture.match_date}
+                />
+
+                {/* Team Biorhythms */}
+                <TeamBiorhythms
+                  fixtureId={fixture.id}
+                  homeTeamName={fixture.home_team.name}
+                  awayTeamName={fixture.away_team.name}
                 />
               </div>
             )}

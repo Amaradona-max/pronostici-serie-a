@@ -207,3 +207,46 @@ class FixtureLineupsResponse(BaseModel):
     available_from: datetime  # 1 ora prima della partita
     home_lineup: Optional[TeamLineup] = None
     away_lineup: Optional[TeamLineup] = None
+
+
+# ============= BIORHYTHM MODELS =============
+
+class PlayerBiorhythm(BaseModel):
+    """Bioritmi di un singolo calciatore"""
+    player_name: str
+    position: str
+    physical: float = Field(..., ge=-100, le=100, description="Bioritmo fisico")
+    emotional: float = Field(..., ge=-100, le=100, description="Bioritmo emotivo")
+    intellectual: float = Field(..., ge=-100, le=100, description="Bioritmo intellettuale")
+    overall: float = Field(..., ge=-100, le=100, description="Media ponderata")
+    status: str = Field(..., description="excellent, good, low, critical")
+
+    model_config = {"from_attributes": True}
+
+
+class TeamBiorhythm(BaseModel):
+    """Bioritmi aggregati di una squadra"""
+    team_name: str
+    avg_physical: float
+    avg_emotional: float
+    avg_intellectual: float
+    avg_overall: float
+    players_excellent: int  # Numero giocatori in forma eccellente
+    players_good: int
+    players_low: int
+    players_critical: int
+    total_players: int
+    top_performers: List[PlayerBiorhythm] = Field(default_factory=list, description="Top 3 giocatori per bioritmo")
+
+    model_config = {"from_attributes": True}
+
+
+class FixtureBiorhythmsResponse(BaseModel):
+    """Bioritmi completi per una partita"""
+    fixture_id: int
+    match_date: datetime
+    home_team_biorhythm: TeamBiorhythm
+    away_team_biorhythm: TeamBiorhythm
+    biorhythm_advantage: str = Field(..., description="home, away, neutral")
+
+    model_config = {"from_attributes": True}

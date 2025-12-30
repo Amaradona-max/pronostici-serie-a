@@ -138,7 +138,11 @@ export function ProbableLineups({
     <div className="mt-4 border border-green-500/20 rounded-lg overflow-hidden">
       {/* Header */}
       <button
-        onClick={fetchData}
+        onClick={(e) => {
+          e.preventDefault()
+          e.stopPropagation()
+          fetchData()
+        }}
         className="w-full p-4 bg-gradient-to-r from-green-500/10 to-emerald-500/10 hover:from-green-500/15 hover:to-emerald-500/15 transition-colors flex items-center justify-between"
       >
         <div className="flex items-center gap-2">
