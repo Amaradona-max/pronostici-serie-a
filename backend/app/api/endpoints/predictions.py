@@ -655,7 +655,7 @@ MOCK_LINEUPS = {
             {"name": "N. Andrade", "position": "GK", "number": 1},
             {"name": "A. Calabresi", "position": "DF", "number": 4},
             {"name": "A. Caracciolo", "position": "DF", "number": 5},
-            {"name": "M. Canestrelli", "position": "DF", "number": "13},
+            {"name": "M. Canestrelli", "position": "DF", "number": 13},
             {"name": "S. Beruatto", "position": "DF", "number": 3},
             {"name": "G. Piccinini", "position": "MF", "number": 21},
             {"name": "M. Marin", "position": "MF", "number": 20},
