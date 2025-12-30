@@ -73,6 +73,10 @@ class PredictionResponse(BaseModel):
     # Scoreline
     most_likely_score: Optional[str] = Field(None, examples=["2-1"])
 
+    # Expected Goals
+    expected_home_goals: Optional[float] = Field(None, ge=0, description="xG casa")
+    expected_away_goals: Optional[float] = Field(None, ge=0, description="xG trasferta")
+
     # Metadata
     confidence_score: float = Field(..., ge=0, le=1)
     computed_at: datetime
@@ -155,3 +159,51 @@ class ModelPerformanceResponse(BaseModel):
 
     # Optional
     roi_if_betting: Optional[float] = None
+
+
+# ============= SCORER PROBABILITY MODELS =============
+
+class ScorerProbability(BaseModel):
+    """Probabilità che un giocatore segni in una partita"""
+    player_name: str
+    position: str  # "Attaccante", "Centrocampista", "Difensore"
+    probability: float = Field(..., ge=0, le=1, description="P(gol)")
+
+    model_config = {"from_attributes": True}
+
+
+class FixtureScorersResponse(BaseModel):
+    """Top 5 probabili marcatori per squadra"""
+    fixture_id: int
+    home_team_scorers: List[ScorerProbability] = Field(default_factory=list)
+    away_team_scorers: List[ScorerProbability] = Field(default_factory=list)
+
+
+# ============= LINEUP MODELS =============
+
+class LineupPlayer(BaseModel):
+    """Giocatore in formazione"""
+    name: str
+    position: str  # "GK", "DF", "MF", "FW"
+    jersey_number: int
+    is_starter: bool  # True = titolare, False = panchina
+
+    model_config = {"from_attributes": True}
+
+
+class TeamLineup(BaseModel):
+    """Formazione squadra (11 titolari + 7 panchina)"""
+    team_name: str
+    formation: str  # Es: "4-3-3", "3-5-2"
+    starters: List[LineupPlayer]  # 11 giocatori
+    bench: List[LineupPlayer]  # 7 giocatori
+
+    model_config = {"from_attributes": True}
+
+
+class FixtureLineupsResponse(BaseModel):
+    """Formazioni probabili per una partita"""
+    fixture_id: int
+    available_from: datetime  # 1 ora prima della partita
+    home_lineup: Optional[TeamLineup] = None
+    away_lineup: Optional[TeamLineup] = None

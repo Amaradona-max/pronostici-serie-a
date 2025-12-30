@@ -35,6 +35,8 @@ export interface Prediction {
   prob_btts_no: number
   most_likely_score?: string
   most_likely_score_prob?: number
+  expected_home_goals?: number
+  expected_away_goals?: number
   confidence_score: number
   computed_at: string
 }

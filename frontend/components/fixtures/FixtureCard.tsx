@@ -6,6 +6,9 @@ import { Badge } from '@/components/ui/badge'
 import { formatDate } from '@/lib/utils'
 import { ChevronRight, Calendar, Clock } from 'lucide-react'
 import type { FixtureWithPrediction } from '@/lib/api'
+import { ExpectedGoals } from '@/components/predictions/ExpectedGoals'
+import { ScorerProbabilities } from '@/components/predictions/ScorerProbabilities'
+import { ProbableLineups } from '@/components/predictions/ProbableLineups'
 
 interface FixtureCardProps {
   fixture: FixtureWithPrediction
@@ -140,6 +143,29 @@ export function FixtureCard({ fixture }: FixtureCardProps) {
                     Affidabilità {(fixture.prediction.confidence_score * 100).toFixed(0)}%
                   </Badge>
                 </div>
+
+                {/* Expected Goals */}
+                <ExpectedGoals
+                  homeTeamName={fixture.home_team.short_name || fixture.home_team.name}
+                  awayTeamName={fixture.away_team.short_name || fixture.away_team.name}
+                  expectedHomeGoals={fixture.prediction.expected_home_goals}
+                  expectedAwayGoals={fixture.prediction.expected_away_goals}
+                />
+
+                {/* Scorer Probabilities */}
+                <ScorerProbabilities
+                  fixtureId={fixture.id}
+                  homeTeamName={fixture.home_team.name}
+                  awayTeamName={fixture.away_team.name}
+                />
+
+                {/* Probable Lineups */}
+                <ProbableLineups
+                  fixtureId={fixture.id}
+                  homeTeamName={fixture.home_team.name}
+                  awayTeamName={fixture.away_team.name}
+                  matchDate={fixture.match_date}
+                />
               </div>
             )}
 
