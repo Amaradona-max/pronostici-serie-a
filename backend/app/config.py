@@ -53,10 +53,21 @@ class Settings(BaseSettings):
             return ["*"]
         try:
             # Try to parse as JSON array
-            return json.loads(self.CORS_ORIGINS)
+            origins = json.loads(self.CORS_ORIGINS)
         except (json.JSONDecodeError, TypeError):
             # Fallback: split by comma
-            return [origin.strip() for origin in self.CORS_ORIGINS.split(",")]
+            origins = [origin.strip() for origin in self.CORS_ORIGINS.split(",")]
+
+        # Always include localhost for development
+        localhost_origins = [
+            "http://localhost:3000",
+            "http://localhost:3001",
+            "http://localhost:3002",
+            "http://127.0.0.1:3000",
+            "http://127.0.0.1:3001",
+            "http://127.0.0.1:3002"
+        ]
+        return list(set(origins + localhost_origins))
 
     @property
     def is_production(self) -> bool:
