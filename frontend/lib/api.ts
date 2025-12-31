@@ -151,11 +151,11 @@ class ApiClient {
 
   // Teams
   async getTeams(): Promise<Team[]> {
-    return this.request('/teams')
+    return this.request('/api/v1/teams')
   }
 
   async getTeam(id: number): Promise<Team> {
-    return this.request(`/teams/${id}`)
+    return this.request(`/api/v1/teams/${id}`)
   }
 }
 

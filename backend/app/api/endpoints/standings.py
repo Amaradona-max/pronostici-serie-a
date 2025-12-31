@@ -72,54 +72,60 @@ async def get_standings(
 ):
     """
     Get Serie A standings (classifica) for the season.
-    Real data as of Giornata 17 (Dec 28, 2025).
-    Source: Sky Sport, IlSussidiario, Wikipedia Serie A 2025-2026
+    Real data from database (updated to Giornata 17, Dec 29, 2025).
+    Source: Sky Sport, Corriere dello Sport
     """
     try:
         logger.info(f"Fetching standings for season {season}")
 
-        # Real standings after Giornata 17 (Dec 28, 2025)
-        # Source: https://www.ilsussidiario.net, https://sport.sky.it/calcio/serie-a/classifica
-        real_standings_data = [
-            {"team": "Inter", "mp": 17, "w": 11, "d": 3, "l": 3, "gf": 38, "ga": 18, "pts": 36},
-            {"team": "AC Milan", "mp": 17, "w": 11, "d": 2, "l": 4, "gf": 35, "ga": 20, "pts": 35},
-            {"team": "Napoli", "mp": 17, "w": 11, "d": 1, "l": 5, "gf": 32, "ga": 16, "pts": 34},
-            {"team": "Juventus", "mp": 17, "w": 9, "d": 5, "l": 3, "gf": 28, "ga": 15, "pts": 32},
-            {"team": "AS Roma", "mp": 17, "w": 9, "d": 3, "l": 5, "gf": 30, "ga": 21, "pts": 30},
-            {"team": "Como", "mp": 17, "w": 8, "d": 3, "l": 6, "gf": 26, "ga": 23, "pts": 27},
-            {"team": "Bologna", "mp": 17, "w": 7, "d": 5, "l": 5, "gf": 24, "ga": 22, "pts": 26},
-            {"team": "Lazio", "mp": 17, "w": 7, "d": 3, "l": 7, "gf": 27, "ga": 26, "pts": 24},
-            {"team": "Atalanta", "mp": 17, "w": 6, "d": 4, "l": 7, "gf": 28, "ga": 28, "pts": 22},
-            {"team": "Udinese", "mp": 17, "w": 6, "d": 4, "l": 7, "gf": 20, "ga": 24, "pts": 22},
-            {"team": "Sassuolo", "mp": 17, "w": 6, "d": 4, "l": 7, "gf": 22, "ga": 26, "pts": 22},
-            {"team": "Cremonese", "mp": 17, "w": 6, "d": 3, "l": 8, "gf": 21, "ga": 27, "pts": 21},
-            {"team": "Torino", "mp": 17, "w": 5, "d": 5, "l": 7, "gf": 18, "ga": 22, "pts": 20},
-            {"team": "Cagliari", "mp": 17, "w": 5, "d": 3, "l": 9, "gf": 17, "ga": 28, "pts": 18},
-            {"team": "Parma", "mp": 17, "w": 4, "d": 5, "l": 8, "gf": 19, "ga": 27, "pts": 17},
-            {"team": "Lecce", "mp": 17, "w": 4, "d": 4, "l": 9, "gf": 16, "ga": 29, "pts": 16},
-            {"team": "Genoa", "mp": 17, "w": 3, "d": 5, "l": 9, "gf": 14, "ga": 27, "pts": 14},
-            {"team": "Hellas Verona", "mp": 17, "w": 3, "d": 3, "l": 11, "gf": 15, "ga": 32, "pts": 12},
-            {"team": "Pisa", "mp": 17, "w": 2, "d": 5, "l": 10, "gf": 13, "ga": 30, "pts": 11},
-            {"team": "Fiorentina", "mp": 17, "w": 2, "d": 3, "l": 12, "gf": 12, "ga": 34, "pts": 9},
-        ]
+        # Query team_stats from database
+        query = (
+            select(models.TeamStats, models.Team)
+            .join(models.Team, models.TeamStats.team_id == models.Team.id)
+            .where(models.TeamStats.season == season)
+        )
 
+        result = await db.execute(query)
+        teams_data = result.all()
+
+        if not teams_data:
+            logger.warning(f"No standings data found for season {season}")
+            return []
+
+        # Calculate points and sort
+        standings_list = []
+        for team_stats, team in teams_data:
+            points = (team_stats.wins * 3) + team_stats.draws
+            goal_diff = team_stats.goals_scored - team_stats.goals_conceded
+
+            standings_list.append({
+                "team_name": team.name,
+                "team_short_name": team.short_name,
+                "matches_played": team_stats.matches_played,
+                "wins": team_stats.wins,
+                "draws": team_stats.draws,
+                "losses": team_stats.losses,
+                "goals_scored": team_stats.goals_scored,
+                "goals_conceded": team_stats.goals_conceded,
+                "goal_difference": goal_diff,
+                "points": points
+            })
+
+        # Sort by points (desc), then goal difference (desc), then goals scored (desc)
+        standings_list.sort(
+            key=lambda x: (x["points"], x["goal_difference"], x["goals_scored"]),
+            reverse=True
+        )
+
+        # Add position
         standings = []
-        for idx, data in enumerate(real_standings_data, 1):
+        for idx, data in enumerate(standings_list, 1):
             standings.append(TeamStandingResponse(
                 position=idx,
-                team_name=data["team"],
-                team_short_name=data["team"][:3].upper(),
-                matches_played=data["mp"],
-                wins=data["w"],
-                draws=data["d"],
-                losses=data["l"],
-                goals_scored=data["gf"],
-                goals_conceded=data["ga"],
-                goal_difference=data["gf"] - data["ga"],
-                points=data["pts"]
+                **data
             ))
 
-        logger.info(f"Returning real standings for {len(standings)} teams")
+        logger.info(f"Returning standings for {len(standings)} teams from database")
         return standings
 
     except Exception as e:

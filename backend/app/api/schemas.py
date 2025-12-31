@@ -79,9 +79,9 @@ class PredictionResponse(BaseModel):
 
     # Metadata
     confidence_score: float = Field(..., ge=0, le=1)
-    computed_at: datetime
+    computed_at: datetime = Field(validation_alias="created_at")
 
-    model_config = {"from_attributes": True}
+    model_config = {"from_attributes": True, "populate_by_name": True}
 
 
 # ============= TEAM STATS MODELS =============

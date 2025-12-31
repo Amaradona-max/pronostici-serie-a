@@ -11,7 +11,7 @@ import logging
 
 from app.config import get_settings
 from app.db.engine import init_db, close_db
-from app.api.endpoints import fixtures, predictions, health, admin, standings
+from app.api.endpoints import fixtures, predictions, health, admin, standings, teams
 
 # Configure logging
 logging.basicConfig(
@@ -98,6 +98,12 @@ app.include_router(
     standings.router,
     prefix="/api/v1/standings",
     tags=["Standings & Statistics"]
+)
+
+app.include_router(
+    teams.router,
+    prefix="/api/v1/teams",
+    tags=["Teams"]
 )
 
 

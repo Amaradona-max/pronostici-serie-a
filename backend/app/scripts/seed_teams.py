@@ -13,6 +13,9 @@ from app.db.models import Team, Stadium, Competition
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 
+# Serie A 2025-2026 Teams (20 teams)
+# PROMOTED FROM SERIE B 2023-24: Parma, Como, Venezia
+# Aggiornato alla Giornata 17 - Dicembre 2024
 SERIE_A_TEAMS = [
     {"name": "Inter", "external_id": 505, "stadium": "San Siro", "city": "Milano"},
     {"name": "AC Milan", "external_id": 489, "stadium": "San Siro", "city": "Milano"},
@@ -25,15 +28,15 @@ SERIE_A_TEAMS = [
     {"name": "Bologna", "external_id": 500, "stadium": "Renato Dall'Ara", "city": "Bologna"},
     {"name": "Torino", "external_id": 503, "stadium": "Olimpico Grande Torino", "city": "Torino"},
     {"name": "Udinese", "external_id": 494, "stadium": "Dacia Arena", "city": "Udine"},
-    {"name": "Empoli", "external_id": 511, "stadium": "Carlo Castellani", "city": "Empoli"},
-    {"name": "Sassuolo", "external_id": 488, "stadium": "Mapei Stadium", "city": "Reggio Emilia"},
-    {"name": "Cagliari", "external_id": 490, "stadium": "Unipol Domus", "city": "Cagliari"},
-    {"name": "Verona", "external_id": 504, "stadium": "Bentegodi", "city": "Verona"},
     {"name": "Lecce", "external_id": 867, "stadium": "Via del Mare", "city": "Lecce"},
-    {"name": "Monza", "external_id": 1579, "stadium": "U-Power Stadium", "city": "Monza"},
-    {"name": "Salernitana", "external_id": 514, "stadium": "Arechi", "city": "Salerno"},
-    {"name": "Como", "external_id": 512, "stadium": "Giuseppe Sinigaglia", "city": "Como"},
-    {"name": "Parma", "external_id": 491, "stadium": "Ennio Tardini", "city": "Parma"},
+    {"name": "Cagliari", "external_id": 490, "stadium": "Unipol Domus", "city": "Cagliari"},
+    {"name": "Hellas Verona", "external_id": 504, "stadium": "Bentegodi", "city": "Verona"},
+    {"name": "Genoa", "external_id": 495, "stadium": "Luigi Ferraris", "city": "Genova"},
+    {"name": "Como", "external_id": 1047, "stadium": "Giuseppe Sinigaglia", "city": "Como"},  # PROMOTED
+    {"name": "Parma", "external_id": 130, "stadium": "Ennio Tardini", "city": "Parma"},  # PROMOTED
+    {"name": "Empoli", "external_id": 749, "stadium": "Carlo Castellani", "city": "Empoli"},
+    {"name": "Venezia", "external_id": 607, "stadium": "Pier Luigi Penzo", "city": "Venezia"},  # PROMOTED
+    {"name": "Monza", "external_id": 2919, "stadium": "U-Power Stadium", "city": "Monza"},
 ]
 
 
@@ -76,8 +79,7 @@ async def seed_teams():
             if not stadium:
                 stadium = Stadium(
                     name=team_data["stadium"],
-                    city=team_data["city"],
-                    home_advantage_factor=1.15  # Default home advantage
+                    city=team_data["city"]
                 )
                 session.add(stadium)
                 await session.flush()
@@ -86,9 +88,8 @@ async def seed_teams():
             new_team = Team(
                 name=team_data["name"],
                 short_name=team_data["name"][:3].upper(),
-                stadium_name=team_data["stadium"],
-                external_id=team_data["external_id"],
-                elo_rating=1500.0  # Default ELO
+                venue_name=team_data["stadium"],
+                external_id=team_data["external_id"]
             )
             session.add(new_team)
 

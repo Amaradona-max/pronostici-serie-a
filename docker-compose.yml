@@ -9,7 +9,7 @@ services:
       POSTGRES_PASSWORD: seriea_password
       POSTGRES_DB: seriea_predictions
     ports:
-      - "5432:5432"
+      - "5433:5432"
     volumes:
       - postgres_data:/var/lib/postgresql/data
     healthcheck:
@@ -55,9 +55,7 @@ services:
       dockerfile: Dockerfile.dev
     container_name: seriea_frontend
     ports:
-      - "3000:3000"
-    environment:
-      - NEXT_PUBLIC_API_URL=http://localhost:8000/api/v1
+      - "3001:3000"
     volumes:
       - ./frontend:/app
       - /app/node_modules
