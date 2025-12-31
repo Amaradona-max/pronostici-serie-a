@@ -202,9 +202,8 @@ class TeamLineup(BaseModel):
 
 
 class FixtureLineupsResponse(BaseModel):
-    """Formazioni probabili per una partita"""
+    """Formazioni probabili per una partita - sempre disponibili"""
     fixture_id: int
-    available_from: datetime  # 1 ora prima della partita
     home_lineup: Optional[TeamLineup] = None
     away_lineup: Optional[TeamLineup] = None
 

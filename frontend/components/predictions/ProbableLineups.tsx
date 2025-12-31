@@ -20,7 +20,6 @@ interface TeamLineup {
 
 interface LineupsData {
   fixture_id: number
-  available_from: string
   home_lineup?: TeamLineup
   away_lineup?: TeamLineup
 }
@@ -167,10 +166,7 @@ export function ProbableLineups({
             <div className="text-center py-8">
               <Clock className="h-8 w-8 text-muted-foreground mx-auto mb-2" />
               <p className="text-sm text-muted-foreground">
-                Formazioni disponibili 1 ora prima della partita
-              </p>
-              <p className="text-xs text-muted-foreground mt-1">
-                Disponibili da: {new Date(data.available_from).toLocaleString('it-IT')}
+                Nessuna formazione disponibile al momento
               </p>
             </div>
           ) : (

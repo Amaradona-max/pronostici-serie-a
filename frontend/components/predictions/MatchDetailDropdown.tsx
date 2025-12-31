@@ -320,7 +320,7 @@ export function MatchDetailDropdown() {
                       <p className="font-medium">Note Importanti:</p>
                       <ul className="list-disc list-inside space-y-1 text-muted-foreground">
                         <li>I pronostici sono generati da algoritmi statistici e non garantiscono il risultato</li>
-                        <li>Le probabilità vengono aggiornate 1 ora prima dell&apos;inizio della partita</li>
+                        <li>Le probabilità vengono aggiornate in tempo reale</li>
                         <li>Considera sempre altri fattori: infortuni, squalifiche, motivazioni</li>
                         <li>Gioca responsabilmente</li>
                       </ul>
@@ -336,7 +336,7 @@ export function MatchDetailDropdown() {
                   <AlertCircle className="h-12 w-12 text-muted-foreground mx-auto mb-4" />
                   <p className="text-lg font-medium">Nessun pronostico disponibile</p>
                   <p className="text-sm text-muted-foreground mt-2">
-                    I pronostici verranno generati 1 ora prima dell&apos;inizio della partita
+                    I pronostici vengono generati in tempo reale
                   </p>
                 </div>
               </CardContent>

@@ -871,7 +871,7 @@ async def get_scorer_probabilities(
 @router.get(
     "/{fixture_id}/lineups",
     response_model=FixtureLineupsResponse,
-    summary="Get probable lineups (available 1h before match)"
+    summary="Get probable lineups (always available)"
 )
 async def get_probable_lineups(
     fixture_id: int,
@@ -880,7 +880,7 @@ async def get_probable_lineups(
     """
     Restituisce le formazioni probabili per una partita.
 
-    Disponibili 1 ora prima del calcio d'inizio.
+    Sempre disponibili in tempo reale.
     Mock implementation con formazioni realistiche basate su rose Serie A 2025-26.
     """
     try:
@@ -895,20 +895,7 @@ async def get_probable_lineups(
         if not fixture:
             raise HTTPException(status_code=404, detail="Fixture not found")
 
-        # Check if lineups are available (1h before match)
-        now = datetime.now(timezone.utc)
-        match_time = fixture.match_date.replace(tzinfo=timezone.utc) if fixture.match_date.tzinfo is None else fixture.match_date
-        one_hour_before = match_time - timedelta(hours=1)
-
-        if now < one_hour_before:
-            return FixtureLineupsResponse(
-                fixture_id=fixture_id,
-                available_from=one_hour_before,
-                home_lineup=None,
-                away_lineup=None
-            )
-
-        # Get lineups from mock data
+        # Get lineups from mock data (always available)
         home_data = MOCK_LINEUPS.get(fixture.home_team.name)
         away_data = MOCK_LINEUPS.get(fixture.away_team.name)
 
@@ -965,7 +952,6 @@ async def get_probable_lineups(
 
         return FixtureLineupsResponse(
             fixture_id=fixture_id,
-            available_from=one_hour_before,
             home_lineup=home_lineup,
             away_lineup=away_lineup
         )

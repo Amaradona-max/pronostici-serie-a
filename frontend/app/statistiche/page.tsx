@@ -197,7 +197,7 @@ export default function StatistichePage() {
             <p className="text-sm">
               <strong>Note:</strong> Il modello Dixon-Coles utilizza rating ELO, statistiche offensive/difensive
               e form recente per calcolare le probabilità. I pronostici vengono aggiornati automaticamente
-              1 ora prima dell&apos;inizio di ogni partita.
+              in tempo reale.
             </p>
           </div>
         </CardContent>
