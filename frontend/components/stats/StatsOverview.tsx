@@ -54,9 +54,9 @@ export function StatsOverview() {
           <CardTitle className="text-sm font-medium">Ultimo Aggiornamento</CardTitle>
         </CardHeader>
         <CardContent>
-          <div className="text-2xl font-bold">T-1h</div>
+          <div className="text-2xl font-bold text-green-600 animate-pulse">Live</div>
           <p className="text-xs text-muted-foreground">
-            Automatico
+            Tempo Reale
           </p>
         </CardContent>
       </Card>
