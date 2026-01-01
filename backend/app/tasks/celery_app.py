@@ -52,6 +52,12 @@ celery_app.conf.beat_schedule = {
         'schedule': crontab(minute='*/30'),  # Every 30 minutes
     },
 
+    # Live updates
+    'sync-live-fixtures': {
+        'task': 'app.tasks.sync_tasks.sync_live_fixtures',
+        'schedule': crontab(minute='*'),  # Every minute
+    },
+
     # Post-match evaluation
     'evaluate-predictions': {
         'task': 'app.tasks.prediction_tasks.evaluate_finished_matches',

@@ -150,6 +150,38 @@ class APIFootballAdapter(BaseDataProvider):
         logger.info(f"Retrieved {len(fixtures)} fixtures from API-Football")
         return fixtures
 
+    async def get_live_fixtures(self) -> List[MatchData]:
+        """Retrieve currently live fixtures for Serie A"""
+        
+        params = {
+            'league': self.SERIE_A_ID,
+            'live': 'all'
+        }
+
+        data = await self._make_request('fixtures', params)
+
+        fixtures = []
+        for item in data.get('response', []):
+            fixture = item['fixture']
+            teams = item['teams']
+            goals = item['goals']
+            league = item['league']
+
+            fixtures.append(MatchData(
+                external_id=fixture['id'],
+                home_team_id=teams['home']['id'],
+                away_team_id=teams['away']['id'],
+                match_date=datetime.fromisoformat(fixture['date'].replace('Z', '+00:00')),
+                status=self._map_status(fixture['status']['short']),
+                home_score=goals['home'],
+                away_score=goals['away'],
+                venue=fixture['venue']['name'] if fixture.get('venue') else None,
+                round=league.get('round')
+            ))
+
+        logger.info(f"Retrieved {len(fixtures)} live fixtures from API-Football")
+        return fixtures
+
     async def get_match_details(self, match_id: int) -> MatchData:
         """Get details for a specific match"""
 

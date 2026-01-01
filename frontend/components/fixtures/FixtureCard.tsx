@@ -80,8 +80,10 @@ export function FixtureCard({ fixture }: FixtureCardProps) {
                     {fixture.home_team.name}
                   </span>
                 </div>
-                {fixture.status === 'finished' && fixture.home_score !== null && (
-                  <span className="text-3xl font-bold text-primary ml-4">{fixture.home_score}</span>
+                {(fixture.status === 'finished' || fixture.status === 'live') && fixture.home_score !== null && (
+                  <span className={`text-3xl font-bold ml-4 ${fixture.status === 'live' ? 'text-green-600 animate-pulse' : 'text-primary'}`}>
+                    {fixture.home_score}
+                  </span>
                 )}
               </div>
 
@@ -104,8 +106,10 @@ export function FixtureCard({ fixture }: FixtureCardProps) {
                     {fixture.away_team.name}
                   </span>
                 </div>
-                {fixture.status === 'finished' && fixture.away_score !== null && (
-                  <span className="text-3xl font-bold text-primary ml-4">{fixture.away_score}</span>
+                {(fixture.status === 'finished' || fixture.status === 'live') && fixture.away_score !== null && (
+                  <span className={`text-3xl font-bold ml-4 ${fixture.status === 'live' ? 'text-green-600 animate-pulse' : 'text-primary'}`}>
+                    {fixture.away_score}
+                  </span>
                 )}
               </div>
             </div>

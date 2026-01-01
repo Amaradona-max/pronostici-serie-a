@@ -78,6 +78,37 @@ class DataProviderOrchestrator:
                 logger.error("No fallback provider configured")
                 raise Exception("Primary provider failed and no fallback available")
 
+    async def get_live_fixtures_with_fallback(self) -> List[MatchData]:
+        """
+        Get live fixtures with automatic fallback to secondary provider.
+        """
+        try:
+            logger.info("Fetching live fixtures from primary provider")
+            fixtures = await self.primary_provider.get_live_fixtures()
+            logger.info(f"Successfully retrieved {len(fixtures)} live fixtures from primary")
+            return fixtures
+
+        except Exception as primary_error:
+            logger.warning(
+                f"Primary provider failed for live fixtures: {str(primary_error)}. "
+                f"Attempting fallback..."
+            )
+
+            if self.fallback_provider:
+                try:
+                    fixtures = await self.fallback_provider.get_live_fixtures()
+                    logger.info(
+                        f"Successfully retrieved {len(fixtures)} live fixtures from fallback"
+                    )
+                    return fixtures
+                except Exception as fallback_error:
+                    logger.error(f"Fallback provider also failed for live fixtures: {str(fallback_error)}")
+                    # For live fixtures, it's better to return empty list than crash
+                    return []
+            else:
+                logger.error("No fallback provider configured for live fixtures")
+                return []
+
     async def get_injuries_with_fallback(
         self,
         team_id: int

@@ -168,8 +168,14 @@ def critical_pre_match_sync(self):
                 )
                 fixtures = (await session.execute(stmt)).scalars().all()
 
+                # Filter out fixtures that match the user's exclusion criteria
+                # "elimina l'aggiornamento un'ora prima dell'inizio delle partite di serie A stagione 2025/2026 
+                # a partire dalla 18 giornta che inizierà il 2 gennaio 2026"
+                cutoff_date = datetime(2026, 1, 2)
+                fixtures = [f for f in fixtures if f.match_date < cutoff_date]
+
                 if not fixtures:
-                    logger.info("No fixtures in T-1h window")
+                    logger.info("No fixtures in T-1h window (or filtered out by policy)")
                     return
 
                 logger.info(f"Processing {len(fixtures)} fixtures in T-1h window")
@@ -339,3 +345,54 @@ def sync_all_team_stats(season: str):
     except Exception as exc:
         logger.error(f"Error syncing team stats: {str(exc)}")
         raise
+
+
+@shared_task(bind=True)
+def sync_live_fixtures(self):
+    """
+    Sync currently live fixtures.
+    """
+    try:
+        # Only run if there are potential live matches (optimization)
+        # But here we rely on the provider to tell us what is live.
+        # Alternatively, we could check DB first if any match is in 'live' state or scheduled around now.
+        
+        async def _sync():
+            orchestrator = DataProviderOrchestrator()
+            try:
+                live_fixtures_data = await orchestrator.get_live_fixtures_with_fallback()
+                
+                if not live_fixtures_data:
+                    return
+
+                logger.info(f"Found {len(live_fixtures_data)} live fixtures")
+                
+                async with AsyncSessionLocal() as session:
+                    for fixture_data in live_fixtures_data:
+                        # Find existing fixture
+                        stmt = select(models.Fixture).where(
+                            models.Fixture.external_id == fixture_data.external_id
+                        )
+                        fixture = (await session.execute(stmt)).scalar_one_or_none()
+                        
+                        if fixture:
+                            # Update details
+                            fixture.status = fixture_data.status
+                            fixture.home_score = fixture_data.home_score
+                            fixture.away_score = fixture_data.away_score
+                            fixture.last_synced_at = datetime.utcnow()
+                            
+                            # If we have minute/elapsed info in the future, we can add it
+                            
+                            logger.info(f"Updated live fixture {fixture.id}: {fixture.home_score}-{fixture.away_score}")
+                    
+                    await session.commit()
+            
+            finally:
+                await orchestrator.close()
+
+        run_async(_sync())
+
+    except Exception as exc:
+        logger.error(f"Error syncing live fixtures: {str(exc)}")
+        # Don't retry aggressively for live updates, just wait for next tick
