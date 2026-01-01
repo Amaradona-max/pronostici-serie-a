@@ -498,67 +498,72 @@ PLAYERS_DATA = {
 }
 
 
-async def seed_players():
+async def seed_players(db=None):
     """Seed players for all Serie A teams"""
-    async with AsyncSessionLocal() as db:
-        try:
-            # Get all teams from database
-            result = await db.execute(select(Team))
-            teams = result.scalars().all()
+    if db:
+        await _seed_players_internal(db)
+    else:
+        async with AsyncSessionLocal() as session:
+            await _seed_players_internal(session)
+            await session.commit()
 
-            if not teams:
-                logger.error("No teams found in database. Please run seed_teams.py first.")
-                return
+async def _seed_players_internal(db):
+    try:
+        # Get all teams from database
+        result = await db.execute(select(Team))
+        teams = result.scalars().all()
 
-            # Create a mapping of team names to team objects
-            team_map = {team.name: team for team in teams}
+        if not teams:
+            logger.error("No teams found in database. Please run seed_teams.py first.")
+            return
 
-            total_players = 0
+        # Create a mapping of team names to team objects
+        team_map = {team.name: team for team in teams}
 
-            for team_name, players_data in PLAYERS_DATA.items():
-                team = team_map.get(team_name)
+        total_players = 0
 
-                if not team:
-                    logger.warning(f"Team '{team_name}' not found in database. Skipping players.")
+        for team_name, players_data in PLAYERS_DATA.items():
+            team = team_map.get(team_name)
+
+            if not team:
+                logger.warning(f"Team '{team_name}' not found in database. Skipping players.")
+                continue
+
+            logger.info(f"Seeding players for {team_name}...")
+
+            for player_data in players_data:
+                # Check if player already exists (by name only, to handle transfers)
+                result = await db.execute(
+                    select(Player).where(
+                        Player.name == player_data["name"]
+                    )
+                )
+                existing_player = result.scalars().first()
+
+                if existing_player:
+                    if existing_player.team_id != team.id:
+                        logger.info(f"Transferring {player_data['name']} from Team {existing_player.team_id} to {team.name} ({team.id})")
+                        existing_player.team_id = team.id
+                    else:
+                        logger.debug(f"Player {player_data['name']} already in correct team. Skipping.")
                     continue
 
-                logger.info(f"Seeding players for {team_name}...")
+                # Create new player
+                player = Player(
+                    team_id=team.id,
+                    name=player_data["name"],
+                    position=player_data["position"]
+                )
+                db.add(player)
+                total_players += 1
+            
+            # Flush after each team to avoid huge transaction if needed
+            await db.flush()
 
-                for player_data in players_data:
-                    # Check if player already exists (by name only, to handle transfers)
-                    result = await db.execute(
-                        select(Player).where(
-                            Player.name == player_data["name"]
-                        )
-                    )
-                    existing_player = result.scalars().first()
-
-                    if existing_player:
-                        if existing_player.team_id != team.id:
-                            logger.info(f"Transferring {player_data['name']} from Team {existing_player.team_id} to {team.name} ({team.id})")
-                            existing_player.team_id = team.id
-                        else:
-                            logger.debug(f"Player {player_data['name']} already in correct team. Skipping.")
-                        continue
-
-                    # Create new player
-                    player = Player(
-                        team_id=team.id,
-                        name=player_data["name"],
-                        position=player_data["position"]
-                    )
-                    db.add(player)
-                    total_players += 1
-
-                await db.commit()
-                logger.info(f"Completed seeding players for {team_name}")
-
-            logger.info(f"Successfully seeded {total_players} players across all teams")
-
-        except Exception as e:
-            logger.error(f"Error seeding players: {e}")
-            await db.rollback()
-            raise
+        logger.info(f"Seeding completed. Added {total_players} new players.")
+    except Exception as e:
+        logger.error(f"Error seeding players: {e}")
+        raise
 
 
 if __name__ == "__main__":

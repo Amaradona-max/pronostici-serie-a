@@ -69,6 +69,23 @@ async def reset_database(db: AsyncSession = Depends(get_db)):
         raise HTTPException(status_code=500, detail=str(e))
 
 
+@router.post("/seed-players", summary="Seed players database")
+async def seed_players_endpoint(db: AsyncSession = Depends(get_db)):
+    """
+    Seed or update players in the database.
+    This handles transfers and new players.
+    """
+    try:
+        from app.scripts.seed_players import seed_players
+        await seed_players(db)
+        await db.commit()
+        return {"message": "Players seeded successfully"}
+    except Exception as e:
+        await db.rollback()
+        logger.error(f"Error seeding players: {str(e)}")
+        raise HTTPException(status_code=500, detail=str(e))
+
+
 @router.post("/populate-sample-data", summary="Populate database with sample data")
 async def populate_sample_data(db: AsyncSession = Depends(get_db)):
     """
