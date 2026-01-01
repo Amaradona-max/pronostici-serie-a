@@ -209,27 +209,24 @@ PLAYERS_DATA = {
     ],
     "Bologna": [
         {"name": "Lukasz Skorupski", "position": "GK", "number": 28, "nationality": "Poland"},
-        {"name": "Federico Ravaglia", "position": "GK", "number": 23, "nationality": "Italy"},
-        {"name": "Nicola Bagnolini", "position": "GK", "number": 34, "nationality": "Italy"},
+        {"name": "Federico Ravaglia", "position": "GK", "number": 34, "nationality": "Italy"},
         {"name": "Stefan Posch", "position": "DF", "number": 3, "nationality": "Austria"},
+        {"name": "Sam Beukema", "position": "DF", "number": 31, "nationality": "Netherlands"},
         {"name": "Jhon Lucumi", "position": "DF", "number": 26, "nationality": "Colombia"},
-        {"name": "Juan Miranda", "position": "DF", "number": 33, "nationality": "Spain"},
-        {"name": "Lorenzo De Silvestri", "position": "DF", "number": 29, "nationality": "Italy"},
-        {"name": "Emil Holm", "position": "DF", "number": 2, "nationality": "Sweden"},
-        {"name": "Nicolo Casale", "position": "DF", "number": 15, "nationality": "Italy"},
-        {"name": "Martin Vitik", "position": "DF", "number": 4, "nationality": "Czech Republic"},
-        {"name": "Davide Calabria", "position": "DF", "number": 2, "nationality": "Italy"},
         {"name": "Charalampos Lykogiannis", "position": "DF", "number": 22, "nationality": "Greece"},
+        {"name": "Lorenzo De Silvestri", "position": "DF", "number": 29, "nationality": "Italy"},
+        {"name": "Juan Miranda", "position": "DF", "number": 33, "nationality": "Spain"},
+        {"name": "Martin Erlic", "position": "DF", "number": 5, "nationality": "Croatia"},
         {"name": "Remo Freuler", "position": "MF", "number": 8, "nationality": "Switzerland"},
-        {"name": "Nikola Moro", "position": "MF", "number": 6, "nationality": "Croatia"},
+        {"name": "Michel Aebischer", "position": "MF", "number": 20, "nationality": "Switzerland"},
+        {"name": "Lewis Ferguson", "position": "MF", "number": 19, "nationality": "Scotland"},
         {"name": "Giovanni Fabbian", "position": "MF", "number": 80, "nationality": "Italy"},
         {"name": "Kacper Urbanski", "position": "MF", "number": 82, "nationality": "Poland"},
-        {"name": "Tommaso Pobega", "position": "MF", "number": 18, "nationality": "Italy"},
-        {"name": "Federico Bernardeschi", "position": "MF", "number": 33, "nationality": "Italy"},
+        {"name": "Nikola Moro", "position": "MF", "number": 6, "nationality": "Croatia"},
         {"name": "Riccardo Orsolini", "position": "FW", "number": 7, "nationality": "Italy"},
+        {"name": "Dan Ndoye", "position": "FW", "number": 11, "nationality": "Switzerland"},
         {"name": "Santiago Castro", "position": "FW", "number": 9, "nationality": "Argentina"},
         {"name": "Jens Odgaard", "position": "FW", "number": 21, "nationality": "Denmark"},
-        {"name": "Thijs Dallinga", "position": "FW", "number": 24, "nationality": "Netherlands"},
         {"name": "Ciro Immobile", "position": "FW", "number": 17, "nationality": "Italy"},
     ],
     "Torino": [
@@ -353,9 +350,9 @@ PLAYERS_DATA = {
         {"name": "Zito Luvumbo", "position": "FW", "number": 77, "nationality": "Angola"},
         {"name": "Leonardo Pavoletti", "position": "FW", "number": 30, "nationality": "Italy"},
         {"name": "Kingstone Mutandwa", "position": "FW", "number": 61, "nationality": "Zimbabwe"},
-        {"name": "Andrea Belotti", "position": "FW", "number": 9, "nationality": "Italy"},
+        {"name": "Andrea Belotti", "position": "FW", "number": 19, "nationality": "Italy"},
         {"name": "Sebastiano Esposito", "position": "FW", "number": 99, "nationality": "Italy"},
-        {"name": "Semih Kilicsoy", "position": "FW", "number": 19, "nationality": "Turkey"},
+        {"name": "Semih Kilicsoy", "position": "FW", "number": 9, "nationality": "Turkey"},
         {"name": "Gennaro Borrelli", "position": "FW", "number": 29, "nationality": "Italy"},
     ],
     "Lecce": [
@@ -393,7 +390,7 @@ PLAYERS_DATA = {
         {"name": "Alex Valle", "position": "DF", "number": 3, "nationality": "Spain"},
         {"name": "Matthias Braunoder", "position": "MF", "number": 23, "nationality": "Austria"},
         {"name": "Sergi Roberto", "position": "MF", "number": 20, "nationality": "Spain"},
-        {"name": "Nico Paz", "position": "MF", "number": 79, "nationality": "Argentina"},
+        {"name": "Nico Paz", "position": "MF", "number": 10, "nationality": "Argentina"},
         {"name": "Yannik Engelhardt", "position": "MF", "number": 6, "nationality": "Germany"},
         {"name": "Lucas Da Cunha", "position": "MF", "number": 33, "nationality": "France"},
         {"name": "Maximo Perrone", "position": "MF", "number": 23, "nationality": "Argentina"},
@@ -401,7 +398,7 @@ PLAYERS_DATA = {
         {"name": "Jayden Addai", "position": "MF", "number": 17, "nationality": "Ghana"},
         {"name": "Martin Baturina", "position": "MF", "number": 10, "nationality": "Croatia"},
         {"name": "Jesus Rodriguez", "position": "MF", "number": 14, "nationality": "Spain"},
-        {"name": "Patrick Cutrone", "position": "FW", "number": 10, "nationality": "Italy"},
+        {"name": "Patrick Cutrone", "position": "FW", "number": 63, "nationality": "Italy"},
         {"name": "Alessio Iovine", "position": "FW", "number": 21, "nationality": "Italy"},
         {"name": "Gabriel Strefezza", "position": "FW", "number": 7, "nationality": "Brazil"},
         {"name": "Alessandro Gabrielloni", "position": "FW", "number": 9, "nationality": "Italy"},
@@ -609,15 +606,19 @@ async def _seed_players_internal(db):
                     if existing_player.team_id != team.id:
                         logger.info(f"Transferring {player_data['name']} from Team {existing_player.team_id} to {team.name} ({team.id})")
                         existing_player.team_id = team.id
-                    else:
-                        logger.debug(f"Player {player_data['name']} already in correct team. Skipping.")
+                    
+                    # Always update mutable fields
+                    existing_player.jersey_number = player_data.get("number")
+                    existing_player.nationality = player_data.get("nationality")
                     continue
 
                 # Create new player
                 player = Player(
                     team_id=team.id,
                     name=player_data["name"],
-                    position=player_data["position"]
+                    position=player_data["position"],
+                    jersey_number=player_data.get("number"),
+                    nationality=player_data.get("nationality")
                 )
                 db.add(player)
                 total_players += 1
