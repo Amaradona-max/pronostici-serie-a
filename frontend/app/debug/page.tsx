@@ -4,7 +4,7 @@ import { useEffect, useState } from 'react'
 
 export default function DebugPage() {
   const [apiUrl, setApiUrl] = useState<string>('')
-  const [testResult, setTestResult] = useState<any>(null)
+  const [testResult, setTestResult] = useState<Record<string, unknown> | null>(null)
   const [error, setError] = useState<string | null>(null)
 
   useEffect(() => {
@@ -22,8 +22,12 @@ export default function DebugPage() {
         const data = await response.json()
 
         setTestResult(data)
-      } catch (err: any) {
-        setError(err.message)
+      } catch (err: unknown) {
+        if (err instanceof Error) {
+          setError(err.message)
+        } else {
+          setError('Errore sconosciuto')
+        }
       }
     }
 

@@ -32,11 +32,11 @@ SERIE_A_TEAMS = [
     {"name": "Cagliari", "external_id": 490, "stadium": "Unipol Domus", "city": "Cagliari"},
     {"name": "Hellas Verona", "external_id": 504, "stadium": "Bentegodi", "city": "Verona"},
     {"name": "Genoa", "external_id": 495, "stadium": "Luigi Ferraris", "city": "Genova"},
-    {"name": "Como", "external_id": 1047, "stadium": "Giuseppe Sinigaglia", "city": "Como"},  # PROMOTED
-    {"name": "Parma", "external_id": 130, "stadium": "Ennio Tardini", "city": "Parma"},  # PROMOTED
-    {"name": "Empoli", "external_id": 749, "stadium": "Carlo Castellani", "city": "Empoli"},
-    {"name": "Venezia", "external_id": 607, "stadium": "Pier Luigi Penzo", "city": "Venezia"},  # PROMOTED
-    {"name": "Monza", "external_id": 2919, "stadium": "U-Power Stadium", "city": "Monza"},
+    {"name": "Parma", "external_id": 130, "stadium": "Ennio Tardini", "city": "Parma"},
+    {"name": "Como", "external_id": 1047, "stadium": "Giuseppe Sinigaglia", "city": "Como"},
+    {"name": "Sassuolo", "external_id": 488, "stadium": "Mapei Stadium", "city": "Reggio Emilia"},  # PROMOTED
+    {"name": "Pisa", "external_id": 506, "stadium": "Arena Garibaldi", "city": "Pisa"},  # PROMOTED
+    {"name": "Cremonese", "external_id": 520, "stadium": "Giovanni Zini", "city": "Cremona"},  # PROMOTED
 ]
 
 
