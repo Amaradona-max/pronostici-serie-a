@@ -206,6 +206,7 @@ PLAYERS_DATA = {
         {"name": "Tommaso Martinelli", "position": "GK", "number": 30, "nationality": "Italy"},
         {"name": "Lucas Martinez Quarta", "position": "DF", "number": 28, "nationality": "Argentina"},
         {"name": "Amir Richardson", "position": "MF", "number": 24, "nationality": "Morocco"},
+        {"name": "Roberto Piccoli", "position": "FW", "number": 91, "nationality": "Italy"},
     ],
     "Bologna": [
         {"name": "Lukasz Skorupski", "position": "GK", "number": 28, "nationality": "Poland"},
@@ -342,7 +343,6 @@ PLAYERS_DATA = {
         {"name": "Michel Adopo", "position": "MF", "number": 8, "nationality": "Ivory Coast"},
         {"name": "Matteo Prati", "position": "MF", "number": 16, "nationality": "Italy"},
         {"name": "Zito Luvumbo", "position": "FW", "number": 77, "nationality": "Angola"},
-        {"name": "Roberto Piccoli", "position": "FW", "number": 91, "nationality": "Italy"},
         {"name": "Nicolas Viola", "position": "MF", "number": 10, "nationality": "Italy"},
         {"name": "Gianluca Gaetano", "position": "MF", "number": 70, "nationality": "Italy"},
         {"name": "Leonardo Pavoletti", "position": "FW", "number": 30, "nationality": "Italy"},
@@ -525,17 +525,20 @@ async def seed_players():
                 logger.info(f"Seeding players for {team_name}...")
 
                 for player_data in players_data:
-                    # Check if player already exists
+                    # Check if player already exists (by name only, to handle transfers)
                     result = await db.execute(
                         select(Player).where(
-                            Player.name == player_data["name"],
-                            Player.team_id == team.id
+                            Player.name == player_data["name"]
                         )
                     )
-                    existing_player = result.scalar_one_or_none()
+                    existing_player = result.scalars().first()
 
                     if existing_player:
-                        logger.debug(f"Player {player_data['name']} already exists. Skipping.")
+                        if existing_player.team_id != team.id:
+                            logger.info(f"Transferring {player_data['name']} from Team {existing_player.team_id} to {team.name} ({team.id})")
+                            existing_player.team_id = team.id
+                        else:
+                            logger.debug(f"Player {player_data['name']} already in correct team. Skipping.")
                         continue
 
                     # Create new player
