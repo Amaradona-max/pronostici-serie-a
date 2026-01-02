@@ -7,7 +7,7 @@ Dati basati su fonti open-source:
 - Database pubblici di calciatori professionisti
 
 Le date sono realistiche e basate sulle rose attuali della Serie A 2025-26.
-Aggiornato alla giornata 17 (dicembre 2025).
+Aggiornato alla giornata 17 (dicembre 2025) e Mercato Invernale 2026.
 """
 
 from datetime import date
@@ -65,6 +65,22 @@ PLAYER_BIRTHDATES = {
     "L. Jovic": date(1997, 12, 23),
     "I. Bennacer": date(1997, 12, 1),
     "T. Reijnders": date(1998, 7, 29),
+    "L. Modric": date(1985, 9, 9),
+    "Modric": date(1985, 9, 9),
+    "C. Nkunku": date(1997, 11, 14),
+    "Nkunku": date(1997, 11, 14),
+    "N. Fullkrug": date(1993, 2, 9),
+    "Fullkrug": date(1993, 2, 9),
+    "A. Rabiot": date(1995, 4, 3),
+    "Rabiot": date(1995, 4, 3),
+    "S. Ricci": date(2001, 8, 21),
+    "P. Estupinan": date(1998, 1, 21),
+    "A. Jashari": date(2002, 7, 30),
+    "K. De Winter": date(2002, 6, 12),
+    "F. Terracciano": date(2003, 2, 8),
+    "Terracciano": date(2003, 2, 8),
+    "K. Athekame": date(2004, 10, 24),
+    "V. Odogu": date(2006, 2, 28),
 
     # ===== NAPOLI =====
     "A. Meret": date(1997, 3, 22),
@@ -88,6 +104,21 @@ PLAYER_BIRTHDATES = {
     "P. Mazzocchi": date(1995, 7, 20),
     "C. Ngonge": date(2000, 5, 26),
     "G. Simeone": date(1995, 7, 5),
+    "K. De Bruyne": date(1991, 6, 28),
+    "De Bruyne": date(1991, 6, 28),
+    "R. Hojlund": date(2003, 2, 4),
+    "Hojlund": date(2003, 2, 4),
+    "E. Elmas": date(1999, 9, 24),
+    "S. Milinkovic-Savic": date(1995, 2, 27),
+    "N. Lang": date(1999, 6, 17),
+    "L. Lucca": date(2000, 9, 10),
+    "S. Beukema": date(1998, 11, 17),
+    "M. Gutierrez": date(2001, 7, 27),
+    "A. Marianucci": date(2004, 5, 23),
+    "A. Ferrante": date(1995, 6, 27),
+    "G. Ambrosino": date(2003, 9, 10),
+    "A. Vergara": date(2003, 3, 12),
+    "C. Saco": date(2002, 1, 17),
 
     # ===== JUVENTUS =====
     "M. Di Gregorio": date(1997, 7, 27),
@@ -135,6 +166,17 @@ PLAYER_BIRTHDATES = {
     "A. Saelemaekers": date(1999, 6, 27),
     "M. Hummels": date(1988, 12, 16),
     "M. Ryan": date(1992, 4, 8),
+    "K. Tsimikas": date(1996, 5, 12),
+    "Tsimikas": date(1996, 5, 12),
+    "E. Bove": date(2002, 5, 16),
+    "L. Cherubini": date(2004, 2, 16),
+    "O. El Aynaoui": date(2001, 7, 2),
+    "L. Ferguson": date(1999, 8, 24),
+    "L. Zelezny": date(2006, 8, 20),
+    "Wesley": date(2005, 3, 5),
+    "D. Ghilardi": date(2003, 1, 6),
+    "L. Bailey": date(1997, 8, 9),
+    "J. Ziolkowski": date(2005, 2, 5),
 
     # ===== BOLOGNA =====
     "Ł. Skorupski": date(1991, 5, 5),
@@ -199,6 +241,14 @@ PLAYER_BIRTHDATES = {
     "F. Dele-Bashiru": date(2001, 2, 16),
     "Pedro": date(1987, 7, 28),
     "Casale": date(1998, 2, 14),
+    "D. Cataldi": date(1994, 8, 6),
+    "M. Cancellieri": date(2002, 2, 12),
+    "Marcos Antonio": date(2000, 6, 13),
+    "S. Fernandes": date(2006, 3, 10),
+    "D. Gonzalez": date(2003, 1, 7),
+    "M. Kamenovic": date(2000, 7, 16),
+    "M. Fares": date(1996, 2, 15),
+    "A. Ruggeri": date(2004, 8, 2),
 
     # ===== COMO =====
     "E. Audero": date(1997, 1, 18),
@@ -221,6 +271,7 @@ PLAYER_BIRTHDATES = {
     "M. Braunoder": date(2002, 3, 27),
     "I. Van der Brempt": date(2002, 4, 1),
     "S. Verdi": date(1992, 7, 12),
+    "N. Tornqvist": date(2002, 2, 1),
 
     # ===== FIORENTINA =====
     "D. de Gea": date(1990, 11, 7),
@@ -242,29 +293,51 @@ PLAYER_BIRTHDATES = {
     "A. Richardson": date(2002, 1, 24),
     "F. Parisi": date(2000, 11, 9),
     "P. Terracciano": date(1990, 3, 8),
+    "M. Solomon": date(1999, 7, 24),
+    "Solomon": date(1999, 7, 24),
 
     # ===== PARMA =====
     "Z. Suzuki": date(2002, 8, 21),
+    "Suzuki": date(2002, 8, 21),
     "E. Delprato": date(1999, 11, 27),
+    "Delprato": date(1999, 11, 27),
     "B. Balogh": date(2002, 6, 6),
     "A. Circati": date(2003, 10, 10),
     "E. Valeri": date(1998, 12, 7),
+    "Valeri": date(1998, 12, 7),
     "N. Estevez": date(1995, 11, 25),
     "A. Bernabé": date(2001, 5, 26),
+    "Bernabé": date(2001, 5, 26),
     "D. Man": date(1998, 8, 26),
     "S. Sohm": date(2001, 4, 11),
     "V. Mihaila": date(2000, 2, 2),
+    "Mihaila": date(2000, 2, 2),
     "A. Bonny": date(2003, 10, 25),
     "M. Cancellieri": date(2002, 2, 12),
     "P. Almqvist": date(1999, 7, 10),
     "H. Nicolussi Caviglia": date(2000, 6, 18),
     "M. Keita": date(2002, 5, 10),
+    "Keita": date(2002, 5, 10),
     "L. Valenti": date(1999, 1, 25),
     "Y. Osorio": date(1994, 5, 10),
     "W. Cyprien": date(1995, 1, 28),
     "Hernani": date(1994, 3, 27),
     "L. Chichizola": date(1990, 3, 27),
     "W. Coulibaly": date(1999, 3, 20),
+    "J. Ordonez": date(2004, 4, 21),
+    "T. Begic": date(2003, 6, 28),
+    "A. Joujou": date(2003, 3, 12),
+    "R. Kouda": date(2002, 7, 25),
+    "A. Partipilo": date(1994, 11, 27),
+    "F. Sorensen": date(1992, 4, 14),
+    "Sorensen": date(1992, 4, 14),
+    "M. Frigan": date(2003, 2, 11),
+    "G. Oristanio": date(2002, 9, 28),
+    "B. Cremaschi": date(2005, 3, 2),
+    "Cremaschi": date(2005, 3, 2),
+    "A. Ndiaye": date(2005, 8, 16),
+    "S. Troilo": date(2005, 2, 2),
+    "M. Britschgi": date(2006, 4, 30),
 
     # ===== TORINO =====
     "V. Milinkovic-Savic": date(1997, 2, 20),
@@ -285,6 +358,21 @@ PLAYER_BIRTHDATES = {
     "M. Vojvoda": date(1995, 4, 25),
     "A. Paleari": date(1992, 9, 24),
     "Y. Karamoh": date(1998, 7, 8),
+    "S. Sazonov": date(2002, 2, 1),
+    "M. Popa": date(2000, 10, 12),
+    "B. Bayeye": date(2000, 6, 30),
+    "N. Rauti": date(2000, 8, 26),
+    "T. Anjorin": date(2001, 11, 23),
+    "A. Ismajli": date(1996, 9, 30),
+    "C. Ngonge": date(2000, 5, 26),
+    "Z. Aboukhlal": date(2000, 2, 18),
+    "N. Nkounkou": date(2000, 11, 1),
+    "A. N'Guessan": date(2003, 9, 1),
+    "S. Israel": date(2000, 5, 4),
+    "K. Asllani": date(2002, 3, 9),
+    "Asllani": date(2002, 3, 9),
+    "G. Simeone": date(1995, 7, 5),
+    "Simeone": date(1995, 7, 5),
 
     # ===== UDINESE =====
     "M. Okoye": date(1999, 8, 28),
@@ -310,6 +398,17 @@ PLAYER_BIRTHDATES = {
     "A. Atta": date(2003, 1, 14),
     "I. Bravo": date(2005, 1, 13),
     "D. Pizarro": date(2005, 3, 28),
+    "N. Bertola": date(2003, 5, 23),
+    "F. Ebosele": date(2002, 8, 2),
+    "J. Abankwah": date(2004, 1, 16),
+    "G. Esteves": date(2004, 2, 27),
+    "V. Bayo": date(1997, 1, 10),
+    "J. Piotrowski": date(1997, 10, 4),
+    "S. Goglichidze": date(2004, 6, 25),
+    "A. Buksa": date(1996, 7, 12),
+    "A. Zanoli": date(2000, 10, 3),
+    "P. Gueye": date(1999, 1, 24),
+    "N. Zaniolo": date(1999, 7, 2),
 
     # ===== GENOA =====
     "P. Gollini": date(1995, 3, 18),
@@ -353,6 +452,18 @@ PLAYER_BIRTHDATES = {
     "G. Kastanos": date(1998, 1, 30),
     "D. Livramento": date(2001, 5, 4),
     "S. Perilli": date(1995, 1, 7),
+    "K. Lasagna": date(1992, 8, 10),
+    "J. Braaf": date(2002, 8, 31),
+    "S. Mitrovic": date(2002, 8, 15),
+    "D. Bradaric": date(1999, 12, 10),
+    "V. Nelsson": date(1998, 10, 14),
+    "A. Bella-Kotchap": date(2001, 12, 11),
+    "G. Orban": date(2002, 7, 17),
+    "A. Al-Musrati": date(1996, 4, 6),
+    "S. Giovane": date(2003, 3, 28),
+    "N. Valentini": date(2001, 4, 6),
+    "U. Nunez": date(1997, 1, 30),
+    "Y. Belghali": date(2002, 5, 26),
 
     # ===== LECCE =====
     "W. Falcone": date(1995, 4, 1),
@@ -376,6 +487,48 @@ PLAYER_BIRTHDATES = {
     "G. Jean": date(2002, 6, 25),
     "A. Pelmard": date(2000, 3, 12),
     "N. Sansone": date(1991, 9, 10),
+    "N. Kouassi": date(2002, 6, 7),
+    "Y. Maleh": date(1998, 8, 22),
+    "P. Rodriguez": date(2001, 8, 4),
+    "A. Borbei": date(2003, 6, 27),
+    "F. Camarda": date(2008, 3, 10),
+    "N. Perez": date(2000, 6, 24),
+    "R. Sottil": date(1999, 6, 3),
+    "J. Siebert": date(2002, 4, 2),
+    "M. Sala": date(1999, 6, 4),
+    "N. Stulic": date(2001, 9, 8),
+    "B. Ndaba": date(2000, 12, 25),
+
+    # ===== SASSUOLO =====
+    "S. Turati": date(2001, 9, 5),
+    "A. Alvarez": date(2001, 3, 24),
+    "A. Russo": date(2001, 12, 1),
+    "A. Fadera": date(2001, 11, 3),
+    "M. Kone": date(2001, 5, 17),
+    "J. Idzes": date(2000, 6, 2),
+    "F. Cande": date(1998, 1, 24),
+    "A. Muric": date(1998, 11, 7),
+    "A. Vranckx": date(2002, 10, 4),
+    "N. Matic": date(1988, 8, 1),
+    "W. Cheddira": date(1998, 1, 22),
+
+    # ===== PISA =====
+    "I. Vural": date(2006, 5, 28),
+    "G. Lusuardi": date(2004, 1, 14),
+    "P. Beruatto": date(1998, 12, 21),
+    "E. Dubickas": date(1998, 7, 17),
+    "Z. Jevsenak": date(2003, 11, 15),
+    "J. Mlakar": date(1998, 10, 19),
+    "N. Bonfanti": date(2002, 3, 15),
+    "E. Akinsanmiro": date(2004, 11, 25),
+    "S. Scuffet": date(1996, 5, 31),
+    "J. Cuadrado": date(1988, 5, 26),
+    "M. Nzola": date(1996, 8, 18),
+    "C. Stengs": date(1998, 12, 18),
+    "R. Albiol": date(1985, 9, 4),
+    "K. Denoon": date(2004, 5, 18),
+    "M. Aebischer": date(1997, 1, 6),
+    "Lorran": date(2006, 7, 4),
 
     # ===== CAGLIARI =====
     "S. Scuffet": date(1996, 5, 31),
@@ -598,23 +751,20 @@ def get_team_birthdates(team_name: str, lineup_dict: dict) -> list[date]:
         lineup_dict: Dizionario con starters e bench
 
     Returns:
-        Lista di date di nascita (solo quelle trovate)
+        Lista di date di nascita
     """
     birthdates = []
-
-    if not lineup_dict:
-        return birthdates
-
-    # Aggiungi date dei titolari
-    for player in lineup_dict.get("starters", []):
-        bd = get_birthdate(player["name"])
-        if bd:
-            birthdates.append(bd)
-
-    # Aggiungi date della panchina
-    for player in lineup_dict.get("bench", []):
-        bd = get_birthdate(player["name"])
-        if bd:
-            birthdates.append(bd)
-
+    
+    # Get starters
+    for player_name, _ in lineup_dict.get("starting_xi", []):
+        bdate = get_birthdate(player_name)
+        if bdate:
+            birthdates.append(bdate)
+            
+    # Get bench
+    for player_name in lineup_dict.get("bench", []):
+        bdate = get_birthdate(player_name)
+        if bdate:
+            birthdates.append(bdate)
+            
     return birthdates
