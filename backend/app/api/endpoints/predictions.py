@@ -206,30 +206,30 @@ MOCK_LINEUPS = {
         ]
     },
     "AC Milan": {
-        "formation": "4-2-3-1",
-        "starters": [
-            {"name": "M. Maignan", "position": "GK", "number": 16},
-            {"name": "E. Royal", "position": "DF", "number": 22},
-            {"name": "F. Tomori", "position": "DF", "number": 23},
-            {"name": "M. Gabbia", "position": "DF", "number": 46},
-            {"name": "T. Hernández", "position": "DF", "number": 19},
-            {"name": "Y. Fofana", "position": "MF", "number": 29},
-            {"name": "S. Ricci", "position": "MF", "number": 5},
-            {"name": "C. Pulisic", "position": "FW", "number": 11},
-            {"name": "L. Modrić", "position": "MF", "number": 10},
-            {"name": "R. Leão", "position": "FW", "number": 10},
-            {"name": "C. Nkunku", "position": "FW", "number": 18},
-        ],
-        "bench": [
-            {"name": "P. Terracciano", "position": "GK", "number": 1},
-            {"name": "L. Torriani", "position": "GK", "number": 96},
-            {"name": "A. Rabiot", "position": "MF", "number": 12},
-            {"name": "R. Loftus-Cheek", "position": "MF", "number": 8},
-            {"name": "S. Gimenez", "position": "FW", "number": 7},
-            {"name": "M. Thiaw", "position": "DF", "number": 28},
-            {"name": "D. Calabria", "position": "DF", "number": 2},
-        ]
-    },
+            "formation": "4-2-3-1",
+            "starters": [
+                {"name": "M. Maignan", "position": "GK", "number": 16},
+                {"name": "E. Royal", "position": "DF", "number": 22},
+                {"name": "F. Tomori", "position": "DF", "number": 23},
+                {"name": "M. Gabbia", "position": "DF", "number": 46},
+                {"name": "P. Estupinan", "position": "DF", "number": 30},
+                {"name": "Y. Fofana", "position": "MF", "number": 29},
+                {"name": "S. Ricci", "position": "MF", "number": 28},
+                {"name": "C. Pulisic", "position": "FW", "number": 11},
+                {"name": "L. Modrić", "position": "MF", "number": 10},
+                {"name": "R. Leão", "position": "FW", "number": 10},
+                {"name": "C. Nkunku", "position": "FW", "number": 18},
+            ],
+            "bench": [
+                {"name": "P. Terracciano", "position": "GK", "number": 1},
+                {"name": "L. Torriani", "position": "GK", "number": 96},
+                {"name": "A. Rabiot", "position": "MF", "number": 25},
+                {"name": "R. Loftus-Cheek", "position": "MF", "number": 8},
+                {"name": "S. Gimenez", "position": "FW", "number": 7},
+                {"name": "S. Pavlovic", "position": "DF", "number": 31},
+                {"name": "D. Calabria", "position": "DF", "number": 2},
+            ]
+        },
     "Napoli": {
         "formation": "4-3-3",
         "starters": [
