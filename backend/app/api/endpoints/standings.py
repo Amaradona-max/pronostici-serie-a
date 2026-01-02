@@ -166,7 +166,7 @@ async def get_top_scorers(
             {"name": "Andrea Pinamonti", "team": "Sassuolo", "short": "SAS", "goals": 4, "assists": 2, "matches": 17},
             {"name": "Giacomo Raspadori", "team": "Napoli", "short": "NAP", "goals": 3, "assists": 2, "matches": 16},
             {"name": "Nikola Krstovic", "team": "Lecce", "short": "LEC", "goals": 3, "assists": 1, "matches": 17},
-            {"name": "Andrea Belotti", "team": "Como", "short": "COM", "goals": 3, "assists": 2, "matches": 17},
+            {"name": "Andrea Belotti", "team": "Cagliari", "short": "CAG", "goals": 3, "assists": 2, "matches": 17},
             {"name": "Dennis Man", "team": "Parma", "short": "PAR", "goals": 3, "assists": 3, "matches": 17},
             {"name": "Valentin Carboni", "team": "Cremonese", "short": "CRE", "goals": 3, "assists": 1, "matches": 17},
             {"name": "Lorenzo Lucca", "team": "Udinese", "short": "UDI", "goals": 3, "assists": 0, "matches": 16},

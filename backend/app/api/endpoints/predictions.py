@@ -392,15 +392,13 @@ MOCK_LINEUPS = {
             {"name": "L. Da Cunha", "position": "MF", "number": 33},
             {"name": "N. Kuhn", "position": "FW", "number": 17},
             {"name": "N. Paz", "position": "MF", "number": 79},
-            {"name": "A. Morata", "position": "FW", "number": 9},
-            {"name": "A. Belotti", "position": "FW", "number": 11},
+            {"name": "P. Cutrone", "position": "FW", "number": 10},
+            {"name": "A. Gabrielloni", "position": "FW", "number": 9},
         ],
         "bench": [
             {"name": "E. Semper", "position": "GK", "number": 1},
-            {"name": "P. Cutrone", "position": "FW", "number": 10},
             {"name": "S. Verdi", "position": "FW", "number": 90},
             {"name": "A. Fabregas", "position": "MF", "number": 4},
-            {"name": "A. Gabrielloni", "position": "FW", "number": 9},
             {"name": "M. Odenthal", "position": "DF", "number": 5},
             {"name": "Y. Engelhardt", "position": "MF", "number": 26},
         ]
@@ -568,7 +566,7 @@ MOCK_LINEUPS = {
             {"name": "N. Viola", "position": "FW", "number": 10},
             {"name": "S. Esposito", "position": "FW", "number": 99},
             {"name": "Z. Luvumbo", "position": "FW", "number": 77},
-            {"name": "L. Pavoletti", "position": "FW", "number": 30},
+            {"name": "A. Belotti", "position": "FW", "number": 11},
         ],
         "bench": [
             {"name": "S. Scuffet", "position": "GK", "number": 1},
@@ -576,7 +574,7 @@ MOCK_LINEUPS = {
             {"name": "G. Gaetano", "position": "MF", "number": 70},
             {"name": "P. Azzi", "position": "DF", "number": 37},
             {"name": "A. Obert", "position": "DF", "number": 33},
-            {"name": "M. Wieteska", "position": "DF", "number": 23},
+            {"name": "L. Pavoletti", "position": "FW", "number": 30},
             {"name": "G. Lapadula", "position": "FW", "number": 9},
         ]
     },
@@ -617,7 +615,7 @@ MOCK_LINEUPS = {
             {"name": "M. Castrovilli", "position": "MF", "number": 23},
             {"name": "C. Volpato", "position": "MF", "number": 22},
             {"name": "A. Laurienté", "position": "FW", "number": 45},
-            {"name": "A. Pinamonti", "position": "FW", "number": 9},
+            {"name": "S. Mulattieri", "position": "FW", "number": 30},
             {"name": "D. Berardi", "position": "FW", "number": 25},
         ],
         "bench": [
@@ -625,8 +623,6 @@ MOCK_LINEUPS = {
             {"name": "G. Defrel", "position": "FW", "number": 92},
             {"name": "U. Racic", "position": "MF", "number": 6},
             {"name": "F. Romagna", "position": "DF", "number": 27},
-            {"name": "M. Viti", "position": "DF", "number": 44},
-            {"name": "S. Mulattieri", "position": "FW", "number": 30},
             {"name": "N. Bajrami", "position": "MF", "number": 10},
         ]
     },
