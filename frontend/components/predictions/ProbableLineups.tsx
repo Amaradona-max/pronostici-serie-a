@@ -51,7 +51,6 @@ export function ProbableLineups({
     try {
       const apiUrl = process.env.NEXT_PUBLIC_API_URL || ''
       const res = await fetch(`${apiUrl}/api/v1/predictions/${fixtureId}/lineups`)
-      if (!res.ok) throw new Error('Failed to fetch lineups')
       const json = await res.json()
       setData(json)
       setIsOpen(true)

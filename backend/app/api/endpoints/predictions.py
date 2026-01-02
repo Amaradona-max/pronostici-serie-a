@@ -358,39 +358,6 @@ MOCK_LINEUPS = {
         ],
         "bench": ["Reina", "Tornqvist", "Sala", "Barba", "Engelhardt", "Verdi", "Gabrielloni", "Da Cunha", "Perrone", "Varane", "Terracciano"]
     },
-    "Venezia": {
-        "formation": "3-4-2-1",
-        "starting_xi": [
-             ("Stankovic", "GK"),
-             ("Idzes", "DEF"), ("Svoboda", "DEF"), ("Sverko", "DEF"),
-             ("Candela", "MID"), ("Duncan", "MID"), ("Nicolussi Caviglia", "MID"), ("Haps", "MID"),
-             ("Yeboah", "MID"), ("Busio", "MID"),
-             ("Pohjanpalo", "FWD")
-        ],
-        "bench": ["Joronen", "Zampano", "Sagrado", "Crnigoj", "Ellertsson", "Gytkjaer"]
-    },
-    "Empoli": {
-        "formation": "3-4-2-1",
-        "starting_xi": [
-            ("Vasquez", "GK"),
-            ("Goglichidze", "DEF"), ("Ismajli", "DEF"), ("Viti", "DEF"),
-            ("Gyasi", "MID"), ("Henderson", "MID"), ("Grassi", "MID"), ("Pezzella", "MID"),
-            ("Fazzini", "MID"), ("Esposito", "MID"),
-            ("Colombo", "FWD")
-        ],
-        "bench": ["Seghetti", "Marianucci", "Cacace", "Anjorin", "Haas", "Maleh", "Solbakken", "Pellegri"]
-    },
-    "Monza": {
-        "formation": "3-4-2-1",
-        "starting_xi": [
-            ("Turati", "GK"),
-            ("Izzo", "DEF"), ("Mari", "DEF"), ("Carboni", "DEF"),
-            ("Pereira", "MID"), ("Bondo", "MID"), ("Bianco", "MID"), ("Kyriakopoulos", "MID"),
-            ("Maldini", "MID"), ("Mota", "MID"),
-            ("Djuric", "FWD")
-        ],
-        "bench": ["Pizzignacco", "Caldirola", "D'Ambrosio", "Sensi", "Valoti", "Caprari", "Petagna", "Pessina"]
-    }
 }
 
 
