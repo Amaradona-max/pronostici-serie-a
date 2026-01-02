@@ -16,28 +16,29 @@ from sqlalchemy import select
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 
-# Serie A Teams 2024/25 (Approximate strengths for simulation)
+# Serie A Teams 2024/25 (Realistic strength estimation based on actual season performance)
+# Updated to reflect: Inter/Napoli dominance, Atalanta's attack, Juventus' defense
 TEAMS = {
-    "Inter": {"att": 2.2, "def": 0.8},
-    "Milan": {"att": 1.9, "def": 1.1},
-    "Juventus": {"att": 1.7, "def": 0.7},
-    "Atalanta": {"att": 2.0, "def": 1.2},
-    "Napoli": {"att": 1.8, "def": 1.0},
-    "Roma": {"att": 1.6, "def": 1.1},
-    "Lazio": {"att": 1.5, "def": 1.0},
-    "Fiorentina": {"att": 1.4, "def": 1.1},
-    "Torino": {"att": 1.1, "def": 1.0},
-    "Bologna": {"att": 1.3, "def": 1.1},
-    "Monza": {"att": 1.0, "def": 1.2},
-    "Genoa": {"att": 1.0, "def": 1.3},
-    "Lecce": {"att": 0.9, "def": 1.4},
-    "Udinese": {"att": 0.9, "def": 1.3},
-    "Empoli": {"att": 0.8, "def": 1.4},
-    "Verona": {"att": 0.9, "def": 1.5},
-    "Cagliari": {"att": 0.9, "def": 1.5},
-    "Salernitana": {"att": 0.7, "def": 1.8}, # Replaced by Parma/Como/Venezia in reality but using placeholder
-    "Frosinone": {"att": 0.8, "def": 1.7},
-    "Sassuolo": {"att": 1.2, "def": 1.6}
+    "Inter": {"att": 2.4, "def": 0.8},       # Strongest attack
+    "Atalanta": {"att": 2.5, "def": 1.1},    # Goal machine
+    "Napoli": {"att": 1.8, "def": 0.6},      # Conte's solid defense
+    "Juventus": {"att": 1.6, "def": 0.5},    # Best defense in league
+    "Milan": {"att": 1.9, "def": 1.3},       # Good attack, leaky defense
+    "Lazio": {"att": 1.8, "def": 1.0},       # Baroni's surprise
+    "Fiorentina": {"att": 2.0, "def": 0.9},  # Strong season
+    "Bologna": {"att": 1.2, "def": 1.0},     # Solid mid-table
+    "Torino": {"att": 1.1, "def": 1.1},      # Balanced
+    "Roma": {"att": 1.3, "def": 1.4},        # Struggling defense
+    "Udinese": {"att": 1.1, "def": 1.2},     # Good start then fell off
+    "Empoli": {"att": 0.9, "def": 0.9},      # Solid defense, low attack
+    "Verona": {"att": 1.3, "def": 1.8},      # Chaotic games
+    "Parma": {"att": 1.2, "def": 1.6},       # Dangerous but concedes
+    "Como": {"att": 1.1, "def": 1.5},        # Fabregas playing style
+    "Cagliari": {"att": 1.0, "def": 1.6},    # Fighting relegation
+    "Genoa": {"att": 0.8, "def": 1.4},       # Low scoring
+    "Lecce": {"att": 0.6, "def": 1.7},       # Worst attack
+    "Monza": {"att": 0.9, "def": 1.4},       # Struggling
+    "Venezia": {"att": 0.8, "def": 1.7}      # Relegation candidate
 }
 
 async def seed_historical_matches():
