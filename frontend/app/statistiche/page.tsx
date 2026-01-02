@@ -6,7 +6,11 @@ import { useQuery } from '@tanstack/react-query'
 import { format } from 'date-fns'
 import { it } from 'date-fns/locale'
 
-const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000'
+// In production (Vercel), we use relative paths to leverage Vercel's internal routing/rewrites.
+// In development, we fallback to localhost:8000 if the env var isn't set.
+const API_URL = process.env.NODE_ENV === 'production' 
+  ? '' 
+  : (process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000')
 
 interface PredictionStats {
   total_predictions: number
