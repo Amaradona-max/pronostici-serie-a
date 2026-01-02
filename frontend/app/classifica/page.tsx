@@ -22,7 +22,7 @@ interface TeamStanding {
 }
 
 export default function ClassificaPage() {
-  const { data: standings, isLoading } = useQuery({
+  const { data: standings, isLoading, error } = useQuery({
     queryKey: ['standings'],
     queryFn: async () => {
       const res = await fetch(`${API_URL}/api/v1/standings/serie-a/2025-2026`)
