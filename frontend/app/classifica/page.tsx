@@ -5,7 +5,7 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
 import { Trophy, TrendingUp, TrendingDown, Minus, ChevronUp, ChevronDown } from 'lucide-react'
 
-const API_URL = process.env.NEXT_PUBLIC_API_URL || '/api'
+const API_URL = process.env.NEXT_PUBLIC_API_URL || ''
 
 interface TeamStanding {
   position: number
@@ -55,6 +55,18 @@ export default function ClassificaPage() {
           {[...Array(20)].map((_, i) => (
             <div key={i} className="h-16 bg-muted rounded-lg" />
           ))}
+        </div>
+      </div>
+    )
+  }
+
+  if (error) {
+    return (
+      <div className="container mx-auto px-4 py-8">
+        <div className="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded relative" role="alert">
+          <strong className="font-bold">Errore!</strong>
+          <span className="block sm:inline"> Impossibile caricare la classifica. Riprova più tardi.</span>
+          <div className="text-xs mt-2 font-mono">{error instanceof Error ? error.message : 'Unknown error'}</div>
         </div>
       </div>
     )
