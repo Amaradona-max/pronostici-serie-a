@@ -10,7 +10,7 @@ import os
 sys.path.append(os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__)))))
 
 from app.db.engine import AsyncSessionLocal
-from app.db.models import Fixture, MatchStats, Team, Competition
+from app.db.models import Fixture, MatchStats, Team, Competition, Prediction
 from sqlalchemy import select
 
 logging.basicConfig(level=logging.INFO)
@@ -57,12 +57,38 @@ async def seed_historical_matches():
         team_map = {t.name: t for t in teams_db}
 
         # Simulate 17 rounds
-        start_date = datetime(2025, 8, 20) # Start of season
+        start_date = datetime(2024, 8, 17) # Start of 2024/25 season
+        
+        # Cleanup existing fixtures for this season to avoid duplicates
+        logger.info("Cleaning up existing fixtures for 2024-2025 and 2025-2026...")
+        stmt_cleanup = select(Fixture).where(Fixture.season.in_(["2024-2025", "2025-2026"]))
+        fixtures_to_delete = (await session.execute(stmt_cleanup)).scalars().all()
+        
+        # Delete associated MatchStats and Predictions first
+        for f in fixtures_to_delete:
+            # Delete MatchStats
+            stmt_stats = select(MatchStats).where(MatchStats.fixture_id == f.id)
+            stats = (await session.execute(stmt_stats)).scalar_one_or_none()
+            if stats:
+                await session.delete(stats)
+            
+            # Delete Predictions
+            stmt_preds = select(Prediction).where(Prediction.fixture_id == f.id)
+            preds = (await session.execute(stmt_preds)).scalars().all()
+            for p in preds:
+                await session.delete(p)
+                
+            await session.delete(f)
+        await session.flush()
         
         matches_created = 0
         
-        for round_num in range(1, 18):
+        # Simulate rounds up to current date (Jan 2025 is approx round 19)
+        # Round 1-19: Finished
+        # Round 20: Scheduled (Upcoming)
+        for round_num in range(1, 21):
             round_date = start_date + timedelta(weeks=round_num-1)
+            is_upcoming = (round_num == 20)
             
             # Create pairings (simplified round robin)
             team_names = list(team_map.keys())
@@ -80,47 +106,61 @@ async def seed_historical_matches():
                 home_team = team_map[home_name]
                 away_team = team_map[away_name]
                 
-                # Simulate Score using Poisson
-                home_str = TEAMS[home_name]
-                away_str = TEAMS[away_name]
-                
-                # Lambda/Mu
-                home_exp = home_str['att'] * away_str['def'] * 1.2 # Home adv
-                away_exp = away_str['att'] * home_str['def']
-                
-                import numpy as np
-                home_goals = np.random.poisson(home_exp)
-                away_goals = np.random.poisson(away_exp)
-                
-                # Simulate xG (correlated with goals but not identical)
-                home_xg = max(0.1, np.random.normal(home_exp, 0.4))
-                away_xg = max(0.1, np.random.normal(away_exp, 0.4))
+                if not is_upcoming:
+                    # Simulate Score using Poisson for finished matches
+                    home_str = TEAMS[home_name]
+                    away_str = TEAMS[away_name]
+                    
+                    # Lambda/Mu
+                    home_exp = home_str['att'] * away_str['def'] * 1.2 # Home adv
+                    away_exp = away_str['att'] * home_str['def']
+                    
+                    import numpy as np
+                    home_goals = np.random.poisson(home_exp)
+                    away_goals = np.random.poisson(away_exp)
+                    
+                    # Simulate xG
+                    home_xg = max(0.1, np.random.normal(home_exp, 0.4))
+                    away_xg = max(0.1, np.random.normal(away_exp, 0.4))
+                    
+                    status = "finished"
+                    h_score = home_goals
+                    a_score = away_goals
+                else:
+                    # Scheduled match
+                    status = "scheduled"
+                    h_score = None
+                    a_score = None
+                    home_xg = None
+                    away_xg = None
                 
                 # Create Fixture
                 fixture = Fixture(
                     competition_id=competition.id,
-                    season="2025-2026",
+                    season="2024-2025",
                     round=f"Giornata {round_num}",
                     match_date=round_date + timedelta(hours=random.randint(12, 20)),
                     home_team_id=home_team.id,
                     away_team_id=away_team.id,
-                    status="finished",
-                    home_score=home_goals,
-                    away_score=away_goals,
+                    status=status,
+                    home_score=h_score,
+                    away_score=a_score,
                     external_id=random.randint(100000, 999999)
                 )
                 session.add(fixture)
                 await session.flush() # Get ID
                 
-                # Create MatchStats
-                stats = MatchStats(
-                    fixture_id=fixture.id,
-                    home_xg=round(home_xg, 2),
-                    away_xg=round(away_xg, 2),
-                    home_possession=50,
-                    away_possession=50
-                )
-                session.add(stats)
+                if not is_upcoming:
+                    # Create MatchStats
+                    stats = MatchStats(
+                        fixture_id=fixture.id,
+                        home_xg=round(home_xg, 2),
+                        away_xg=round(away_xg, 2),
+                        home_possession=50,
+                        away_possession=50
+                    )
+                    session.add(stats)
+                
                 matches_created += 1
                 
         await session.commit()

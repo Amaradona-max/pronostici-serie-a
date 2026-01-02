@@ -204,10 +204,10 @@ class ScorerProbability(BaseModel):
 
 
 class FixtureScorersResponse(BaseModel):
-    """Top 5 probabili marcatori per squadra"""
+    """Probabilità marcatori per una partita"""
     fixture_id: int
-    home_team_scorers: List[ScorerProbability] = Field(default_factory=list)
-    away_team_scorers: List[ScorerProbability] = Field(default_factory=list)
+    home_team_scorers: List[ScorerProbability]
+    away_team_scorers: List[ScorerProbability]
 
 
 # ============= LINEUP MODELS =============

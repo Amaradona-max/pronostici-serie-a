@@ -2,10 +2,14 @@
 import logging
 import asyncio
 import os
+import sys
 from datetime import datetime
 from typing import List, Dict
 from sqlalchemy import select, and_
 from sqlalchemy.orm import selectinload
+
+# Add parent directory to path to allow imports from app
+sys.path.append(os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__)))))
 
 from app.db.engine import AsyncSessionLocal
 from app.db.models import Fixture, MatchStats

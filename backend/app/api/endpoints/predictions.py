@@ -298,7 +298,14 @@ async def get_prediction(
     """
     Get prediction for a specific fixture.
     """
-    # ... (rest of existing code)
+    # Get fixture to check existence
+    fixture_query = select(Fixture).where(Fixture.id == fixture_id)
+    result = await db.execute(fixture_query)
+    fixture = result.scalar_one_or_none()
+
+    if not fixture:
+        raise HTTPException(status_code=404, detail="Fixture not found")
+
     query = select(Prediction).where(Prediction.fixture_id == fixture_id)
     result = await db.execute(query)
     prediction = result.scalar_one_or_none()
@@ -341,26 +348,22 @@ async def get_scorers_prediction(
     for player_name, role, base_prob in home_squad:
         home_scorers.append(ScorerProbability(
             player_name=player_name,
-            team_name=home_team_name,
-            probability=base_prob,
-            anytime_odds=round(1/base_prob, 2) if base_prob > 0 else 0,
-            first_scorer_odds=round(1/(base_prob * 0.3), 2) if base_prob > 0 else 0
+            position=role,
+            probability=base_prob
         ))
 
     away_scorers = []
     for player_name, role, base_prob in away_squad:
         away_scorers.append(ScorerProbability(
             player_name=player_name,
-            team_name=away_team_name,
-            probability=base_prob,
-            anytime_odds=round(1/base_prob, 2) if base_prob > 0 else 0,
-            first_scorer_odds=round(1/(base_prob * 0.3), 2) if base_prob > 0 else 0
+            position=role,
+            probability=base_prob
         ))
 
     return {
         "fixture_id": fixture_id,
-        "home_scorers": home_scorers,
-        "away_scorers": away_scorers
+        "home_team_scorers": home_scorers,
+        "away_team_scorers": away_scorers
     }
 
 
@@ -399,43 +402,46 @@ async def get_probable_lineups(
         "bench": []
     })
 
+    # Helper to map positions
+    def map_position(pos):
+        mapping = {"GK": "GK", "DEF": "DF", "MID": "MF", "FWD": "FW"}
+        return mapping.get(pos, pos)
+
     # Convert to response format
     home_lineup = TeamLineup(
         team_name=home_team_name,
         formation=home_mock["formation"],
-        starting_xi=[
-            LineupPlayer(name=p[0], position=p[1], jersey_number=0) 
+        starters=[
+            LineupPlayer(name=p[0], position=map_position(p[1]), jersey_number=0, is_starter=True) 
             for p in home_mock["starting_xi"]
         ],
         bench=[
-            LineupPlayer(name=p, position="SUB", jersey_number=0) 
+            LineupPlayer(name=p, position="SUB", jersey_number=0, is_starter=False) 
             for p in home_mock["bench"]
-        ],
-        coach="Allenatore" # Placeholder
+        ]
     )
 
     away_lineup = TeamLineup(
         team_name=away_team_name,
         formation=away_mock["formation"],
-        starting_xi=[
-            LineupPlayer(name=p[0], position=p[1], jersey_number=0) 
+        starters=[
+            LineupPlayer(name=p[0], position=map_position(p[1]), jersey_number=0, is_starter=True) 
             for p in away_mock["starting_xi"]
         ],
         bench=[
-            LineupPlayer(name=p, position="SUB", jersey_number=0) 
+            LineupPlayer(name=p, position="SUB", jersey_number=0, is_starter=False) 
             for p in away_mock["bench"]
-        ],
-        coach="Allenatore" # Placeholder
+        ]
     )
 
     return {
         "fixture_id": fixture_id,
-        "home_team": home_lineup,
-        "away_team": away_lineup
+        "home_lineup": home_lineup,
+        "away_lineup": away_lineup
     }
 
 
-@router.get("/{fixture_id}/biorhythm", response_model=FixtureBiorhythmsResponse)
+@router.get("/{fixture_id}/biorhythms", response_model=FixtureBiorhythmsResponse)
 async def get_biorhythm_analysis(
     fixture_id: int,
     db: AsyncSession = Depends(get_db)
@@ -480,17 +486,23 @@ async def get_biorhythm_analysis(
             # Fallback if no birthdates found
             return TeamBiorhythm(
                 team_name=team_name,
-                physical_avg=50.0,
-                emotional_avg=50.0,
-                intellectual_avg=50.0,
-                average_total=50.0,
-                trend="Neutral",
-                key_players=[]
+                avg_physical=50.0,
+                avg_emotional=50.0,
+                avg_intellectual=50.0,
+                avg_overall=50.0,
+                players_excellent=0,
+                players_good=0,
+                players_low=0,
+                players_critical=0,
+                total_players=0,
+                top_performers=[]
             )
 
         # Calculate for each player
         total_phy, total_emo, total_int = 0, 0, 0
         count = 0
+        
+        excellent, good, low, critical = 0, 0, 0, 0
         
         for name, dob_str in relevant_players.items():
             try:
@@ -499,18 +511,25 @@ async def get_biorhythm_analysis(
                 
                 player_bio = PlayerBiorhythm(
                     player_name=name,
-                    physical=bio["physical"],
-                    emotional=bio["emotional"],
-                    intellectual=bio["intellectual"],
-                    total=bio["average"],
-                    description=bio["description"]
+                    position="Giocatore", # Placeholder
+                    physical=bio.physical,
+                    emotional=bio.emotional,
+                    intellectual=bio.intellectual,
+                    overall=bio.overall,
+                    status=bio.status
                 )
                 team_players.append(player_bio)
                 
-                total_phy += bio["physical"]
-                total_emo += bio["emotional"]
-                total_int += bio["intellectual"]
+                total_phy += bio.physical
+                total_emo += bio.emotional
+                total_int += bio.intellectual
                 count += 1
+                
+                if bio.status == 'excellent': excellent += 1
+                elif bio.status == 'good': good += 1
+                elif bio.status == 'low': low += 1
+                elif bio.status == 'critical': critical += 1
+                
             except Exception as e:
                 logger.warning(f"Error calculating bio for {name}: {e}")
                 continue
@@ -518,12 +537,16 @@ async def get_biorhythm_analysis(
         if count == 0:
             return TeamBiorhythm(
                 team_name=team_name,
-                physical_avg=50.0,
-                emotional_avg=50.0,
-                intellectual_avg=50.0,
-                average_total=50.0,
-                trend="Neutral",
-                key_players=[]
+                avg_physical=50.0,
+                avg_emotional=50.0,
+                avg_intellectual=50.0,
+                avg_overall=50.0,
+                players_excellent=0,
+                players_good=0,
+                players_low=0,
+                players_critical=0,
+                total_players=0,
+                top_performers=[]
             )
 
         avg_phy = round(total_phy / count, 1)
@@ -532,30 +555,38 @@ async def get_biorhythm_analysis(
         avg_tot = round((avg_phy + avg_emo + avg_int) / 3, 1)
         
         # Sort players by total score to find key players (top 3)
-        team_players.sort(key=lambda x: x.total, reverse=True)
-        
-        trend = "Stable"
-        if avg_tot > 60: trend = "Peaking"
-        elif avg_tot < 40: trend = "Slumping"
+        team_players.sort(key=lambda x: x.overall, reverse=True)
         
         return TeamBiorhythm(
             team_name=team_name,
-            physical_avg=avg_phy,
-            emotional_avg=avg_emo,
-            intellectual_avg=avg_int,
-            average_total=avg_tot,
-            trend=trend,
-            key_players=team_players[:3]
+            avg_physical=avg_phy,
+            avg_emotional=avg_emo,
+            avg_intellectual=avg_int,
+            avg_overall=avg_tot,
+            players_excellent=excellent,
+            players_good=good,
+            players_low=low,
+            players_critical=critical,
+            total_players=count,
+            top_performers=team_players[:3]
         )
 
     home_bio = get_team_bio(home_team_name)
     away_bio = get_team_bio(away_team_name)
     
-    comparison = compare_team_biorhythms(home_bio, away_bio)
+    # Calculate advantage
+    diff = home_bio.avg_overall - away_bio.avg_overall
+    if diff > 5:
+        advantage = "home"
+    elif diff < -5:
+        advantage = "away"
+    else:
+        advantage = "neutral"
 
     return {
         "fixture_id": fixture_id,
+        "match_date": match_date,
         "home_team_biorhythm": home_bio,
         "away_team_biorhythm": away_bio,
-        "comparison_text": comparison
+        "biorhythm_advantage": advantage
     }
