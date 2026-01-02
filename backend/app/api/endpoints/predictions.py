@@ -42,11 +42,11 @@ TEAM_SQUADS = {
         ("Federico Dimarco", "Difensore", 0.25),
     ],
     "AC Milan": [
-        ("Christian Pulisic", "Attaccante", 0.46),
-        ("Rafael Leão", "Attaccante", 0.40),
-        ("Alvaro Morata", "Attaccante", 0.35),
-        ("Niclas Füllkrug", "Attaccante", 0.32),
-        ("Tijjani Reijnders", "Centrocampista", 0.28),
+        ("Christopher Nkunku", "Attaccante", 0.40),
+        ("Niclas Füllkrug", "Attaccante", 0.35),
+        ("Rafael Leão", "Attaccante", 0.35),
+        ("Christian Pulisic", "Attaccante", 0.32),
+        ("Luka Modrić", "Centrocampista", 0.28),
     ],
     "Napoli": [
         ("Romelu Lukaku", "Attaccante", 0.42),
@@ -147,7 +147,7 @@ TEAM_SQUADS = {
         ("Armel Bella-Kotchap", "Difensore", 0.15),
     ],
     "Cagliari": [
-        ("Roberto Piccoli", "Attaccante", 0.30),
+        ("Gianluca Lapadula", "Attaccante", 0.30),
         ("Zito Luvumbo", "Attaccante", 0.28),
         ("Gianluca Gaetano", "Centrocampista", 0.25),
         ("Razvan Marin", "Centrocampista", 0.20),
@@ -206,12 +206,12 @@ MOCK_LINEUPS = {
         "formation": "4-2-3-1",
         "starting_xi": [
             ("Maignan", "GK"),
-            ("Emerson Royal", "DEF"), ("Gabbia", "DEF"), ("Tomori", "DEF"), ("Hernandez", "DEF"),
-            ("Fofana", "MID"), ("Reijnders", "MID"),
-            ("Pulisic", "MID"), ("Loftus-Cheek", "MID"), ("Leao", "FWD"),
+            ("Terracciano", "DEF"), ("Tomori", "DEF"), ("De Winter", "DEF"), ("Estupinan", "DEF"),
+            ("Modric", "MID"), ("Rabiot", "MID"),
+            ("Pulisic", "MID"), ("Nkunku", "MID"), ("Leao", "FWD"),
             ("Fullkrug", "FWD")
         ],
-        "bench": ["Sportiello", "Calabria", "Pavlovic", "Terracciano", "Musah", "Chukwueze", "Okafor", "Abraham", "Jovic", "Thiaw", "Morata"]
+        "bench": ["Torriani", "Gabbia", "Pavlovic", "Jashari", "Bennacer", "Saelemaekers", "Ricci", "Athekame", "Odogu", "Loftus-Cheek", "Fofana"]
     },
     "Juventus": {
         "formation": "4-2-3-1",
@@ -357,9 +357,9 @@ MOCK_LINEUPS = {
             ("Scuffet", "GK"),
             ("Zappa", "DEF"), ("Mina", "DEF"), ("Luperto", "DEF"),
             ("Zortea", "MID"), ("Marin", "MID"), ("Adopo", "MID"), ("Gaetano", "MID"), ("Augello", "MID"),
-            ("Luvumbo", "FWD"), ("Piccoli", "FWD")
+            ("Luvumbo", "FWD"), ("Lapadula", "FWD")
         ],
-        "bench": ["Sherri", "Palomino", "Obert", "Prati", "Deiola", "Viola", "Lapadula", "Pavoletti", "Felici"]
+        "bench": ["Sherri", "Palomino", "Obert", "Prati", "Deiola", "Viola", "Pavoletti", "Felici", "Jankto"]
     },
     "Como": {
         "formation": "4-2-3-1",
