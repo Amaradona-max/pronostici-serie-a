@@ -8,10 +8,12 @@ from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import JSONResponse
 from contextlib import asynccontextmanager
 import logging
+from sqlalchemy import select, text
 
 from app.config import get_settings
-from app.db.engine import init_db, close_db
+from app.db.engine import init_db, close_db, AsyncSessionLocal
 from app.api.endpoints import fixtures, predictions, health, admin, standings, teams
+from app.db import models
 
 # Configure logging
 logging.basicConfig(
@@ -38,6 +40,57 @@ async def lifespan(app: FastAPI):
     logger.info("Initializing database...")
     await init_db()
     logger.info("Database initialized successfully")
+
+    # AUTO-SEEDING CHECK FOR VERCEL
+    # If we are in production and the DB is empty (no teams/standings), seed them.
+    if settings.is_production:
+        try:
+            async with AsyncSessionLocal() as session:
+                # Check for teams
+                result = await session.execute(select(models.Team).limit(1))
+                team = result.scalar_one_or_none()
+                
+                if not team:
+                    logger.warning("PRODUCTION: Database is empty! Starting auto-seeding...")
+                    
+                    # Import seed functions inside the check to avoid circular imports
+                    from app.scripts.seed_teams import seed_teams
+                    from app.scripts.seed_players import seed_players
+                    from app.scripts.seed_standings_g17 import seed_standings
+                    from app.scripts.seed_fixtures_g18 import seed_fixtures
+                    
+                    # 1. Seed Teams
+                    logger.info("Auto-seeding Teams...")
+                    await seed_teams()
+                    
+                    # 2. Seed Players (includes creating players)
+                    logger.info("Auto-seeding Players...")
+                    await seed_players()
+                    
+                    # 3. Seed Standings
+                    logger.info("Auto-seeding Standings...")
+                    await seed_standings()
+
+                    # 4. Seed Fixtures
+                    logger.info("Auto-seeding Fixtures...")
+                    await seed_fixtures()
+                    
+                    logger.info("Auto-seeding COMPLETE.")
+                else:
+                    # Check for standings specifically
+                    stats_result = await session.execute(
+                        select(models.TeamStats).where(models.TeamStats.season == "2025-2026").limit(1)
+                    )
+                    stats = stats_result.scalar_one_or_none()
+                    
+                    if not stats:
+                        logger.warning("PRODUCTION: Standings missing! Seeding standings...")
+                        from app.scripts.seed_standings_g17 import seed_standings
+                        await seed_standings()
+                        logger.info("Standings seeded.")
+
+        except Exception as e:
+            logger.error(f"Error during auto-seeding check: {e}")
 
     logger.info("Application started successfully")
 
@@ -105,38 +158,3 @@ app.include_router(
     prefix="/api/v1/teams",
     tags=["Teams"]
 )
-
-
-@app.get("/")
-async def root():
-    """Root endpoint - API information"""
-    return {
-        "name": "Serie A Predictions API",
-        "version": "1.0.0",
-        "status": "running",
-        "environment": settings.ENVIRONMENT,
-        "docs": "/docs"
-    }
-
-
-@app.exception_handler(Exception)
-async def global_exception_handler(request, exc):
-    """Global exception handler"""
-    logger.error(f"Unhandled exception: {exc}", exc_info=True)
-    return JSONResponse(
-        status_code=500,
-        content={
-            "detail": "Internal server error",
-            "type": "server_error"
-        }
-    )
-
-
-if __name__ == "__main__":
-    import uvicorn
-    uvicorn.run(
-        "app.main:app",
-        host="0.0.0.0",
-        port=8000,
-        reload=True
-    )
