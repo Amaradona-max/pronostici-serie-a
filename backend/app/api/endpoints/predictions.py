@@ -187,7 +187,7 @@ MOCK_LINEUPS = {
             ("Dumfries", "MID"), ("Barella", "MID"), ("Calhanoglu", "MID"), ("Mkhitaryan", "MID"), ("Dimarco", "MID"),
             ("M. Thuram", "FWD"), ("Lautaro Martinez", "FWD")
         ],
-        "bench": ["J. Martinez", "Bisseck", "Darmian", "Frattesi", "Zielinski", "Taremi", "Arnautovic"]
+        "bench": ["J. Martinez", "Bisseck", "De Vrij", "Darmian", "Zielinski", "Frattesi", "Taremi", "Arnautovic", "Buchanan", "Asllani", "Carlos Augusto"]
     },
     "AC Milan": {
         "formation": "4-2-3-1",
@@ -198,39 +198,39 @@ MOCK_LINEUPS = {
             ("Pulisic", "MID"), ("Loftus-Cheek", "MID"), ("Leao", "FWD"),
             ("Morata", "FWD")
         ],
-        "bench": ["Sportiello", "Calabria", "Musah", "Chukwueze", "Okafor", "Jovic", "Abraham"]
+        "bench": ["Sportiello", "Calabria", "Pavlovic", "Terracciano", "Musah", "Chukwueze", "Okafor", "Abraham", "Jovic", "Thiaw"]
     },
     "Juventus": {
         "formation": "4-2-3-1",
         "starting_xi": [
             ("Di Gregorio", "GK"),
-            ("Cambiaso", "DEF"), ("Gatti", "DEF"), ("Bremer", "DEF"), ("Cabal", "DEF"),
+            ("Savona", "DEF"), ("Gatti", "DEF"), ("Kalulu", "DEF"), ("Cambiaso", "DEF"),
             ("Locatelli", "MID"), ("K. Thuram", "MID"),
-            ("Gonzalez", "MID"), ("Koopmeiners", "MID"), ("Yildiz", "FWD"),
+            ("Conceicao", "MID"), ("Koopmeiners", "MID"), ("Yildiz", "FWD"),
             ("Vlahovic", "FWD")
         ],
-        "bench": ["Perin", "Danilo", "Douglas Luiz", "Fagioli", "Conceicao", "Milik", "Weah"]
+        "bench": ["Perin", "Danilo", "Douglas Luiz", "Fagioli", "Weah", "McKennie", "Rouhi", "Adzic", "Mbangula", "Milik"]
     },
     "Napoli": {
-        "formation": "3-4-2-1",
+        "formation": "4-3-3",
         "starting_xi": [
             ("Meret", "GK"),
-            ("Di Lorenzo", "DEF"), ("Rrahmani", "DEF"), ("Buongiorno", "DEF"),
-            ("Mazzocchi", "MID"), ("Anguissa", "MID"), ("Lobotka", "MID"), ("Spinazzola", "MID"),
-            ("Politano", "MID"), ("Kvaratskhelia", "FWD"),
-            ("Lukaku", "FWD")
+            ("Di Lorenzo", "DEF"), ("Rrahmani", "DEF"), ("Buongiorno", "DEF"), ("Olivera", "DEF"),
+            ("Anguissa", "MID"), ("Lobotka", "MID"), ("McTominay", "MID"),
+            ("Politano", "FWD"), ("Lukaku", "FWD"), ("Kvaratskhelia", "FWD")
         ],
-        "bench": ["Caprile", "Juan Jesus", "Marin", "McTominay", "Neres", "Simeone", "Raspadori"]
+        "bench": ["Caprile", "Juan Jesus", "Spinazzola", "Gilmour", "Neres", "Simeone", "Raspadori", "Mazzocchi", "Marin"]
     },
     "AS Roma": {
-        "formation": "3-5-2",
+        "formation": "3-4-2-1",
         "starting_xi": [
             ("Svilar", "GK"),
-            ("Mancini", "DEF"), ("Ndicka", "DEF"), ("Angelino", "DEF"),
-            ("Celik", "MID"), ("Koné", "MID"), ("Paredes", "MID"), ("Pellegrini", "MID"), ("El Shaarawy", "MID"),
-            ("Dybala", "FWD"), ("Dovbyk", "FWD")
+            ("Mancini", "DEF"), ("Hummels", "DEF"), ("Ndicka", "DEF"),
+            ("Celik", "MID"), ("Koné", "MID"), ("Cristante", "MID"), ("Angelino", "MID"),
+            ("Dybala", "FWD"), ("Pellegrini", "FWD"),
+            ("Dovbyk", "FWD")
         ],
-        "bench": ["Ryan", "Hummels", "Hermoso", "Cristante", "Baldanzi", "Soulé", "Shomurodov"]
+        "bench": ["Ryan", "Hermoso", "Abdulhamid", "Dahl", "Le Fee", "Pisilli", "Soulé", "Baldanzi", "Shomurodov", "Saelemaekers", "El Shaarawy"]
     },
     "Lazio": {
         "formation": "4-2-3-1",
@@ -238,139 +238,137 @@ MOCK_LINEUPS = {
             ("Provedel", "GK"),
             ("Lazzari", "DEF"), ("Gila", "DEF"), ("Romagnoli", "DEF"), ("Tavares", "DEF"),
             ("Guendouzi", "MID"), ("Rovella", "MID"),
-            ("Isaksen", "MID"), ("Castrovilli", "MID"), ("Zaccagni", "MID"),
+            ("Isaksen", "MID"), ("Dia", "MID"), ("Zaccagni", "MID"),
             ("Castellanos", "FWD")
         ],
-        "bench": ["Mandas", "Patric", "Marusic", "Vecino", "Dele-Bashiru", "Noslin", "Dia"]
+        "bench": ["Mandas", "Patric", "Marusic", "Gigot", "Vecino", "Dele-Bashiru", "Noslin", "Pedro", "Castrovilli"]
     },
     "Atalanta": {
-        "formation": "3-4-1-2",
+        "formation": "3-4-2-1",
         "starting_xi": [
             ("Carnesecchi", "GK"),
             ("Djimsiti", "DEF"), ("Hien", "DEF"), ("Kolasinac", "DEF"),
             ("Bellanova", "MID"), ("De Roon", "MID"), ("Ederson", "MID"), ("Ruggeri", "MID"),
-            ("Pasalic", "MID"),
-            ("De Ketelaere", "FWD"), ("Retegui", "FWD")
+            ("De Ketelaere", "MID"), ("Lookman", "MID"),
+            ("Retegui", "FWD")
         ],
-        "bench": ["Rui Patricio", "Godfrey", "Toloi", "Zappacosta", "Samardzic", "Brescianini", "Lookman"]
+        "bench": ["Rui Patricio", "Kossounou", "Toloi", "Zappacosta", "Cuadrado", "Pasalic", "Samardzic", "Brescianini", "Zaniolo"]
     },
     "Fiorentina": {
-        "formation": "3-4-2-1",
+        "formation": "4-2-3-1",
         "starting_xi": [
             ("De Gea", "GK"),
-            ("Quarta", "DEF"), ("Pongracic", "DEF"), ("Biraghi", "DEF"),
-            ("Dodo", "MID"), ("Mandragora", "MID"), ("Richardson", "MID"), ("R. Gosens", "MID"),
-            ("Colpani", "MID"), ("Sottil", "MID"),
+            ("Dodo", "DEF"), ("Comuzzo", "DEF"), ("Ranieri", "DEF"), ("R. Gosens", "DEF"),
+            ("Adli", "MID"), ("Cataldi", "MID"),
+            ("Colpani", "MID"), ("Gudmundsson", "MID"), ("Bove", "MID"),
             ("Kean", "FWD")
         ],
-        "bench": ["Terracciano", "Ranieri", "Kayode", "Adli", "Bove", "Gudmundsson", "Beltran", "Parisi"]
+        "bench": ["Terracciano", "Pongracic", "Quarta", "Kayode", "Biraghi", "Richardson", "Mandragora", "Sottil", "Beltran", "Kouame", "Parisi"]
     },
     "Bologna": {
         "formation": "4-2-3-1",
         "starting_xi": [
             ("Skorupski", "GK"),
             ("Posch", "DEF"), ("Beukema", "DEF"), ("Lucumi", "DEF"), ("Miranda", "DEF"),
-            ("Freuler", "MID"), ("Aebischer", "MID"),
+            ("Freuler", "MID"), ("Pobega", "MID"),
             ("Orsolini", "MID"), ("Fabbian", "MID"), ("Ndoye", "MID"),
             ("Castro", "FWD")
         ],
-        "bench": ["Ravaglia", "Erlic", "Lykogiannis", "Moro", "Pobega", "Iling-Junior", "Dallinga"]
+        "bench": ["Ravaglia", "Casale", "Erlic", "Holm", "Lykogiannis", "Moro", "Aebischer", "Iling-Junior", "Dallinga", "Odgaard"]
     },
     "Torino": {
         "formation": "3-5-2",
         "starting_xi": [
             ("Milinkovic-Savic", "GK"),
-            ("Vojvoda", "DEF"), ("Coco", "DEF"), ("Masina", "DEF"),
-            ("Lazaro", "MID"), ("Ricci", "MID"), ("Linetty", "MID"), ("Ilic", "MID"), ("Sosa", "MID"),
-            ("Adams", "FWD"), ("Zapata", "FWD")
+            ("Walukiewicz", "DEF"), ("Coco", "DEF"), ("Masina", "DEF"),
+            ("Pedersen", "MID"), ("Ricci", "MID"), ("Linetty", "MID"), ("Vlasic", "MID"), ("Lazaro", "MID"),
+            ("Adams", "FWD"), ("Sanabria", "FWD")
         ],
-        "bench": ["Paleari", "Walukiewicz", "Maripan", "Tameze", "Vlasic", "Sanabria", "Karamoh"]
+        "bench": ["Paleari", "Maripan", "Vojvoda", "Sosa", "Ilic", "Tameze", "Gineitis", "Karamoh", "Njie"]
     },
     "Udinese": {
-        "formation": "3-4-2-1",
+        "formation": "3-5-2",
         "starting_xi": [
             ("Okoye", "GK"),
-            ("Perez", "DEF"), ("Bijol", "DEF"), ("Giannetti", "DEF"),
-            ("Ehizibue", "MID"), ("Karlstrom", "MID"), ("Payero", "MID"), ("Kamara", "MID"),
-            ("Thauvin", "MID"), ("Brenner", "MID"),
-            ("Lucca", "FWD")
+            ("Kabasele", "DEF"), ("Bijol", "DEF"), ("Touré", "DEF"),
+            ("Ehizibue", "MID"), ("Karlstrom", "MID"), ("Lovric", "MID"), ("Kamara", "MID"), ("Ekkelenkamp", "MID"),
+            ("Thauvin", "FWD"), ("Lucca", "FWD")
         ],
-        "bench": ["Padelli", "Kabasele", "Kristensen", "Lovric", "Zarraga", "Ekkelenkamp", "Davis"]
+        "bench": ["Padelli", "Sava", "Kristensen", "Giannetti", "Ebosse", "Zarraga", "Atta", "Payero", "Davis", "Brenner", "Bravo", "Pizarro"]
     },
     "Genoa": {
         "formation": "3-5-2",
         "starting_xi": [
             ("Gollini", "GK"),
             ("Vogliacco", "DEF"), ("Bani", "DEF"), ("Vasquez", "DEF"),
-            ("Sabelli", "MID"), ("Frendrup", "MID"), ("Badelj", "MID"), ("Malinovskyi", "MID"), ("Martin", "MID"),
+            ("Sabelli", "MID"), ("Frendrup", "MID"), ("Badelj", "MID"), ("Miretti", "MID"), ("Martin", "MID"),
             ("Vitinha", "FWD"), ("Pinamonti", "FWD")
         ],
-        "bench": ["Leali", "De Winter", "Matturro", "Thorsby", "Messias", "Ekuban", "Ekhator"]
+        "bench": ["Leali", "De Winter", "Matturro", "Thorsby", "Messias", "Ekuban", "Ekhator", "Balotelli", "Norton-Cuffy"]
     },
     "Hellas Verona": {
         "formation": "4-2-3-1",
         "starting_xi": [
             ("Montipò", "GK"),
-            ("Tchatchoua", "DEF"), ("Dawidowicz", "DEF"), ("Coppola", "DEF"), ("Frese", "DEF"),
+            ("Tchatchoua", "DEF"), ("Dawidowicz", "DEF"), ("Coppola", "DEF"), ("Bradaric", "DEF"),
             ("Belahyane", "MID"), ("Duda", "MID"),
             ("Suslov", "MID"), ("Harroui", "MID"), ("Lazovic", "MID"),
             ("Tengstedt", "FWD")
         ],
-        "bench": ["Perilli", "Magnani", "Daniliuc", "Dani Silva", "Kastanos", "Livramento", "Mosquera"]
+        "bench": ["Perilli", "Magnani", "Daniliuc", "Dani Silva", "Kastanos", "Livramento", "Mosquera", "Frese", "Serdar"]
     },
     "Lecce": {
-        "formation": "4-2-3-1",
+        "formation": "4-3-3",
         "starting_xi": [
             ("Falcone", "GK"),
             ("Guilbert", "DEF"), ("Baschirotto", "DEF"), ("Gaspar", "DEF"), ("Gallo", "DEF"),
-            ("Ramadani", "MID"), ("Pierret", "MID"),
-            ("Morente", "MID"), ("Marchwinski", "MID"), ("Dorgu", "MID"),
-            ("Krstovic", "FWD")
+            ("Coulibaly", "MID"), ("Ramadani", "MID"), ("Rafia", "MID"),
+            ("Dorgu", "FWD"), ("Krstovic", "FWD"), ("Banda", "FWD")
         ],
-        "bench": ["Fruchtl", "Jean", "Coulibaly", "Oudin", "Rafia", "Banda", "Rebic"]
+        "bench": ["Fruchtl", "Pelmard", "Jean", "Pierret", "Oudin", "Marchwinski", "Rebic", "Sansone", "Morente"]
     },
     "Parma": {
         "formation": "4-2-3-1",
         "starting_xi": [
             ("Suzuki", "GK"),
-            ("Coulibaly", "DEF"), ("Delprato", "DEF"), ("Circati", "DEF"), ("Valeri", "DEF"),
-            ("Estevez", "MID"), ("Bernabé", "MID"),
-            ("Man", "MID"), ("Sohm", "MID"), ("Mihaila", "MID"),
+            ("Coulibaly", "DEF"), ("Delprato", "DEF"), ("Balogh", "DEF"), ("Valeri", "DEF"),
+            ("Keita", "MID"), ("Sohm", "MID"),
+            ("Man", "MID"), ("Bernabé", "MID"), ("Mihaila", "MID"),
             ("Bonny", "FWD")
         ],
-        "bench": ["Chichizola", "Balogh", "Osorio", "Cyprien", "Hernani", "Cancellieri", "Almqvist"]
+        "bench": ["Chichizola", "Hainaut", "Osorio", "Leoni", "Hernani", "Estevez", "Cancellieri", "Almqvist", "Charpentier"]
     },
     "Cagliari": {
         "formation": "3-5-2",
         "starting_xi": [
             ("Scuffet", "GK"),
             ("Zappa", "DEF"), ("Mina", "DEF"), ("Luperto", "DEF"),
-            ("Zortea", "MID"), ("Deiola", "MID"), ("Prati", "MID"), ("Marin", "MID"), ("Augello", "MID"),
-            ("Belotti", "FWD"), ("Piccoli", "FWD")
+            ("Zortea", "MID"), ("Marin", "MID"), ("Adopo", "MID"), ("Gaetano", "MID"), ("Augello", "MID"),
+            ("Luvumbo", "FWD"), ("Piccoli", "FWD")
         ],
-        "bench": ["Sherri", "Palomino", "Obert", "Adopo", "Viola", "Gaetano", "Luvumbo", "Lapadula", "Pavoletti"]
+        "bench": ["Sherri", "Palomino", "Obert", "Prati", "Deiola", "Viola", "Lapadula", "Pavoletti", "Felici"]
     },
     "Como": {
         "formation": "4-2-3-1",
         "starting_xi": [
-            ("Reina", "GK"),
+            ("Audero", "GK"),
             ("Iovine", "DEF"), ("Kempf", "DEF"), ("Dossena", "DEF"), ("Moreno", "DEF"),
             ("Mazzitelli", "MID"), ("Sergi Roberto", "MID"),
-            ("Strefezza", "MID"), ("Paz", "MID"), ("Da Cunha", "FWD"),
+            ("Strefezza", "MID"), ("Paz", "MID"), ("Fadera", "MID"),
             ("Cutrone", "FWD")
         ],
-        "bench": ["Audero", "Sala", "Barba", "Engelhardt", "Verdi", "Gabrielloni", "Belotti"]
+        "bench": ["Reina", "Sala", "Barba", "Engelhardt", "Verdi", "Gabrielloni", "Belotti", "Da Cunha", "Perrone"]
     },
     "Venezia": {
         "formation": "3-4-2-1",
         "starting_xi": [
-             ("Joronen", "GK"),
+             ("Stankovic", "GK"),
              ("Idzes", "DEF"), ("Svoboda", "DEF"), ("Sverko", "DEF"),
-             ("Candela", "MID"), ("Duncan", "MID"), ("Nicolussi Caviglia", "MID"), ("Zampano", "MID"),
-             ("Busio", "MID"), ("Oristanio", "MID"),
+             ("Candela", "MID"), ("Duncan", "MID"), ("Nicolussi Caviglia", "MID"), ("Haps", "MID"),
+             ("Oristanio", "MID"), ("Busio", "MID"),
              ("Pohjanpalo", "FWD")
         ],
-        "bench": ["Stankovic", "Haps", "Sagrado", "Crnigoj", "Ellertsson", "Yeboah", "Gytkjaer"]
+        "bench": ["Joronen", "Zampano", "Sagrado", "Crnigoj", "Ellertsson", "Yeboah", "Gytkjaer"]
     },
     "Empoli": {
         "formation": "3-4-2-1",
@@ -381,18 +379,18 @@ MOCK_LINEUPS = {
             ("Fazzini", "MID"), ("Esposito", "MID"),
             ("Colombo", "FWD")
         ],
-        "bench": ["Seghetti", "Marianucci", "Cacace", "Haas", "Maleh", "Solbakken", "Pellegri"]
+        "bench": ["Seghetti", "Marianucci", "Cacace", "Anjorin", "Haas", "Maleh", "Solbakken", "Pellegri"]
     },
     "Monza": {
         "formation": "3-4-2-1",
         "starting_xi": [
             ("Turati", "GK"),
             ("Izzo", "DEF"), ("Mari", "DEF"), ("Carboni", "DEF"),
-            ("Pereira", "MID"), ("Bondo", "MID"), ("Pessina", "MID"), ("Kyriakopoulos", "MID"),
+            ("Pereira", "MID"), ("Bondo", "MID"), ("Bianco", "MID"), ("Kyriakopoulos", "MID"),
             ("Maldini", "MID"), ("Mota", "MID"),
             ("Djuric", "FWD")
         ],
-        "bench": ["Pizzignacco", "Caldirola", "D'Ambrosio", "Sensi", "Valoti", "Caprari", "Petagna"]
+        "bench": ["Pizzignacco", "Caldirola", "D'Ambrosio", "Sensi", "Valoti", "Caprari", "Petagna", "Pessina"]
     }
 }
 

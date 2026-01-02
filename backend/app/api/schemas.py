@@ -46,7 +46,7 @@ class PredictionStatsResponse(BaseModel):
     worst_team_correct: int
     worst_team_total: int
 
-    model_config = {"from_attributes": True}
+    model_config = {"from_attributes": True, "protected_namespaces": ()}
 
 
 
@@ -190,6 +190,8 @@ class ModelPerformanceResponse(BaseModel):
 
     # Optional
     roi_if_betting: Optional[float] = None
+    
+    model_config = {"protected_namespaces": ()}
 
 
 # ============= SCORER PROBABILITY MODELS =============

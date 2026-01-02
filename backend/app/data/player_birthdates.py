@@ -197,6 +197,8 @@ PLAYER_BIRTHDATES = {
     "L. Pellegrini": date(1999, 3, 7),
     "M. Vecino": date(1991, 8, 24),
     "F. Dele-Bashiru": date(2001, 2, 16),
+    "Pedro": date(1987, 7, 28),
+    "Casale": date(1998, 2, 14),
 
     # ===== COMO =====
     "E. Audero": date(1997, 1, 18),
@@ -305,6 +307,9 @@ PLAYER_BIRTHDATES = {
     "I. Touré": date(2003, 1, 4),
     "R. Sava": date(2002, 7, 20),
     "E. Ebosse": date(1999, 3, 11),
+    "A. Atta": date(2003, 1, 14),
+    "I. Bravo": date(2005, 1, 13),
+    "D. Pizarro": date(2005, 3, 28),
 
     # ===== GENOA =====
     "P. Gollini": date(1995, 3, 18),
@@ -350,7 +355,8 @@ PLAYER_BIRTHDATES = {
     "S. Perilli": date(1995, 1, 7),
 
     # ===== LECCE =====
-    "W. Falcone": date(1995, 4, 12),
+    "W. Falcone": date(1995, 4, 1),
+    "D. Bradaric": date(1999, 12, 10),
     "F. Guilbert": date(1995, 4, 5),
     "F. Baschirotto": date(1996, 9, 20),
     "K. Gaspar": date(1997, 4, 23),
@@ -368,6 +374,8 @@ PLAYER_BIRTHDATES = {
     "H. Rafia": date(1999, 4, 2),
     "C. Fruchtl": date(2000, 1, 28),
     "G. Jean": date(2002, 6, 25),
+    "A. Pelmard": date(2000, 3, 12),
+    "N. Sansone": date(1991, 9, 10),
 
     # ===== CAGLIARI =====
     "S. Scuffet": date(1996, 5, 31),
@@ -465,6 +473,7 @@ PLAYER_BIRTHDATES = {
     "O. Solbakken": date(1998, 9, 7),
     "Solbakken": date(1998, 9, 7),
     "P. Pellegri": date(2001, 3, 17),
+    "T. Anjorin": date(2001, 11, 23),
     "Pellegri": date(2001, 3, 17),
 
     # ===== MONZA =====
@@ -504,6 +513,55 @@ PLAYER_BIRTHDATES = {
     "Caprari": date(1993, 7, 30),
     "A. Petagna": date(1995, 6, 30),
     "Petagna": date(1995, 6, 30),
+
+    # ===== AGGIUNTE 2025/26 (Missing Players) =====
+    "De Vrij": date(1992, 2, 5),
+    "Carlos Augusto": date(1999, 1, 7),
+    "Emerson Royal": date(1999, 1, 14),
+    "M. Sportiello": date(1992, 5, 10),
+    "Conceicao": date(2002, 12, 14),
+    "Yildiz": date(2005, 5, 4),
+    "Vlahovic": date(2000, 1, 28),
+    "J. Rouhi": date(2004, 1, 7),
+    "V. Adzic": date(2006, 5, 12),
+    "Juan Jesus": date(1991, 6, 10),
+    "S. Abdulhamid": date(1999, 7, 18),
+    "S. Dahl": date(2003, 3, 4),
+    "E. Le Fee": date(2000, 2, 3),
+    "N. Pisilli": date(2004, 9, 23),
+    "E. Shomurodov": date(1995, 6, 29),
+    "C. Mandas": date(2001, 9, 17),
+    "Patric": date(1993, 4, 17),
+    "A. Marusic": date(1992, 10, 17),
+    "De Roon": date(1991, 3, 29),
+    "Ederson": date(1999, 7, 7),
+    "Rui Patricio": date(1988, 2, 15),
+    "R. Toloi": date(1990, 10, 10),
+    "De Gea": date(1990, 11, 7),
+    "P. Comuzzo": date(2005, 2, 20),
+    "M. Kayode": date(2004, 7, 10),
+    "C. Biraghi": date(1992, 9, 1),
+    "C. Kouame": date(1997, 12, 6),
+    "F. Ravaglia": date(1999, 11, 11),
+    "C. Lykogiannis": date(1993, 10, 22),
+    "N. Moro": date(1998, 3, 12),
+    "M. Pedersen": date(2000, 7, 16),
+    "G. Gineitis": date(2004, 4, 15),
+    "A. Njie": date(2005, 5, 14),
+    "D. Padelli": date(1985, 10, 25),
+    "J. Ekhator": date(2006, 11, 11),
+    "B. Norton-Cuffy": date(2004, 1, 12),
+    "S. Serdar": date(1997, 4, 11),
+    "A. Hainaut": date(2002, 2, 18),
+    "G. Leoni": date(2006, 12, 21),
+    "G. Charpentier": date(1999, 5, 17),
+    "M. Felici": date(2001, 4, 17),
+    "Sergi Roberto": date(1992, 2, 7),
+    "M. Sala": date(1999, 6, 4),
+    "F. Barba": date(1993, 9, 1),
+    "Y. Engelhardt": date(2001, 2, 7),
+    "A. Gabrielloni": date(1994, 7, 10),
+    "A. Bianco": date(2002, 10, 1),
 }
 
 
