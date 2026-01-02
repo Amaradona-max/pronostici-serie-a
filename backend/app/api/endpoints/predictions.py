@@ -185,7 +185,7 @@ MOCK_LINEUPS = {
             ("Sommer", "GK"),
             ("Pavard", "DEF"), ("Acerbi", "DEF"), ("Bastoni", "DEF"),
             ("Dumfries", "MID"), ("Barella", "MID"), ("Calhanoglu", "MID"), ("Mkhitaryan", "MID"), ("Dimarco", "MID"),
-            ("Thuram", "FWD"), ("Lautaro", "FWD")
+            ("Thuram", "FWD"), ("Lautaro Martinez", "FWD")
         ],
         "bench": ["Audero", "Bisseck", "Darmian", "Frattesi", "Zielinski", "Taremi", "Arnautovic"]
     },
@@ -655,6 +655,7 @@ async def get_biorhythm_analysis(
         count = 0
         
         excellent, good, low, critical = 0, 0, 0, 0
+        team_players = []
         
         for name, dob in relevant_players.items():
             try:
@@ -720,7 +721,7 @@ async def get_biorhythm_analysis(
             players_low=low,
             players_critical=critical,
             total_players=count,
-            top_performers=team_players[:3]
+            top_performers=team_players  # Return all players for detailed view
         )
 
     home_bio = get_team_bio(home_team_name)

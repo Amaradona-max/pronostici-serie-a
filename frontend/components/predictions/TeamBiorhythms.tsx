@@ -168,11 +168,11 @@ export function TeamBiorhythms({
             )}
           </div>
 
-          {/* Top Performers */}
+          {/* Player Details */}
           {teamData.top_performers.length > 0 && (
             <div>
               <div className="text-xs text-muted-foreground mb-2 font-semibold">
-                Top 3 Giocatori per Bioritmo
+                Dettaglio Giocatori
               </div>
               <div className="space-y-2">
                 {teamData.top_performers.map((player, idx) => (
