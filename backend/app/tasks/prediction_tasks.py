@@ -16,9 +16,12 @@ from app.ml.dixon_coles import DixonColesModel
 from app.ml.evaluation import PredictionEvaluator
 from app.services.feature_extraction import FeatureExtractor
 from app.config import get_settings
+import os
 
 logger = logging.getLogger(__name__)
 settings = get_settings()
+
+MODEL_PATH = os.path.join(os.path.dirname(os.path.dirname(__file__)), "ml", "saved_models", "dixon_coles_latest.pkl")
 
 
 def run_async(coroutine):
@@ -70,31 +73,40 @@ def generate_predictions(self, fixture_id: int, force_regenerate: bool = False):
                 features = await feature_extractor.extract_features(fixture_id)
 
                 # Load ML model
-                # TODO: Implement model loading from storage
-                # For now, we'll create a placeholder
                 model = DixonColesModel()
-
+                if os.path.exists(MODEL_PATH):
+                    try:
+                        model = DixonColesModel.load(MODEL_PATH)
+                        logger.info(f"Loaded trained model from {MODEL_PATH}")
+                    except Exception as e:
+                        logger.error(f"Failed to load model: {e}")
+                
                 # Check if model is fitted
-                # In production, load pre-trained model
                 if not model._is_fitted:
-                    logger.warning("Model not fitted. Skipping prediction.")
+                    logger.warning("Model not fitted and no saved model found. Skipping prediction.")
                     return
 
                 # Generate prediction
                 home_form_factor = features.get('home_form_factor', 1.0)
                 away_form_factor = features.get('away_form_factor', 1.0)
 
-                prediction = model.predict_match(
-                    fixture.home_team.name,
-                    fixture.away_team.name,
-                    home_form_factor=home_form_factor,
-                    away_form_factor=away_form_factor
-                )
+                # Safe prediction (handle new teams)
+                try:
+                    prediction = model.predict_match(
+                        fixture.home_team.name,
+                        fixture.away_team.name,
+                        home_form_factor=home_form_factor,
+                        away_form_factor=away_form_factor
+                    )
+                except ValueError as e:
+                    logger.warning(f"Could not predict fixture {fixture_id}: {e}")
+                    # Fallback or skip
+                    return
 
                 # Save prediction to database
                 new_prediction = models.Prediction(
                     fixture_id=fixture_id,
-                    model_version='1.0',
+                    model_version='1.2.0-xg',
                     prob_home_win=prediction['prob_home_win'],
                     prob_draw=prediction['prob_draw'],
                     prob_away_win=prediction['prob_away_win'],

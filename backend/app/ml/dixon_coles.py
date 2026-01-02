@@ -345,6 +345,110 @@ class DixonColesModel:
 
         return result
 
+    def fit_xg(
+        self,
+        matches: List[Dict],
+        time_decay: bool = True
+    ):
+        """
+        Fit model using Expected Goals (xG) instead of actual goals.
+        Minimizes Mean Squared Error between predicted lambda/mu and actual xG.
+        
+        This is often more accurate as xG is less noisy than goals.
+        """
+        if not matches:
+            raise ValueError("No matches provided for fitting")
+
+        logger.info(f"Fitting Dixon-Coles model on {len(matches)} matches using xG")
+
+        # Get unique teams
+        teams = set()
+        for match in matches:
+            teams.add(match['home_team'])
+            teams.add(match['away_team'])
+
+        self.team_list = sorted(teams)
+        n_teams = len(self.team_list)
+        team_to_idx = {team: i for i, team in enumerate(self.team_list)}
+
+        # Weights
+        weights = []
+        if time_decay and 'date' in matches[0]:
+            max_date = max(m['date'] for m in matches)
+            for match in matches:
+                days_ago = (max_date - match['date']).days
+                weight = np.exp(-self.xi * days_ago)
+                weights.append(weight)
+        else:
+            weights = [1.0] * len(matches)
+
+        def loss_function(params):
+            # Unpack parameters
+            attack = params[:n_teams]
+            defense = params[n_teams:2 * n_teams]
+            home_adv = params[-1]  # No rho for xG fitting
+
+            if np.any(attack <= 0) or np.any(defense <= 0) or home_adv <= 0:
+                return 1e10
+
+            loss = 0.0
+            
+            # Constraint: Avg Attack = 1.0 (to fix scale)
+            # We add this as a penalty
+            scale_penalty = (np.mean(attack) - 1.0)**2 + (np.mean(defense) - 1.0)**2
+
+            for idx, match in enumerate(matches):
+                i = team_to_idx[match['home_team']]
+                j = team_to_idx[match['away_team']]
+
+                # Predicted xG
+                pred_home_xg = attack[i] * defense[j] * home_adv
+                pred_away_xg = attack[j] * defense[i] # No home adv for away
+
+                # Actual xG
+                actual_home_xg = match.get('home_xg', match['home_score']) # Fallback to goals if xG missing
+                actual_away_xg = match.get('away_xg', match['away_score'])
+
+                # Weighted Squared Error
+                error = (pred_home_xg - actual_home_xg)**2 + (pred_away_xg - actual_away_xg)**2
+                loss += weights[idx] * error
+
+            return loss + (scale_penalty * 1000)
+
+        # Initial parameters
+        x0 = np.concatenate([
+            np.ones(n_teams),          # Attack
+            np.ones(n_teams),          # Defense
+            [1.2]                      # Home Adv
+        ])
+
+        # Bounds
+        bounds = (
+            [(0.1, 5.0)] * (2 * n_teams) +
+            [(0.8, 1.6)]  # Home Adv
+        )
+
+        result = minimize(
+            loss_function,
+            x0,
+            method='L-BFGS-B',
+            bounds=bounds
+        )
+
+        # Extract parameters
+        optimal_params = result.x
+        for idx, team in enumerate(self.team_list):
+            self.attack_params[team] = optimal_params[idx]
+            self.defense_params[team] = optimal_params[n_teams + idx]
+
+        self.home_advantage = optimal_params[-1]
+        self.rho = 0.0 # xG fitting doesn't estimate rho, assume independent
+
+        self._is_fitted = True
+        logger.info(f"Model fitted with xG. Home Adv: {self.home_advantage:.3f}")
+        
+        return result
+
     def save(self, filepath: str):
         """Save model to disk"""
         model_data = {

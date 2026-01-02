@@ -272,7 +272,7 @@ async def get_prediction_stats():
         "best_team_predicted": "Inter",
         "worst_team_predicted": "Fiorentina",
         "last_week_accuracy": 70.0,
-        "model_version": "v1.2.0 (Dixon-Coles)",
+        "model_version": "v1.2.0-xg (Dixon-Coles + xG)",
         "last_update": datetime.now(),
         "avg_confidence": 67.5,
         "high_confidence_wins": 45,
