@@ -1,5 +1,9 @@
 // Use environment variable for API URL, fallback to /api for local dev
-const API_URL = process.env.NEXT_PUBLIC_API_URL || '/api'
+// In production (Vercel), we use relative paths to leverage Vercel's internal routing/rewrites.
+// In development, we fallback to localhost:8000 if the env var isn't set.
+const API_URL = process.env.NODE_ENV === 'production' 
+  ? '' 
+  : (process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000')
 
 // Types
 export interface Team {
