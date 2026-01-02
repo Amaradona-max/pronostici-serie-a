@@ -40,6 +40,7 @@ PLAYER_BIRTHDATES = {
     "J. Martinez": date(1998, 5, 27),
     "T. Buchanan": date(1999, 2, 8),
     "Y. Bisseck": date(2000, 11, 29),
+    "F. Acerbi": date(1988, 2, 10),
 
     # ===== AC MILAN =====
     "M. Maignan": date(1995, 7, 3),
@@ -47,6 +48,8 @@ PLAYER_BIRTHDATES = {
     "M. Gabbia": date(1999, 10, 21),
     "F. Tomori": date(1997, 12, 19),
     "T. Hernández": date(1997, 10, 6),
+    "T. Hernandez": date(1997, 10, 6),
+    "Hernandez": date(1997, 10, 6),
     "Y. Fofana": date(1999, 1, 10),
     "C. Pulisic": date(1998, 9, 18),
     "R. Loftus-Cheek": date(1996, 1, 23),
@@ -61,6 +64,7 @@ PLAYER_BIRTHDATES = {
     "M. Thiaw": date(2001, 8, 8),
     "L. Jovic": date(1997, 12, 23),
     "I. Bennacer": date(1997, 12, 1),
+    "T. Reijnders": date(1998, 7, 29),
 
     # ===== NAPOLI =====
     "A. Meret": date(1997, 3, 22),
@@ -97,7 +101,9 @@ PLAYER_BIRTHDATES = {
     "K. Yıldız": date(2005, 5, 4),
     "D. Vlahović": date(2000, 1, 28),
     "T. Koopmeiners": date(1998, 2, 28),
+    "Douglas Luiz": date(1998, 5, 9),
     "D. Luiz": date(1998, 5, 9),
+    "G. Bremer": date(1997, 3, 18),
     "N. Gonzalez": date(1998, 4, 6),
     "F. Conceição": date(2002, 12, 14),
     "T. Weah": date(2000, 2, 22),
@@ -320,6 +326,8 @@ PLAYER_BIRTHDATES = {
     "N. Leali": date(1993, 6, 30),
     "G. Pereiro": date(1995, 6, 11),
     "F. Miretti": date(2003, 8, 3),
+    "M. Balotelli": date(1990, 8, 12),
+    "Balotelli": date(1990, 8, 12),
 
     # ===== HELLAS VERONA =====
     "L. Montipò": date(1996, 2, 20),
@@ -382,10 +390,10 @@ PLAYER_BIRTHDATES = {
     "A. Sherri": date(1997, 12, 15),
     "J. Palomino": date(1990, 1, 5),
     "A. Obert": date(2002, 8, 23),
+    "J. Jankto": date(1996, 1, 19),
 
     # ===== VENEZIA =====
     "J. Joronen": date(1993, 3, 21),
-    "Joronen": date(1993, 3, 21),
     "J. Idzes": date(2000, 6, 2),
     "Idzes": date(2000, 6, 2),
     "M. Svoboda": date(1998, 10, 15),
@@ -503,6 +511,7 @@ PLAYER_BIRTHDATES = {
 def get_birthdate(player_name: str) -> date:
     """
     Ottiene la data di nascita di un calciatore.
+    Tenta match esatto, poi match parziale sul cognome.
 
     Args:
         player_name: Nome del calciatore (es: "L. Martinez")
@@ -510,7 +519,16 @@ def get_birthdate(player_name: str) -> date:
     Returns:
         Data di nascita o None se non trovata
     """
-    return PLAYER_BIRTHDATES.get(player_name)
+    # 1. Match esatto
+    if player_name in PLAYER_BIRTHDATES:
+        return PLAYER_BIRTHDATES[player_name]
+    
+    # 2. Match per cognome (es. "Sommer" -> "Y. Sommer")
+    for name, bdate in PLAYER_BIRTHDATES.items():
+        if name.endswith(" " + player_name):
+            return bdate
+            
+    return None
 
 
 def get_team_birthdates(team_name: str, lineup_dict: dict) -> list[date]:

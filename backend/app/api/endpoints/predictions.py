@@ -185,15 +185,15 @@ MOCK_LINEUPS = {
             ("Sommer", "GK"),
             ("Pavard", "DEF"), ("Acerbi", "DEF"), ("Bastoni", "DEF"),
             ("Dumfries", "MID"), ("Barella", "MID"), ("Calhanoglu", "MID"), ("Mkhitaryan", "MID"), ("Dimarco", "MID"),
-            ("Thuram", "FWD"), ("Lautaro Martinez", "FWD")
+            ("M. Thuram", "FWD"), ("Lautaro Martinez", "FWD")
         ],
-        "bench": ["Audero", "Bisseck", "Darmian", "Frattesi", "Zielinski", "Taremi", "Arnautovic"]
+        "bench": ["J. Martinez", "Bisseck", "Darmian", "Frattesi", "Zielinski", "Taremi", "Arnautovic"]
     },
     "AC Milan": {
         "formation": "4-2-3-1",
         "starting_xi": [
             ("Maignan", "GK"),
-            ("Emerson Royal", "DEF"), ("Gabbia", "DEF"), ("Tomori", "DEF"), ("Terracciano", "DEF"),
+            ("Emerson Royal", "DEF"), ("Gabbia", "DEF"), ("Tomori", "DEF"), ("Hernandez", "DEF"),
             ("Fofana", "MID"), ("Reijnders", "MID"),
             ("Pulisic", "MID"), ("Loftus-Cheek", "MID"), ("Leao", "FWD"),
             ("Morata", "FWD")
@@ -205,7 +205,7 @@ MOCK_LINEUPS = {
         "starting_xi": [
             ("Di Gregorio", "GK"),
             ("Cambiaso", "DEF"), ("Gatti", "DEF"), ("Bremer", "DEF"), ("Cabal", "DEF"),
-            ("Locatelli", "MID"), ("Thuram", "MID"),
+            ("Locatelli", "MID"), ("K. Thuram", "MID"),
             ("Gonzalez", "MID"), ("Koopmeiners", "MID"), ("Yildiz", "FWD"),
             ("Vlahovic", "FWD")
         ],
@@ -259,11 +259,11 @@ MOCK_LINEUPS = {
         "starting_xi": [
             ("De Gea", "GK"),
             ("Quarta", "DEF"), ("Pongracic", "DEF"), ("Biraghi", "DEF"),
-            ("Dodo", "MID"), ("Mandragora", "MID"), ("Richardson", "MID"), ("Parisi", "MID"),
+            ("Dodo", "MID"), ("Mandragora", "MID"), ("Richardson", "MID"), ("R. Gosens", "MID"),
             ("Colpani", "MID"), ("Sottil", "MID"),
             ("Kean", "FWD")
         ],
-        "bench": ["Terracciano", "Ranieri", "Kayode", "Adli", "Bove", "Gudmundsson", "Beltran"]
+        "bench": ["Terracciano", "Ranieri", "Kayode", "Adli", "Bove", "Gudmundsson", "Beltran", "Parisi"]
     },
     "Bologna": {
         "formation": "4-2-3-1",
@@ -354,7 +354,7 @@ MOCK_LINEUPS = {
         "formation": "4-2-3-1",
         "starting_xi": [
             ("Reina", "GK"),
-            ("Iovine", "DEF"), ("Goldaniga", "DEF"), ("Dossena", "DEF"), ("Moreno", "DEF"),
+            ("Iovine", "DEF"), ("Kempf", "DEF"), ("Dossena", "DEF"), ("Moreno", "DEF"),
             ("Mazzitelli", "MID"), ("Sergi Roberto", "MID"),
             ("Strefezza", "MID"), ("Paz", "MID"), ("Da Cunha", "FWD"),
             ("Cutrone", "FWD")
