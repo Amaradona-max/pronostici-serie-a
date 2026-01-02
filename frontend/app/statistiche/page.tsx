@@ -1,23 +1,79 @@
 'use client'
 
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
-import { BarChart3, TrendingUp, Target, Award } from 'lucide-react'
+import { BarChart3, TrendingUp, Target, Award, AlertCircle } from 'lucide-react'
+import { useQuery } from '@tanstack/react-query'
+import { format } from 'date-fns'
+import { it } from 'date-fns/locale'
+
+const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000'
+
+interface PredictionStats {
+  total_predictions: number
+  accuracy_1x2: number
+  accuracy_over_under: number
+  accuracy_btts: number
+  best_team_predicted: string
+  worst_team_predicted: string
+  last_week_accuracy: number
+  model_version: string
+  last_update: string
+  avg_confidence: number
+  high_confidence_wins: number
+  high_confidence_accuracy: number
+  medium_confidence_wins: number
+  medium_confidence_accuracy: number
+  low_confidence_wins: number
+  low_confidence_accuracy: number
+  best_team_accuracy: number
+  best_team_correct: number
+  best_team_total: number
+  worst_team_accuracy: number
+  worst_team_correct: number
+  worst_team_total: number
+}
+
+async function fetchStats(): Promise<PredictionStats> {
+  const res = await fetch(`${API_URL}/api/v1/predictions/stats`)
+  if (!res.ok) {
+    throw new Error('Failed to fetch stats')
+  }
+  return res.json()
+}
 
 export default function StatistichePage() {
-  // TODO: Fetch real stats from API
-  const stats = {
-    totalPredictions: 184,
-    accuracy1X2: 54.3,
-    accuracyOverUnder: 62.1,
-    accuracyBTTS: 58.7,
-    bestTeamPredicted: 'Inter',
-    worstTeamPredicted: 'Fiorentina',
-    lastWeekAccuracy: 70.0,
-    modelVersion: 'v1.2.0 (Dixon-Coles)',
-    lastUpdate: '29/12/2025 19:53',
-    avgConfidence: 67.5,
-    highConfidenceWins: 45,
-    lowConfidenceWins: 23,
+  const { data: stats, isLoading, error } = useQuery({
+    queryKey: ['prediction-stats'],
+    queryFn: fetchStats,
+    refetchInterval: 30000 // Refresh every 30s
+  })
+
+  if (isLoading) {
+    return (
+      <div className="container mx-auto px-4 py-8">
+        <div className="flex items-center gap-2 mb-8">
+          <div className="h-8 w-8 bg-gray-200 rounded animate-pulse" />
+          <div className="h-8 w-64 bg-gray-200 rounded animate-pulse" />
+        </div>
+        <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-4 mb-8">
+          {[...Array(4)].map((_, i) => (
+            <Card key={i} className="animate-pulse">
+              <CardHeader className="h-20" />
+              <CardContent className="h-24" />
+            </Card>
+          ))}
+        </div>
+      </div>
+    )
+  }
+
+  if (error || !stats) {
+    return (
+      <div className="container mx-auto px-4 py-8 text-center text-red-500">
+        <AlertCircle className="mx-auto h-12 w-12 mb-4" />
+        <p>Errore nel caricamento delle statistiche. Riprova più tardi.</p>
+      </div>
+    )
   }
 
   return (
@@ -41,9 +97,9 @@ export default function StatistichePage() {
             <Target className="h-4 w-4 text-muted-foreground" />
           </CardHeader>
           <CardContent>
-            <div className="text-3xl font-bold text-green-600">{stats.accuracy1X2}%</div>
+            <div className="text-3xl font-bold text-green-600">{stats.accuracy_1x2}%</div>
             <p className="text-xs text-muted-foreground mt-1">
-              Su {stats.totalPredictions} partite analizzate
+              Su {stats.total_predictions} partite analizzate
             </p>
           </CardContent>
         </Card>
@@ -54,7 +110,7 @@ export default function StatistichePage() {
             <TrendingUp className="h-4 w-4 text-muted-foreground" />
           </CardHeader>
           <CardContent>
-            <div className="text-3xl font-bold text-blue-600">{stats.accuracyOverUnder}%</div>
+            <div className="text-3xl font-bold text-blue-600">{stats.accuracy_over_under}%</div>
             <p className="text-xs text-muted-foreground mt-1">
               Migliore metrica del modello
             </p>
@@ -67,7 +123,7 @@ export default function StatistichePage() {
             <Award className="h-4 w-4 text-muted-foreground" />
           </CardHeader>
           <CardContent>
-            <div className="text-3xl font-bold text-purple-600">{stats.accuracyBTTS}%</div>
+            <div className="text-3xl font-bold text-purple-600">{stats.accuracy_btts}%</div>
             <p className="text-xs text-muted-foreground mt-1">
               Both Teams To Score
             </p>
@@ -80,7 +136,7 @@ export default function StatistichePage() {
             <TrendingUp className="h-4 w-4 text-muted-foreground" />
           </CardHeader>
           <CardContent>
-            <div className="text-3xl font-bold text-orange-600">{stats.lastWeekAccuracy}%</div>
+            <div className="text-3xl font-bold text-orange-600">{stats.last_week_accuracy}%</div>
             <p className="text-xs text-muted-foreground mt-1">
               7/10 pronostici corretti
             </p>
@@ -104,8 +160,8 @@ export default function StatistichePage() {
                   <p className="text-xs text-muted-foreground">Pronostici con alta confidence</p>
                 </div>
                 <div className="text-right">
-                  <p className="text-2xl font-bold text-green-600">78%</p>
-                  <p className="text-xs text-muted-foreground">{stats.highConfidenceWins} successi</p>
+                  <p className="text-2xl font-bold text-green-600">{stats.high_confidence_accuracy}%</p>
+                  <p className="text-xs text-muted-foreground">{stats.high_confidence_wins} successi</p>
                 </div>
               </div>
               <div className="flex items-center justify-between">
@@ -114,8 +170,8 @@ export default function StatistichePage() {
                   <p className="text-xs text-muted-foreground">Pronostici con media confidence</p>
                 </div>
                 <div className="text-right">
-                  <p className="text-2xl font-bold text-yellow-600">56%</p>
-                  <p className="text-xs text-muted-foreground">89 successi</p>
+                  <p className="text-2xl font-bold text-yellow-600">{stats.medium_confidence_accuracy}%</p>
+                  <p className="text-xs text-muted-foreground">{stats.medium_confidence_wins} successi</p>
                 </div>
               </div>
               <div className="flex items-center justify-between">
@@ -124,8 +180,8 @@ export default function StatistichePage() {
                   <p className="text-xs text-muted-foreground">Pronostici con bassa confidence</p>
                 </div>
                 <div className="text-right">
-                  <p className="text-2xl font-bold text-red-600">38%</p>
-                  <p className="text-xs text-muted-foreground">{stats.lowConfidenceWins} successi</p>
+                  <p className="text-2xl font-bold text-red-600">{stats.low_confidence_accuracy}%</p>
+                  <p className="text-xs text-muted-foreground">{stats.low_confidence_wins} successi</p>
                 </div>
               </div>
             </div>
@@ -143,7 +199,7 @@ export default function StatistichePage() {
               <div>
                 <div className="flex items-center justify-between mb-2">
                   <p className="text-sm font-medium text-green-600">Più Prevedibile</p>
-                  <p className="text-2xl font-bold">{stats.bestTeamPredicted}</p>
+                  <p className="text-2xl font-bold">{stats.best_team_predicted}</p>
                 </div>
                 <div className="flex items-center gap-2">
                   <div className="flex-1 h-2 bg-gray-200 rounded-full overflow-hidden">
@@ -157,7 +213,7 @@ export default function StatistichePage() {
               <div>
                 <div className="flex items-center justify-between mb-2">
                   <p className="text-sm font-medium text-red-600">Meno Prevedibile</p>
-                  <p className="text-2xl font-bold">{stats.worstTeamPredicted}</p>
+                  <p className="text-2xl font-bold">{stats.worst_team_predicted}</p>
                 </div>
                 <div className="flex items-center gap-2">
                   <div className="flex-1 h-2 bg-gray-200 rounded-full overflow-hidden">
@@ -182,15 +238,18 @@ export default function StatistichePage() {
           <div className="grid gap-4 md:grid-cols-3">
             <div>
               <p className="text-sm font-medium text-muted-foreground">Modello</p>
-              <p className="text-lg font-bold">{stats.modelVersion}</p>
+              <p className="text-lg font-bold">{stats.model_version}</p>
             </div>
             <div>
               <p className="text-sm font-medium text-muted-foreground">Ultimo Aggiornamento</p>
-              <p className="text-lg font-bold">{stats.lastUpdate}</p>
+              <p className="text-lg font-bold">
+                {format(new Date(stats.last_update), "d/MM/yyyy HH:mm", { locale: it })}
+              </p>
+
             </div>
             <div>
               <p className="text-sm font-medium text-muted-foreground">Confidence Media</p>
-              <p className="text-lg font-bold">{stats.avgConfidence}%</p>
+              <p className="text-lg font-bold">{stats.avg_confidence}%</p>
             </div>
           </div>
           <div className="mt-4 p-4 bg-muted rounded-lg">

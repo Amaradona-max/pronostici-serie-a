@@ -16,7 +16,36 @@ class TeamBase(BaseModel):
     short_name: Optional[str] = None
     logo_url: Optional[str] = None
 
+# ============= PREDICTION STATS MODELS =============
+
+class PredictionStatsResponse(BaseModel):
+    total_predictions: int
+    accuracy_1x2: float
+    accuracy_over_under: float
+    accuracy_btts: float
+    best_team_predicted: str
+    worst_team_predicted: str
+    last_week_accuracy: float
+    model_version: str
+    last_update: datetime
+    avg_confidence: float
+    high_confidence_wins: int
+    high_confidence_accuracy: float
+    medium_confidence_wins: int
+    medium_confidence_accuracy: float
+    low_confidence_wins: int
+    low_confidence_accuracy: float
+
+    # Detailed Team Stats
+    best_team_accuracy: float
+    best_team_correct: int
+    best_team_total: int
+    worst_team_accuracy: float
+    worst_team_correct: int
+    worst_team_total: int
+
     model_config = {"from_attributes": True}
+
 
 
 class StadiumInfo(BaseModel):
