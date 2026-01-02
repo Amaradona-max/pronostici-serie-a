@@ -46,7 +46,7 @@ TEAM_SQUADS = {
         ("Rafael Leão", "Attaccante", 0.40),
         ("Alvaro Morata", "Attaccante", 0.35),
         ("Niclas Füllkrug", "Attaccante", 0.32),
-        ("Luka Modric", "Centrocampista", 0.30),
+        ("Tijjani Reijnders", "Centrocampista", 0.28),
     ],
     "Napoli": [
         ("Romelu Lukaku", "Attaccante", 0.42),
@@ -639,13 +639,41 @@ async def get_biorhythm_analysis(
         if target_player_names:
             # We have a specific list of players (from lineup)
             for target_name in target_player_names:
-                # Fuzzy match against database keys
-                # Database keys are like "Y. Sommer", target is "Sommer"
+                # Improved matching logic to avoid partial matches (e.g. "Mina" in "McTominay", "Zappa" in "Zappacosta")
+                target_lower = target_name.lower()
+                
                 for db_name, dob in PLAYER_BIRTHDATES.items():
-                    # Check if target name is part of db name (e.g. "Sommer" in "Y. Sommer")
-                    if target_name.lower() in db_name.lower() or db_name.lower() in target_name.lower():
+                    db_lower = db_name.lower()
+                    
+                    # 1. Exact match
+                    if target_lower == db_lower:
                         relevant_players[db_name] = dob
-                        break # Match found
+                        break
+                        
+                    # 2. Check if target_name is a distinct part of db_name
+                    # Split by space, dot, or hyphen
+                    import re
+                    # Create parts list from db_name (e.g. "D. Zappacosta" -> ["d", "zappacosta"])
+                    # We remove dots and split by spaces
+                    db_parts = [p.strip() for p in re.split(r'[ .-]+', db_lower) if p.strip()]
+                    
+                    # Handle multi-word target names (e.g. "De Ketelaere")
+                    # If target name has spaces, we check if it's contained as a phrase
+                    if ' ' in target_lower:
+                        # Check if target_lower appears in db_lower with boundaries
+                        # e.g. "De Ketelaere" in "C. De Ketelaere" -> OK
+                        # But we need to ensure it's not "De Ketelaeres"
+                        if f" {target_lower} " in f" {db_lower} " or \
+                           db_lower.endswith(f" {target_lower}") or \
+                           db_lower.startswith(f"{target_lower} "):
+                             relevant_players[db_name] = dob
+                             break
+                    else:
+                        # Single word target (surname)
+                        # Must match one of the parts exactly
+                        if target_lower in db_parts:
+                            relevant_players[db_name] = dob
+                            break
         
         if not relevant_players:
             # Fallback if no players found
