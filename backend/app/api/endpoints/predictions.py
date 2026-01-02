@@ -7,7 +7,7 @@ from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.orm import selectinload
 from typing import List
-from datetime import datetime, timedelta, timezone
+from datetime import datetime, timedelta, timezone, date
 
 from app.db.engine import get_db
 from app.db.models import Prediction, Fixture
@@ -604,25 +604,38 @@ async def get_biorhythm_analysis(
     home_team_name = fixture.home_team.name
     away_team_name = fixture.away_team.name
     match_date = fixture.match_date
+    
+    # Ensure match_date is a date object for biorhythm calculation
+    if isinstance(match_date, datetime):
+        match_date = match_date.date()
 
     # Helper function to calculate team biorhythm
     def get_team_bio(team_name: str) -> TeamBiorhythm:
-        players_birthdates = get_team_birthdates(team_name)
-        team_players = []
-        
-        # Filter for probable starters (using mock lineups or all players if not available)
+        # Get mock data for the team to know who is playing
         mock_data = MOCK_LINEUPS.get(team_name)
-        starters_names = [p[0] for p in mock_data["starting_xi"]] if mock_data else []
         
-        # If we have mock starters, prioritize them
-        if starters_names:
-            relevant_players = {name: dob for name, dob in players_birthdates.items() 
-                              if any(s.lower() in name.lower() for s in starters_names)}
-        else:
-            relevant_players = players_birthdates # Use all available
-
+        # We need a list of player names to check against the database
+        target_player_names = []
+        if mock_data:
+             # Prioritize starters
+            target_player_names = [p[0] for p in mock_data["starting_xi"]]
+        
+        # Find relevant players in our database
+        relevant_players = {}
+        
+        if target_player_names:
+            # We have a specific list of players (from lineup)
+            for target_name in target_player_names:
+                # Fuzzy match against database keys
+                # Database keys are like "Y. Sommer", target is "Sommer"
+                for db_name, dob in PLAYER_BIRTHDATES.items():
+                    # Check if target name is part of db name (e.g. "Sommer" in "Y. Sommer")
+                    if target_name.lower() in db_name.lower() or db_name.lower() in target_name.lower():
+                        relevant_players[db_name] = dob
+                        break # Match found
+        
         if not relevant_players:
-            # Fallback if no birthdates found
+            # Fallback if no players found
             return TeamBiorhythm(
                 team_name=team_name,
                 avg_physical=50.0,
@@ -643,9 +656,9 @@ async def get_biorhythm_analysis(
         
         excellent, good, low, critical = 0, 0, 0, 0
         
-        for name, dob_str in relevant_players.items():
+        for name, dob in relevant_players.items():
             try:
-                dob = datetime.strptime(dob_str, "%Y-%m-%d")
+                # dob is already a date object from PLAYER_BIRTHDATES
                 bio = calculate_player_biorhythm(dob, match_date)
                 
                 player_bio = PlayerBiorhythm(
