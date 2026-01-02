@@ -88,6 +88,8 @@ PLAYER_BIRTHDATES = {
     "Odogu": date(2006, 2, 28),
     "L. Torriani": date(2005, 1, 31),
     "Torriani": date(2005, 1, 31),
+    "S. Gimenez": date(2001, 4, 18),
+    "Gimenez": date(2001, 4, 18),
 
     # ===== NAPOLI =====
     "A. Meret": date(1997, 3, 22),
@@ -152,6 +154,8 @@ PLAYER_BIRTHDATES = {
     "J. Cabal": date(2001, 1, 8),
     "A. Milik": date(1994, 2, 28),
     "N. Fagioli": date(2001, 2, 12),
+    "J. David": date(2000, 1, 14),
+    "David": date(2000, 1, 14),
 
     # ===== AS ROMA =====
     "M. Svilar": date(1999, 8, 27),
@@ -295,6 +299,10 @@ PLAYER_BIRTHDATES = {
     "L. Beltran": date(2001, 3, 29),
     "C. Kouamé": date(1997, 12, 6),
     "R. Sottil": date(1999, 6, 3),
+    "R. Piccoli": date(2001, 1, 27),
+    "Piccoli": date(2001, 1, 27),
+    "E. Dzeko": date(1986, 3, 17),
+    "Dzeko": date(1986, 3, 17),
     "Y. Adli": date(2000, 7, 29),
     "D. Cataldi": date(1994, 8, 6),
     "A. Richardson": date(2002, 1, 24),
@@ -548,7 +556,6 @@ PLAYER_BIRTHDATES = {
     "R. Marin": date(1996, 5, 23),
     "T. Augello": date(1994, 8, 30),
     "Z. Luvumbo": date(2002, 3, 9),
-    "R. Piccoli": date(2001, 1, 27),
     "G. Gaetano": date(2000, 5, 5),
     "L. Pavoletti": date(1988, 11, 26),
     "N. Viola": date(1989, 10, 12),
