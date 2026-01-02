@@ -21,7 +21,10 @@ GIORNATA_18_FIXTURES = [
         "home_team": "Cagliari",
         "away_team": "AC Milan",
         "match_date": datetime(2026, 1, 2, 20, 45),
-        "round": "Giornata 18"
+        "round": "Giornata 18",
+        "status": "finished",
+        "home_score": 0,
+        "away_score": 1
     },
     # Sabato 3 Gennaio 2026
     {
@@ -134,8 +137,12 @@ async def seed_fixtures_g18():
 
             if existing_fixture:
                 # Update existing fixture
-                existing_fixture.status = FixtureStatus.SCHEDULED
+                existing_fixture.status = fixture_data.get("status", FixtureStatus.SCHEDULED)
                 existing_fixture.match_date = fixture_data["match_date"]
+                if "home_score" in fixture_data:
+                    existing_fixture.home_score = fixture_data["home_score"]
+                if "away_score" in fixture_data:
+                    existing_fixture.away_score = fixture_data["away_score"]
                 fixtures_updated += 1
                 logger.info(
                     f"Updated: {fixture_data['home_team']} vs {fixture_data['away_team']}"
@@ -149,7 +156,9 @@ async def seed_fixtures_g18():
                     match_date=fixture_data["match_date"],
                     home_team_id=home_team.id,
                     away_team_id=away_team.id,
-                    status=FixtureStatus.SCHEDULED
+                    status=fixture_data.get("status", FixtureStatus.SCHEDULED),
+                    home_score=fixture_data.get("home_score"),
+                    away_score=fixture_data.get("away_score")
                 )
                 session.add(new_fixture)
                 fixtures_created += 1
