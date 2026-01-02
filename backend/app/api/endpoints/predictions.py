@@ -39,46 +39,46 @@ TEAM_SQUADS = {
         ("Marcus Thuram", "Attaccante", 0.40),
         ("Hakan Çalhanoğlu", "Centrocampista", 0.35),
         ("Nicolò Barella", "Centrocampista", 0.28),
-        ("Ange-Yoan Bonny", "Attaccante", 0.22),
+        ("Federico Dimarco", "Difensore", 0.25),
     ],
     "AC Milan": [
         ("Christian Pulisic", "Attaccante", 0.46),
         ("Rafael Leão", "Attaccante", 0.40),
-        ("Tammy Abraham", "Attaccante", 0.35),
+        ("Alvaro Morata", "Attaccante", 0.35),
         ("Samuel Chukwueze", "Attaccante", 0.28),
-        ("Luka Modrić", "Centrocampista", 0.22),
+        ("Youssouf Fofana", "Centrocampista", 0.22),
     ],
     "Napoli": [
         ("Romelu Lukaku", "Attaccante", 0.42),
-        ("Rasmus Højlund", "Attaccante", 0.38),
-        ("Lorenzo Lucca", "Attaccante", 0.32),
-        ("Kevin De Bruyne", "Centrocampista", 0.28),
+        ("Khvicha Kvaratskhelia", "Attaccante", 0.38),
+        ("Scott McTominay", "Centrocampista", 0.32),
+        ("Alessandro Buongiorno", "Difensore", 0.28),
         ("David Neres", "Attaccante", 0.24),
-        ("Noa Lang", "Attaccante", 0.22),
+        ("Giacomo Raspadori", "Attaccante", 0.22),
     ],
     "Juventus": [
         ("Kenan Yıldız", "Attaccante", 0.42),
         ("Dušan Vlahović", "Attaccante", 0.38),
-        ("Jonathan David", "Attaccante", 0.35),
-        ("Loïs Openda", "Attaccante", 0.30),
-        ("Francisco Conceição", "Attaccante", 0.25),
+        ("Teun Koopmeiners", "Centrocampista", 0.35),
+        ("Francisco Conceição", "Attaccante", 0.30),
+        ("Nicolò Savona", "Difensore", 0.25),
     ],
     "AS Roma": [
         ("Artem Dovbyk", "Attaccante", 0.38),
         ("Paulo Dybala", "Attaccante", 0.35),
         ("Matías Soulé", "Attaccante", 0.30),
         ("Lorenzo Pellegrini", "Centrocampista", 0.25),
-        ("Evan Ferguson", "Attaccante", 0.22),
+        ("Manu Koné", "Centrocampista", 0.22),
     ],
     "Bologna": [
         ("Riccardo Orsolini", "Attaccante", 0.42),
-        ("Ciro Immobile", "Attaccante", 0.38),
-        ("Santiago Castro", "Attaccante", 0.32),
+        ("Santiago Castro", "Attaccante", 0.38),
+        ("Dan Ndoye", "Attaccante", 0.32),
         ("Thijs Dallinga", "Attaccante", 0.28),
-        ("Jens Odgaard", "Centrocampista", 0.24),
+        ("Giovanni Fabbian", "Centrocampista", 0.24),
     ],
     "Atalanta": [
-        ("Gianluca Scamacca", "Attaccante", 0.38),
+        ("Mateo Retegui", "Attaccante", 0.38),
         ("Ademola Lookman", "Attaccante", 0.32),
         ("Charles De Ketelaere", "Attaccante", 0.28),
         ("Mario Pašalić", "Centrocampista", 0.24),
@@ -93,9 +93,9 @@ TEAM_SQUADS = {
     ],
     "Como": [
         ("Nico Paz", "Centrocampista", 0.40),
-        ("Álvaro Morata", "Attaccante", 0.35),
-        ("Andrea Belotti", "Attaccante", 0.30),
-        ("Nicolas Kuhn", "Attaccante", 0.25),
+        ("Patrick Cutrone", "Attaccante", 0.35),
+        ("Gabriel Strefezza", "Attaccante", 0.30),
+        ("Sergi Roberto", "Centrocampista", 0.25),
         ("Máximo Perrone", "Centrocampista", 0.22),
     ],
     "Fiorentina": [
@@ -126,7 +126,7 @@ TEAM_SQUADS = {
         ("Ruslan Malinovskyi", "Centrocampista", 0.22),
         ("Morten Frendrup", "Centrocampista", 0.18),
     ],
-    "Pisa": [
+    "Empoli": [
         ("Sebastiano Esposito", "Attaccante", 0.30),
         ("Lorenzo Colombo", "Attaccante", 0.28),
         ("Ola Solbakken", "Attaccante", 0.25),
@@ -154,19 +154,19 @@ TEAM_SQUADS = {
         ("Razvan Marin", "Centrocampista", 0.20),
         ("Leonardo Pavoletti", "Attaccante", 0.22),
     ],
-    "Cremonese": [
+    "Monza": [
         ("Daniel Maldini", "Attaccante", 0.32),
         ("Dany Mota", "Attaccante", 0.30),
         ("Matteo Pessina", "Centrocampista", 0.25),
         ("Milan Djuric", "Attaccante", 0.28),
         ("Gianluca Caprari", "Attaccante", 0.25),
     ],
-    "Sassuolo": [
-        ("Domenico Berardi", "Attaccante", 0.40),
-        ("Andrea Pinamonti", "Attaccante", 0.35),
-        ("Armand Laurienté", "Attaccante", 0.30),
-        ("Kristian Thorstvedt", "Centrocampista", 0.25),
-        ("Daniel Boloca", "Centrocampista", 0.20),
+    "Venezia": [
+        ("Joel Pohjanpalo", "Attaccante", 0.35),
+        ("Gaetano Oristanio", "Attaccante", 0.30),
+        ("Gianluca Busio", "Centrocampista", 0.25),
+        ("Hans Nicolussi Caviglia", "Centrocampista", 0.22),
+        ("John Yeboah", "Attaccante", 0.28),
     ],
     "Parma": [
         ("Dennis Man", "Attaccante", 0.35),
@@ -355,42 +355,44 @@ MOCK_LINEUPS = {
         "starting_xi": [
             ("Reina", "GK"),
             ("Iovine", "DEF"), ("Goldaniga", "DEF"), ("Dossena", "DEF"), ("Moreno", "DEF"),
-            ("Mazzitelli", "MID"), ("Braunoder", "MID"),
-            ("Strefezza", "MID"), ("Cutrone", "MID"), ("Da Cunha", "FWD"),
-            ("Belotti", "FWD")
+            ("Mazzitelli", "MID"), ("Sergi Roberto", "MID"),
+            ("Strefezza", "MID"), ("Paz", "MID"), ("Da Cunha", "FWD"),
+            ("Cutrone", "FWD")
         ],
-        "bench": ["Audero", "Sala", "Barba", "Engelhardt", "Verdi", "Gabrielloni", "Cerri"]
+        "bench": ["Audero", "Sala", "Barba", "Engelhardt", "Verdi", "Gabrielloni", "Belotti"]
     },
-    "Sassuolo": {
-        "formation": "4-3-3",
-        "starting_xi": [
-             ("Consigli", "GK"),
-             ("Toljan", "DEF"), ("Romagna", "DEF"), ("Ferrari", "DEF"), ("Doig", "DEF"),
-             ("Boloca", "MID"), ("Obiang", "MID"), ("Thorstvedt", "MID"),
-             ("Berardi", "FWD"), ("Pinamonti", "FWD"), ("Laurienté", "FWD")
-        ],
-        "bench": ["Satalino", "Missori", "Racic", "Lipani", "Volpato", "Ceide", "Mulattieri"]
-    },
-    "Pisa": {
+    "Venezia": {
         "formation": "3-4-2-1",
         "starting_xi": [
-            ("Semper", "GK"),
-            ("Caracciolo", "DEF"), ("Canestrelli", "DEF"), ("Rus", "DEF"),
-            ("Touré", "MID"), ("Marin", "MID"), ("Hojholt", "MID"), ("Beruatto", "MID"),
-            ("Moreo", "MID"), ("Tramoni", "MID"),
-            ("Bonfanti", "FWD")
+             ("Joronen", "GK"),
+             ("Idzes", "DEF"), ("Svoboda", "DEF"), ("Sverko", "DEF"),
+             ("Candela", "MID"), ("Duncan", "MID"), ("Nicolussi Caviglia", "MID"), ("Zampano", "MID"),
+             ("Busio", "MID"), ("Oristanio", "MID"),
+             ("Pohjanpalo", "FWD")
         ],
-        "bench": ["Nicolas", "Calabresi", "Esteves", "Piccinini", "Arena", "Mlakar", "Lind"]
+        "bench": ["Stankovic", "Haps", "Sagrado", "Crnigoj", "Ellertsson", "Yeboah", "Gytkjaer"]
     },
-    "Cremonese": {
-        "formation": "3-5-2",
+    "Empoli": {
+        "formation": "3-4-2-1",
         "starting_xi": [
-            ("Fulignati", "GK"),
-            ("Antov", "DEF"), ("Ravanelli", "DEF"), ("Bianchetti", "DEF"),
-            ("Zanimacchia", "MID"), ("Collocolo", "MID"), ("Castagnetti", "MID"), ("Vazquez", "MID"), ("Sernicola", "MID"),
-            ("Johnsen", "FWD"), ("De Luca", "FWD")
+            ("Vasquez", "GK"),
+            ("Goglichidze", "DEF"), ("Ismajli", "DEF"), ("Viti", "DEF"),
+            ("Gyasi", "MID"), ("Henderson", "MID"), ("Grassi", "MID"), ("Pezzella", "MID"),
+            ("Fazzini", "MID"), ("Esposito", "MID"),
+            ("Colombo", "FWD")
         ],
-        "bench": ["Saro", "Lochoshvili", "Ceccherini", "Majer", "Pickel", "Bonazzoli", "Nasti"]
+        "bench": ["Seghetti", "Marianucci", "Cacace", "Haas", "Maleh", "Solbakken", "Pellegri"]
+    },
+    "Monza": {
+        "formation": "3-4-2-1",
+        "starting_xi": [
+            ("Turati", "GK"),
+            ("Izzo", "DEF"), ("Mari", "DEF"), ("Carboni", "DEF"),
+            ("Pereira", "MID"), ("Bondo", "MID"), ("Pessina", "MID"), ("Kyriakopoulos", "MID"),
+            ("Maldini", "MID"), ("Mota", "MID"),
+            ("Djuric", "FWD")
+        ],
+        "bench": ["Pizzignacco", "Caldirola", "D'Ambrosio", "Sensi", "Valoti", "Caprari", "Petagna"]
     }
 }
 
