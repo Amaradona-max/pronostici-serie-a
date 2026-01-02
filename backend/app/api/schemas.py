@@ -16,6 +16,8 @@ class TeamBase(BaseModel):
     short_name: Optional[str] = None
     logo_url: Optional[str] = None
 
+    model_config = {"from_attributes": True}
+
 # ============= PREDICTION STATS MODELS =============
 
 class PredictionStatsResponse(BaseModel):
