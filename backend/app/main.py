@@ -89,6 +89,18 @@ async def lifespan(app: FastAPI):
                         await seed_standings()
                         logger.info("Standings seeded.")
 
+                    # Check for fixtures specifically
+                    fixtures_result = await session.execute(
+                        select(models.Fixture).limit(1)
+                    )
+                    fixture = fixtures_result.scalar_one_or_none()
+
+                    if not fixture:
+                        logger.warning("PRODUCTION: Fixtures missing! Seeding fixtures...")
+                        from app.scripts.seed_fixtures_g18 import seed_fixtures
+                        await seed_fixtures()
+                        logger.info("Fixtures seeded.")
+
         except Exception as e:
             logger.error(f"Error during auto-seeding check: {e}")
 
