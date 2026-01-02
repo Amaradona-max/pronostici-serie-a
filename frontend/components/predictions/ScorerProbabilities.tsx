@@ -37,7 +37,8 @@ export function ScorerProbabilities({
     setLoading(true)
     try {
       const apiUrl = process.env.NEXT_PUBLIC_API_URL || ''
-      const res = await fetch(`${apiUrl}/api/v1/predictions/${fixtureId}/scorer-probabilities`)
+      const res = await fetch(`${apiUrl}/api/v1/predictions/${fixtureId}/scorers`)
+      if (!res.ok) throw new Error('Failed to fetch scorer probabilities')
       const json = await res.json()
       setData(json)
       setIsOpen(true)
