@@ -5,27 +5,32 @@ Application Configuration
 from pydantic_settings import BaseSettings, SettingsConfigDict
 from typing import List
 import json
+import os
 
+# Determine absolute path to database file for Vercel/Production
+BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+DB_PATH = os.path.join(BASE_DIR, "backend.db")
+DEFAULT_DATABASE_URL = f"sqlite+aiosqlite:///{DB_PATH}"
 
 class Settings(BaseSettings):
     """Application settings loaded from environment variables"""
 
     # Database
-    DATABASE_URL: str
+    DATABASE_URL: str = DEFAULT_DATABASE_URL
 
-    # Redis
-    REDIS_URL: str
+    # Redis (Optional for Vercel/SQLite mode)
+    REDIS_URL: str = "redis://localhost:6379/0"
 
-    # Celery
-    CELERY_BROKER_URL: str
-    CELERY_RESULT_BACKEND: str
+    # Celery (Optional)
+    CELERY_BROKER_URL: str = "redis://localhost:6379/0"
+    CELERY_RESULT_BACKEND: str = "redis://localhost:6379/0"
 
     # External APIs
     API_FOOTBALL_KEY: str = ""
     FOOTBALL_DATA_KEY: str = ""
 
     # Security
-    SECRET_KEY: str
+    SECRET_KEY: str = "default-dev-secret-key-change-in-prod"
     CORS_ORIGINS: str = "*"
 
     # Environment
