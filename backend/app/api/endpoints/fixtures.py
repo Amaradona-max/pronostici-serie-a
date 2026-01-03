@@ -38,7 +38,7 @@ async def get_fixtures(
     team_id: Optional[int] = Query(None),
     date_from: Optional[date] = Query(None),
     date_to: Optional[date] = Query(None),
-    status: str = Query("scheduled"),
+    status: Optional[str] = Query(None),
     page: int = Query(1, ge=1),
     page_size: int = Query(20, ge=1, le=100),
     db: AsyncSession = Depends(get_db)
