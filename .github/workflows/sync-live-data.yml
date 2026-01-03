@@ -14,9 +14,9 @@ jobs:
     name: Sync Live Football Data
     runs-on: ubuntu-latest
 
-    # Only run during match hours (11:00 - 23:59 UTC)
-    # This saves GitHub Actions minutes
-    if: github.event_name == 'workflow_dispatch' || (github.event.schedule && (vars.ALWAYS_RUN == 'true' || (github.event.schedule && github.event.schedule.hour >= 11)))
+    # Run on manual trigger or scheduled (always during schedule for testing)
+    # TODO: Add time-based optimization in sync script to save GitHub Actions minutes
+    if: github.event_name == 'workflow_dispatch' || github.event_name == 'schedule'
 
     steps:
       - name: Checkout code
