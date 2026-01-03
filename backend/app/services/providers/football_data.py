@@ -35,9 +35,30 @@ class FootballDataAdapter(BaseDataProvider):
     SERIE_A_CODE = "SA"  # Serie A competition code
     SERIE_A_ID = 2019    # Serie A competition ID
 
-    # Team ID mapping (Football-Data.org IDs for Serie A teams)
-    # These will be populated dynamically from API
-    TEAM_MAPPING = {}
+    # Team ID mapping: Football-Data.org ID → API-Football ID (used in database)
+    # This mapping allows us to match teams between providers
+    TEAM_MAPPING = {
+        108: 505,   # Inter
+        98: 489,    # AC Milan
+        109: 496,   # Juventus
+        113: 492,   # Napoli
+        100: 497,   # AS Roma
+        110: 487,   # Lazio
+        102: 499,   # Atalanta
+        99: 502,    # Fiorentina
+        103: 500,   # Bologna
+        586: 503,   # Torino
+        115: 494,   # Udinese
+        5890: 867,  # Lecce
+        104: 490,   # Cagliari
+        450: 504,   # Hellas Verona
+        107: 495,   # Genoa
+        112: 130,   # Parma
+        7397: 1047, # Como
+        471: 488,   # Sassuolo
+        487: 506,   # Pisa
+        457: 520,   # Cremonese
+    }
 
     def __init__(self):
         self.api_key = settings.FOOTBALL_DATA_KEY
@@ -345,10 +366,18 @@ class FootballDataAdapter(BaseDataProvider):
             matchday = match_data.get("matchday")
             round_str = f"Giornata {matchday}" if matchday else None
 
+            # Map Football-Data.org team IDs to database external IDs
+            fd_home_id = home_team.get("id")
+            fd_away_id = away_team.get("id")
+
+            # Use mapping, fallback to original ID if not found
+            db_home_id = self.TEAM_MAPPING.get(fd_home_id, fd_home_id)
+            db_away_id = self.TEAM_MAPPING.get(fd_away_id, fd_away_id)
+
             return MatchData(
                 external_id=match_id,
-                home_team_id=home_team.get("id"),
-                away_team_id=away_team.get("id"),
+                home_team_id=db_home_id,
+                away_team_id=db_away_id,
                 match_date=match_date,
                 status=mapped_status,
                 home_score=home_score,
@@ -380,8 +409,11 @@ class FootballDataAdapter(BaseDataProvider):
             if match.get("status") != "FINISHED":
                 continue
 
-            home_team_id = match.get("homeTeam", {}).get("id")
-            away_team_id = match.get("awayTeam", {}).get("id")
+            # Get Football-Data.org IDs and map them to database IDs
+            fd_home_id = match.get("homeTeam", {}).get("id")
+            fd_away_id = match.get("awayTeam", {}).get("id")
+            home_team_id = self.TEAM_MAPPING.get(fd_home_id, fd_home_id)
+            away_team_id = self.TEAM_MAPPING.get(fd_away_id, fd_away_id)
             score = match.get("score", {}).get("fullTime", {})
             home_score = score.get("home")
             away_score = score.get("away")
