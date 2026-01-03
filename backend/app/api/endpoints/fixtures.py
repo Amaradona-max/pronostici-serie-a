@@ -92,7 +92,7 @@ async def get_fixtures(
             selectinload(Fixture.home_team),
             selectinload(Fixture.away_team),
             selectinload(Fixture.predictions)
-        ).order_by(Fixture.match_date).offset((page - 1) * page_size).limit(page_size)
+        ).order_by(Fixture.match_date.desc()).offset((page - 1) * page_size).limit(page_size)
 
         result = await db.execute(query)
         fixtures = result.scalars().all()
