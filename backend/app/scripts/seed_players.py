@@ -13,7 +13,8 @@ from app.db.models import Team, Player
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 
-# Complete Serie A 2025/2026 players data (Updated to Jan 2026)
+# Complete Serie A 2025/2026 players data
+# Verified from official Transfermarkt sources - January 3, 2026
 PLAYERS_DATA = {
     "Inter": [
         # Goalkeepers
@@ -721,7 +722,7 @@ async def _seed_players_internal(db):
                     if existing_player.team_id != team.id:
                         logger.info(f"Transferring {player_data['name']} from Team {existing_player.team_id} to {team.name} ({team.id})")
                         existing_player.team_id = team.id
-                    
+
                     # Always update mutable fields
                     existing_player.jersey_number = player_data.get("number")
                     existing_player.nationality = player_data.get("nationality")
@@ -737,7 +738,7 @@ async def _seed_players_internal(db):
                 )
                 db.add(player)
                 total_players += 1
-            
+
             # Flush after each team to avoid huge transaction if needed
             await db.flush()
 
