@@ -94,8 +94,8 @@ async def full_resync():
             for i, fixture_data in enumerate(fixtures_data, 1):
                 try:
                     external_id = fixture_data.external_id
-                    home_ext_id = fixture_data.home_team_external_id
-                    away_ext_id = fixture_data.away_team_external_id
+                    home_ext_id = fixture_data.home_team_id
+                    away_ext_id = fixture_data.away_team_id
 
                     # Find teams
                     home_team = team_map.get(home_ext_id)

@@ -142,12 +142,19 @@ class TeamStats(Base):
     id = Column(Integer, primary_key=True, index=True)
     team_id = Column(Integer, ForeignKey("teams.id"), nullable=False)
     season = Column(String(20), nullable=False)
+
+    # Standings fields
+    position = Column(Integer)
     matches_played = Column(Integer, default=0)
     wins = Column(Integer, default=0)
     draws = Column(Integer, default=0)
     losses = Column(Integer, default=0)
     goals_scored = Column(Integer, default=0)
     goals_conceded = Column(Integer, default=0)
+    goal_difference = Column(Integer, default=0)
+    points = Column(Integer, default=0)
+
+    # Additional stats
     clean_sheets = Column(Integer, default=0)
     elo_rating = Column(Float, default=1500.0)
     created_at = Column(DateTime, default=datetime.utcnow)

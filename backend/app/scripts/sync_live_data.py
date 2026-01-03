@@ -200,13 +200,9 @@ class LiveDataSynchronizer:
                         logger.warning(f"Available IDs in DB: {sorted(teams_by_external_id.keys())}")
                         continue
 
-                    # Check if fixture exists
+                    # Check if fixture exists by external_id (unique identifier)
                     fixture_stmt = select(Fixture).where(
-                        and_(
-                            Fixture.home_team_id == home_team.id,
-                            Fixture.away_team_id == away_team.id,
-                            Fixture.season == self.season
-                        )
+                        Fixture.external_id == match_data.external_id
                     )
                     fixture = (await session.execute(fixture_stmt)).scalar_one_or_none()
 
@@ -242,40 +238,149 @@ class LiveDataSynchronizer:
 
     async def update_standings_if_needed(self):
         """
-        Update standings if matches finished recently.
-        Only runs if there were finished matches in last 2 hours.
+        Update standings by calculating from all finished fixtures.
+        Runs whenever called - calculates standings from all finished matches.
         """
-        logger.info("📊 Checking if standings update needed...")
+        logger.info("📊 Calculating standings from fixtures...")
 
         try:
-            async with AsyncSessionLocal() as session:
-                # Check for recently finished matches (UTC timezone)
-                two_hours_ago = datetime.now(timezone.utc) - timedelta(hours=2)
-
-                stmt = select(Fixture).where(
-                    and_(
-                        Fixture.season == self.season,
-                        Fixture.status == FixtureStatus.FINISHED,
-                        Fixture.match_date >= two_hours_ago
-                    )
-                )
-                recent_finished = (await session.execute(stmt)).scalars().all()
-
-                if not recent_finished:
-                    logger.info("No recently finished matches - standings update skipped")
-                    return
-
-                logger.info(f"Found {len(recent_finished)} recently finished matches")
-                logger.info("Updating standings...")
-
-                # TODO: Implement standings calculation from fixtures
-                # For now, we can call the Football-Data standings endpoint
-                await self._sync_standings_from_api()
-
-                logger.info("✅ Standings updated")
+            await self._calculate_standings_from_fixtures()
+            logger.info("✅ Standings calculated and saved")
 
         except Exception as e:
-            logger.error(f"Failed to update standings: {str(e)}")
+            logger.error(f"Failed to calculate standings: {str(e)}")
+
+    async def _calculate_standings_from_fixtures(self):
+        """
+        Calculate standings directly from finished fixtures in database.
+        """
+        async with AsyncSessionLocal() as session:
+            # Get all teams
+            teams_stmt = select(Team)
+            teams_result = await session.execute(teams_stmt)
+            teams = {team.id: team for team in teams_result.scalars().all()}
+
+            # Get all finished fixtures for current season
+            fixtures_stmt = select(Fixture).where(
+                and_(
+                    Fixture.season == self.season,
+                    Fixture.status == FixtureStatus.FINISHED
+                )
+            )
+            fixtures = (await session.execute(fixtures_stmt)).scalars().all()
+
+            if not fixtures:
+                logger.info("No finished fixtures found - standings calculation skipped")
+                return
+
+            logger.info(f"Calculating standings from {len(fixtures)} finished matches...")
+
+            # Initialize standings for all teams
+            standings = {}
+            for team_id, team in teams.items():
+                standings[team_id] = {
+                    "team_id": team_id,
+                    "team_name": team.name,
+                    "played": 0,
+                    "won": 0,
+                    "drawn": 0,
+                    "lost": 0,
+                    "goals_for": 0,
+                    "goals_against": 0,
+                    "goal_difference": 0,
+                    "points": 0
+                }
+
+            # Calculate stats from fixtures
+            for fixture in fixtures:
+                if fixture.home_score is None or fixture.away_score is None:
+                    continue
+
+                home_id = fixture.home_team_id
+                away_id = fixture.away_team_id
+                home_score = fixture.home_score
+                away_score = fixture.away_score
+
+                # Update matches played
+                standings[home_id]["played"] += 1
+                standings[away_id]["played"] += 1
+
+                # Update goals
+                standings[home_id]["goals_for"] += home_score
+                standings[home_id]["goals_against"] += away_score
+                standings[away_id]["goals_for"] += away_score
+                standings[away_id]["goals_against"] += home_score
+
+                # Update results and points
+                if home_score > away_score:
+                    # Home win
+                    standings[home_id]["won"] += 1
+                    standings[home_id]["points"] += 3
+                    standings[away_id]["lost"] += 1
+                elif home_score < away_score:
+                    # Away win
+                    standings[away_id]["won"] += 1
+                    standings[away_id]["points"] += 3
+                    standings[home_id]["lost"] += 1
+                else:
+                    # Draw
+                    standings[home_id]["drawn"] += 1
+                    standings[home_id]["points"] += 1
+                    standings[away_id]["drawn"] += 1
+                    standings[away_id]["points"] += 1
+
+            # Calculate goal difference
+            for team_id in standings:
+                standings[team_id]["goal_difference"] = (
+                    standings[team_id]["goals_for"] - standings[team_id]["goals_against"]
+                )
+
+            # Sort standings (by points, then goal difference, then goals scored)
+            sorted_standings = sorted(
+                standings.values(),
+                key=lambda x: (x["points"], x["goal_difference"], x["goals_for"]),
+                reverse=True
+            )
+
+            # Update TeamStats in database
+            for position, team_standing in enumerate(sorted_standings, 1):
+                team_id = team_standing["team_id"]
+
+                # Find or create TeamStats
+                stats_stmt = select(TeamStats).where(
+                    and_(
+                        TeamStats.team_id == team_id,
+                        TeamStats.season == self.season
+                    )
+                )
+                stats = (await session.execute(stats_stmt)).scalar_one_or_none()
+
+                if not stats:
+                    stats = TeamStats(
+                        team_id=team_id,
+                        season=self.season
+                    )
+                    session.add(stats)
+
+                # Update stats
+                stats.position = position
+                stats.matches_played = team_standing["played"]
+                stats.wins = team_standing["won"]
+                stats.draws = team_standing["drawn"]
+                stats.losses = team_standing["lost"]
+                stats.goals_scored = team_standing["goals_for"]
+                stats.goals_conceded = team_standing["goals_against"]
+                stats.goal_difference = team_standing["goal_difference"]
+                stats.points = team_standing["points"]
+
+            await session.commit()
+
+            # Log standings summary
+            logger.info("📊 Standings calculated:")
+            for i, team in enumerate(sorted_standings[:5], 1):
+                logger.info(f"   {i}. {team['team_name']}: {team['points']} pts ({team['played']} played)")
+            if len(sorted_standings) > 5:
+                logger.info(f"   ... and {len(sorted_standings) - 5} more teams")
 
     async def _sync_standings_from_api(self):
         """
