@@ -106,15 +106,19 @@ class LiveDataSynchronizer:
 
         try:
             # Get fixtures from provider
+            logger.info(f"Fetching all fixtures for competition_id={self.serie_a_id}, season={self.season}")
             all_fixtures = await self.orchestrator.get_fixtures_with_fallback(
                 self.serie_a_id,
                 self.season
             )
+            logger.info(f"Received {len(all_fixtures)} total fixtures from provider")
 
             # Filter for recent matches (yesterday, today, tomorrow)
             today = datetime.now()
             yesterday = today - timedelta(days=1)
             tomorrow = today + timedelta(days=1)
+
+            logger.info(f"Filtering fixtures between {yesterday.date()} and {tomorrow.date()}")
 
             recent_fixtures = [
                 f for f in all_fixtures
@@ -122,7 +126,7 @@ class LiveDataSynchronizer:
             ]
 
             if not recent_fixtures:
-                logger.info("No recent fixtures found")
+                logger.info(f"No recent fixtures found (searched {len(all_fixtures)} total fixtures)")
                 return
 
             logger.info(f"Found {len(recent_fixtures)} recent fixtures")
@@ -147,6 +151,9 @@ class LiveDataSynchronizer:
                     for team in teams_result.scalars().all()
                 }
 
+                logger.info(f"Loaded {len(teams_by_external_id)} teams from database")
+                logger.info(f"Team external IDs in DB: {list(teams_by_external_id.keys())[:10]}...")
+
                 updated = 0
                 for match_data in recent_fixtures:
                     # Find teams
@@ -158,6 +165,7 @@ class LiveDataSynchronizer:
                             f"Teams not found for external IDs: "
                             f"{match_data.home_team_id} vs {match_data.away_team_id}"
                         )
+                        logger.warning(f"Available IDs in DB: {sorted(teams_by_external_id.keys())}")
                         continue
 
                     # Check if fixture exists
