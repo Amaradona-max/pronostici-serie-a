@@ -1,0 +1,13 @@
+# COMANDI DA ESEGUIRE SU RENDER SHELL
+
+# PASSO 1: Scarica lo script standalone
+curl -O https://raw.githubusercontent.com/Amaradona-max/pronostici-serie-a/main/fix_db_standalone.py
+
+# PASSO 2: Esegui lo script (DATABASE_URL è già configurato automaticamente)
+python3 fix_db_standalone.py
+
+# PASSO 3: Dopo il fix, testa il sync
+cd backend
+python3 -m app.scripts.sync_live_data
+
+# FINE! Se tutto va bene vedrai "Fixed X teams" e poi "Updated Y fixtures"
