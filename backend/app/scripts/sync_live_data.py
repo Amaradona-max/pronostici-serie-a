@@ -11,7 +11,7 @@ This script can be run:
 
 import asyncio
 import logging
-from datetime import datetime, timedelta
+from datetime import datetime, timedelta, timezone
 from sqlalchemy import select, and_
 from sqlalchemy.exc import SQLAlchemyError
 
@@ -47,7 +47,7 @@ class LiveDataSynchronizer:
         """
         logger.info("=" * 60)
         logger.info("Starting live data synchronization")
-        logger.info(f"Time: {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}")
+        logger.info(f"Time: {datetime.now(timezone.utc).strftime('%Y-%m-%d %H:%M:%S')} UTC")
         logger.info("=" * 60)
 
         try:
@@ -114,11 +114,12 @@ class LiveDataSynchronizer:
             logger.info(f"Received {len(all_fixtures)} total fixtures from provider")
 
             # Filter for recent matches (yesterday, today, tomorrow)
-            today = datetime.now()
+            # CRITICAL: Use UTC timezone to match Football-Data.org dates
+            today = datetime.now(timezone.utc)
             yesterday = today - timedelta(days=1)
             tomorrow = today + timedelta(days=1)
 
-            logger.info(f"Filtering fixtures between {yesterday.date()} and {tomorrow.date()}")
+            logger.info(f"Filtering fixtures between {yesterday.date()} and {tomorrow.date()} UTC")
 
             recent_fixtures = [
                 f for f in all_fixtures
@@ -217,8 +218,8 @@ class LiveDataSynchronizer:
 
         try:
             async with AsyncSessionLocal() as session:
-                # Check for recently finished matches
-                two_hours_ago = datetime.now() - timedelta(hours=2)
+                # Check for recently finished matches (UTC timezone)
+                two_hours_ago = datetime.now(timezone.utc) - timedelta(hours=2)
 
                 stmt = select(Fixture).where(
                     and_(
