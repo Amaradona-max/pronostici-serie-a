@@ -41,6 +41,34 @@ class LiveDataSynchronizer:
         self.season = "2025-2026"
         self.serie_a_id = 135  # Serie A external ID
 
+    async def fix_external_ids_if_needed(self):
+        """
+        ONE-TIME FIX: Ensure all teams have correct external_ids.
+        This runs once at the start of each sync to ensure data integrity.
+        """
+        CORRECT_IDS = {
+            "Inter": 505, "AC Milan": 489, "Juventus": 496, "Napoli": 492,
+            "AS Roma": 497, "Lazio": 487, "Atalanta": 499, "Fiorentina": 502,
+            "Bologna": 500, "Torino": 503, "Udinese": 494, "Lecce": 867,
+            "Cagliari": 490, "Hellas Verona": 504, "Genoa": 495, "Parma": 130,
+            "Como": 1047, "Sassuolo": 488, "Pisa": 506, "Cremonese": 520
+        }
+
+        try:
+            async with AsyncSessionLocal() as session:
+                teams = (await session.execute(select(Team))).scalars().all()
+                fixed = 0
+                for team in teams:
+                    correct_id = CORRECT_IDS.get(team.name)
+                    if correct_id and team.external_id != correct_id:
+                        team.external_id = correct_id
+                        fixed += 1
+                if fixed > 0:
+                    await session.commit()
+                    logger.info(f"✅ Fixed {fixed} team external_ids")
+        except Exception as e:
+            logger.warning(f"External ID fix skipped: {str(e)}")
+
     async def sync_all(self):
         """
         Main sync method - updates all live data.
@@ -51,6 +79,9 @@ class LiveDataSynchronizer:
         logger.info("=" * 60)
 
         try:
+            # 0. Fix external IDs if needed (one-time auto-fix)
+            await self.fix_external_ids_if_needed()
+
             # 1. Sync live matches (most important)
             await self.sync_live_matches()
 
