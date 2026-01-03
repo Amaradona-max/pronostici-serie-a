@@ -40,7 +40,12 @@ Applicazione completa per pronostici calcistici Serie A con intelligenza artific
 - ✅ Backend deployato su Render con auto-deploy
 - ✅ Frontend deployato su Vercel con auto-deploy
 - ✅ Database PostgreSQL popolato con dati reali Serie A 2025/2026
-- ✅ **Rose squadre VERIFICATE al 100% da Transfermarkt** (3 Gen 2026) **[NUOVO]**
+- ✅ **Rose squadre VERIFICATE al 100% da Transfermarkt** (3 Gen 2026)
+- ✅ **SISTEMA LIVE DATA IMPLEMENTATO** 🔴 **[NUOVO - 3 Gen 2026]**
+  - Aggiornamenti automatici ogni 2-5 minuti
+  - Football-Data.org integration (gratis, 14,400 req/giorno)
+  - Sync automatico partite live, risultati e classifica
+  - Guida completa setup: **[LIVE_DATA_SETUP.md](./LIVE_DATA_SETUP.md)**
 - ✅ Giornata 18 in corso (2-4 Gennaio 2026)
 - ✅ Classifica aggiornata (Milan 38 pts - in testa dopo Cagliari 0-1)
 - ✅ Pronostici AI implementati e funzionanti
@@ -80,6 +85,11 @@ cd backend
 python -m venv venv
 source venv/bin/activate  # Windows: venv\Scripts\activate
 pip install -r requirements.txt
+
+# Copia e configura variabili d'ambiente
+cp .env.example .env
+# Modifica .env con le tue API keys
+
 uvicorn app.main:app --reload
 ```
 
@@ -89,6 +99,20 @@ cd frontend
 npm install
 npm run dev
 ```
+
+## 🔴 Setup Dati Live (Opzionale ma Raccomandato)
+
+Per abilitare aggiornamenti automatici di partite, risultati e classifica:
+
+**📖 Leggi la guida completa**: [LIVE_DATA_SETUP.md](./LIVE_DATA_SETUP.md)
+
+**Quick Start**:
+1. Registrati gratis su https://www.football-data.org/client/register
+2. Ottieni la tua API key via email
+3. Aggiungi `FOOTBALL_DATA_KEY` nelle variabili d'ambiente
+4. Configura Render Cron Job (5 minuti una tantum)
+
+**Risultato**: Dati aggiornati automaticamente ogni 2-5 minuti, gratis forever! 🎉
 
 ## 📚 Documentazione
 

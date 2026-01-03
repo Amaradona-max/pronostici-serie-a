@@ -11,9 +11,12 @@ from app.services.providers.base import (
     InjuryData,
     TeamStatsData
 )
+from app.services.providers.football_data import FootballDataAdapter
 from app.services.providers.api_football import APIFootballAdapter
+from app.config import get_settings
 
 logger = logging.getLogger(__name__)
+settings = get_settings()
 
 
 class DataProviderOrchestrator:
@@ -21,15 +24,41 @@ class DataProviderOrchestrator:
     Orchestrates data retrieval from multiple providers.
 
     Features:
-    - Primary/fallback provider strategy
+    - Primary/fallback provider strategy (Football-Data.org -> API-Football)
     - Automatic retry on failure
     - Logging and monitoring
-    - Circuit breaker pattern (TODO)
+    - Rate limit management
     """
 
     def __init__(self):
-        self.primary_provider: BaseDataProvider = APIFootballAdapter()
-        self.fallback_provider: Optional[BaseDataProvider] = None  # TODO: Add Football-Data
+        """
+        Initialize providers based on available API keys.
+
+        Priority:
+        1. Football-Data.org (free, 10 req/min, Serie A included)
+        2. API-Football (fallback, paid/free tier)
+        """
+        # Try to use Football-Data as primary if key available
+        if settings.FOOTBALL_DATA_KEY:
+            self.primary_provider: BaseDataProvider = FootballDataAdapter()
+            logger.info("Using Football-Data.org as primary provider")
+
+            # API-Football as fallback if key available
+            if settings.API_FOOTBALL_KEY:
+                self.fallback_provider: Optional[BaseDataProvider] = APIFootballAdapter()
+                logger.info("API-Football configured as fallback provider")
+            else:
+                self.fallback_provider = None
+                logger.warning("No fallback provider configured")
+
+        # Fall back to API-Football if Football-Data not available
+        elif settings.API_FOOTBALL_KEY:
+            self.primary_provider: BaseDataProvider = APIFootballAdapter()
+            self.fallback_provider = None
+            logger.warning("Using API-Football as primary (no Football-Data key)")
+
+        else:
+            raise Exception("No API keys configured! Please set FOOTBALL_DATA_KEY or API_FOOTBALL_KEY")
 
     async def get_fixtures_with_fallback(
         self,
