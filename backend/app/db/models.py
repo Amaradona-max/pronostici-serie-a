@@ -8,7 +8,7 @@ from sqlalchemy import (
     ForeignKey, Text, Date, Enum as SQLEnum, Index
 )
 from sqlalchemy.orm import relationship
-from datetime import datetime
+from datetime import datetime, timezone
 import enum
 
 from app.db.base import Base
@@ -90,16 +90,16 @@ class Fixture(Base):
     competition_id = Column(Integer, ForeignKey("competitions.id"), nullable=False)
     season = Column(String(20), nullable=False)
     round = Column(String(50))
-    match_date = Column(DateTime, nullable=False, index=True)
+    match_date = Column(DateTime(timezone=True), nullable=False, index=True)
     home_team_id = Column(Integer, ForeignKey("teams.id"), nullable=False)
     away_team_id = Column(Integer, ForeignKey("teams.id"), nullable=False)
     status = Column(SQLEnum(FixtureStatus), default=FixtureStatus.SCHEDULED, index=True)
     home_score = Column(Integer)
     away_score = Column(Integer)
     external_id = Column(Integer, unique=True, index=True)
-    last_synced_at = Column(DateTime)
-    created_at = Column(DateTime, default=datetime.utcnow)
-    updated_at = Column(DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
+    last_synced_at = Column(DateTime(timezone=True))
+    created_at = Column(DateTime(timezone=True), default=lambda: datetime.now(timezone.utc))
+    updated_at = Column(DateTime(timezone=True), default=lambda: datetime.now(timezone.utc), onupdate=lambda: datetime.now(timezone.utc))
 
     # Relationships
     competition = relationship("Competition", back_populates="fixtures")
